@@ -1,10 +1,11 @@
-package com.siy.KitMarket.domain.entity;
+package com.siy.KitMarket.domain.entity.account;
 
 import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -12,7 +13,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 @Builder
 public class RoleHierarchy implements Serializable {
 
@@ -29,4 +29,13 @@ public class RoleHierarchy implements Serializable {
 
     @OneToMany(mappedBy = "parentName", cascade={CascadeType.ALL})
     private Set<RoleHierarchy> roleHierarchy = new HashSet<>();
+
+    public RoleHierarchy(String childName) {
+        this.childName = childName;
+    }
+
+    public RoleHierarchy(String childName, RoleHierarchy parentName) {
+        this.childName = childName;
+        this.parentName = parentName;
+    }
 }

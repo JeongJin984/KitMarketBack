@@ -1,4 +1,4 @@
-package com.siy.KitMarket.domain.entity;
+package com.siy.KitMarket.domain.entity.account;
 
 import lombok.*;
 
@@ -8,11 +8,11 @@ import java.util.List;
 
 @Entity
 @Table(name = "ROLES")
-@Data
 @EqualsAndHashCode(of = "id")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class Role {
 
     @Id
@@ -26,6 +26,14 @@ public class Role {
     @OneToMany(mappedBy = "role")
     List<AccountRole> accountRoles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "role")
-    List<RoleResource> roleResources = new ArrayList<>();
+    public Role(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public void setAccountRoles(List<AccountRole> accountRoles) {
+        this.accountRoles = accountRoles;
+        this.accountRoles.stream().forEach(accountRole -> {
+            accountRole.setRole(this);
+        });
+    }
 }

@@ -1,8 +1,6 @@
 package com.siy.KitMarket.security.service;
 
-import com.siy.KitMarket.domain.dto.AccountAuthDto;
 import com.siy.KitMarket.domain.entity.account.Account;
-import com.siy.KitMarket.repository.AccountRepository;
 import com.siy.KitMarket.repository.QAccountRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

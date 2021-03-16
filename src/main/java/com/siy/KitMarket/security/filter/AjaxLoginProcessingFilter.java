@@ -1,7 +1,7 @@
 package com.siy.KitMarket.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.siy.KitMarket.domain.dto.AccountAuthDto;
+import com.siy.KitMarket.domain.entity.account.Account;
 import com.siy.KitMarket.security.token.AjaxAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -28,12 +28,12 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
             throw new IllegalStateException("Authentication not Supported");
         }
 
-        AccountAuthDto accountAuthDto = objectMapper.readValue(request.getReader(), AccountAuthDto.class);
-        if(!StringUtils.hasText(accountAuthDto.getUsername()) || !StringUtils.hasText(accountAuthDto.getPassword())) {
+        Account account = objectMapper.readValue(request.getReader(), Account.class);
+        if(!StringUtils.hasText(account.getUsername()) || !StringUtils.hasText(account.getPassword())) {
             throw new IllegalArgumentException("Username or Password is required");
         }
 
-        AjaxAuthenticationToken ajaxAuthenticationToken = new AjaxAuthenticationToken(accountAuthDto.getUsername(), accountAuthDto.getPassword());
+        AjaxAuthenticationToken ajaxAuthenticationToken = new AjaxAuthenticationToken(account.getUsername(), account.getPassword());
 
         return getAuthenticationManager().authenticate(ajaxAuthenticationToken);
     }

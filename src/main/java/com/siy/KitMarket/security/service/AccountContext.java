@@ -1,6 +1,5 @@
 package com.siy.KitMarket.security.service;
 
-import com.siy.KitMarket.domain.dto.AccountAuthDto;
 import com.siy.KitMarket.domain.entity.account.Account;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;

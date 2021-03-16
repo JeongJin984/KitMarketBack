@@ -13,4 +13,9 @@ public class UserController {
     String jwtLogin() {
         return "hello world";
     }
+
+    @GetMapping(value = "/login")
+    String login() {
+        return "login";
+    }
 }

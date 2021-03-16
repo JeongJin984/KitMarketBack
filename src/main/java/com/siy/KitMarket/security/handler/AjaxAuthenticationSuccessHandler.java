@@ -1,6 +1,7 @@
 package com.siy.KitMarket.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.siy.KitMarket.domain.dto.AccountDto;
 import com.siy.KitMarket.domain.entity.account.Account;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,11 +20,12 @@ public class AjaxAuthenticationSuccessHandler implements AuthenticationSuccessHa
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        Account account = (Account)authentication.getPrincipal();
+        AccountDto accountdto = new AccountDto((Account)authentication.getPrincipal());
+
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-        objectMapper.writeValue(response.getWriter(), account);
+        objectMapper.writeValue(response.getWriter(), accountdto);
     }
 }
 

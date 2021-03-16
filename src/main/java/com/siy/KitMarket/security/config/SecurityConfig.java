@@ -6,6 +6,7 @@ import com.siy.KitMarket.security.handler.AjaxAuthenticationSuccessHandler;
 import com.siy.KitMarket.security.provider.AjaxAuthenticationProvider;
 import com.siy.KitMarket.security.token.AjaxAuthenticationToken;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,11 +15,21 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
@@ -45,6 +56,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new AjaxAuthenticationFailureHandler();
     }
 
+    @Autowired
+    UserDetailsService userDetailsService;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(ajaxAuthenticationProvider());
@@ -58,7 +72,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .anyRequest().authenticated()
         .and()
+                .rememberMe().key("seceret-key")
+                .tokenValiditySeconds(3600)
+                .alwaysRemember(true)
+                .userDetailsService(userDetailsService)
+        .and()
                 .addFilterBefore(ajaxLoginProcessingFilter(),UsernamePasswordAuthenticationFilter.class);
+
+        http
+                .logout()
+                .logoutUrl("/api/logout")
+                .addLogoutHandler(new LogoutHandler() {
+                    @Override
+                    public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+                        HttpSession session = request.getSession();
+                        session.invalidate();
+                    }
+                })
+                .logoutSuccessHandler(new LogoutSuccessHandler() {
+                    @Override
+                    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+                        response.sendRedirect("/login");
+                    }
+                })
+                .deleteCookies("remember-me");
     }
 
     @Override

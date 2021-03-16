@@ -1,5 +1,6 @@
 package com.siy.KitMarket.domain.entity.account;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -24,6 +25,7 @@ public class Role {
     private String roleName;
 
     @OneToMany(mappedBy = "role")
+    @JsonIgnore
     List<AccountRole> accountRoles = new ArrayList<>();
 
     public Role(String roleName) {

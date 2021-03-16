@@ -1,7 +1,7 @@
 package com.siy.KitMarket.domain.entity.account;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import net.minidev.json.annotate.JsonIgnore;
 
 import javax.persistence.*;
 
@@ -25,7 +25,6 @@ public class AccountRole {
 
     @ManyToOne
     @JoinColumn(name = "role_id")
-    @JsonIgnore
     private Role role;
 }
 

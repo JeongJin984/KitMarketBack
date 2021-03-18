@@ -1,6 +1,7 @@
 package com.siy.KitMarket.domain.entity;
 
 
+import com.siy.KitMarket.domain.entity.account.Account;
 import com.siy.KitMarket.domain.entity.post.Post;
 import lombok.*;
 
@@ -15,26 +16,38 @@ import static javax.persistence.FetchType.*;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"content"})
-public class Chat {
+@Table(name = "APPLICATION")
+
+public class Application {
     @Id
     @GeneratedValue
-    @Column(name = "chat_id")
+    @Column(name = "application_id")
     private Long id;
 
     private String content;
 
-//    @ManyToOne(fetch = LAZY)
-//    private Member member;
+    private Boolean Status;
+
+    private LocalDateTime chatDate; //채팅 시간
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "account_id")
+    private Account account;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
 
-    private LocalDateTime chatDate; //채팅 시간
 
-    public Chat(String content, Post post) {
+    public Application(String content, Post post) {
         this.content = content;
         this.post = post;
-        post.getChats().add(this);
+        post.getApplications().add(this);
     }
+
+
+    // 작성자 선택할수 있게
+    // 신청!! 이름 내용 신청(bool)enum "TRUE", "FALSE"
+
+
 }

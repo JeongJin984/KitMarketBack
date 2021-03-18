@@ -1,12 +1,13 @@
 package com.siy.KitMarket.domain.entity.post;
 
-import com.siy.KitMarket.domain.entity.Chat;
+import com.siy.KitMarket.domain.entity.Application;
+import com.siy.KitMarket.domain.entity.account.Account;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.*;
@@ -18,6 +19,7 @@ import static javax.persistence.FetchType.*;
 @Getter @Setter
 @ToString(of = {"id", "title", "content"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "POST")
 public abstract class Post {
     @Id
     @GeneratedValue
@@ -38,19 +40,19 @@ public abstract class Post {
         this.content = content;
     }
 
-/**
-     * member 연결
+    /**
+     * Account 연결
      */
-//    @ManyToOne(fetch = LAZY)
-//    @JoinColumn(name = "member_id")
-//    private Member member;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "account_id")
+    private Account account;
 
 
     /**
-     * chat 연결
+     * Application 연결
      */
     @BatchSize(size = 100)
     @OneToMany(mappedBy = "post", fetch = LAZY, cascade = ALL)
-    private List<Chat> chats = new ArrayList<>();
+    private Set<Application> applications = new HashSet<>();
 
 }

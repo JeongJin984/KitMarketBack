@@ -10,7 +10,8 @@ import org.springframework.context.annotation.Bean;
 public class KitMarketApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(KitMarketApplication.class, args);
+		SpringApplication springApplication = new SpringApplication();
+		springApplication.run(KitMarketApplication.class, args);
 	}
 
 	@Bean

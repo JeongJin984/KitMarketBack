@@ -19,7 +19,7 @@ public class AjaxAuthenticationSuccessHandler implements AuthenticationSuccessHa
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException{
         AccountDto accountdto = new AccountDto((Account)authentication.getPrincipal());
 
         response.setStatus(HttpStatus.OK.value());

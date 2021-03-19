@@ -3,6 +3,7 @@ package com.siy.KitMarket.security.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.DisabledException;
@@ -19,7 +20,7 @@ public class AjaxAuthenticationFailureHandler implements AuthenticationFailureHa
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException {
         String error = "Invalid Username or Password";
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
@@ -31,6 +32,8 @@ public class AjaxAuthenticationFailureHandler implements AuthenticationFailureHa
             error = "Locked";
         } else if(e instanceof CredentialsExpiredException) {
             error = "Expired password";
+        } else if(e instanceof AuthenticationServiceException) {
+            error = "Cannot Authenticate";
         }
 
         objectMapper.writeValue(response.getWriter(), error);

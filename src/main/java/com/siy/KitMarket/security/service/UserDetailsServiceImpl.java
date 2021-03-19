@@ -25,9 +25,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private QAccountRepository qAccountRepository;
 
     @Autowired
-    private HttpServletRequest request;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

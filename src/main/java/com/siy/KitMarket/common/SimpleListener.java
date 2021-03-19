@@ -15,7 +15,6 @@ import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Set;
 
-
 public class SimpleListener implements ApplicationListener<ApplicationStartedEvent> {
 
     @Autowired

@@ -3,6 +3,7 @@ package com.siy.KitMarket.security.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.siy.KitMarket.domain.entity.account.Account;
 import com.siy.KitMarket.security.token.AjaxAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
@@ -23,9 +24,9 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException {
         if(!isAjax(request)) {
-            throw new IllegalStateException("Authentication not Supported");
+            throw new AuthenticationServiceException("Authentication not Supported");
         }
 
         Account account = objectMapper.readValue(request.getReader(), Account.class);

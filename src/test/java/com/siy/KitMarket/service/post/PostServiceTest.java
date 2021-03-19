@@ -1,8 +1,12 @@
-package com.siy.KitMarket.domain.entity.post;
+package com.siy.KitMarket.service.post;
 
 import com.siy.KitMarket.domain.entity.Application;
+import com.siy.KitMarket.domain.entity.post.CarFull;
+import com.siy.KitMarket.domain.entity.post.Study;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfSystemProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
@@ -10,19 +14,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-@Commit
-class PostTest {
-
+class PostServiceTest {
+    @Autowired
+    PostService postService;
     @Autowired
     EntityManager em;
 
-    Study post1 = new Study("Study1", "I'm Study1", "study");
+    Study post1 = new Study("Study1", "I'm Study1", "study1111");
     CarFull post2 = new CarFull("CarFull1", "I'm CarFull1", "carfull");
-    Study post3 = new Study("Study2", "I'm Study2", "study");
+    Study post3 = new Study("Study2", "I'm Study2", "study22222");
     CarFull post4 = new CarFull("CarFull2", "I'm CarFull2", "carfull");
 
     Application application1 = new Application("댓글 1입니다.", post1);
@@ -33,36 +38,23 @@ class PostTest {
 
     @BeforeEach
     public void before(){
-        em.persist(post1);
-        em.persist(post2);
-        em.persist(post3);
-        em.persist(post4);
-
-        em.persist(application1);
-        em.persist(application2);
-        em.persist(application3);
-        em.persist(application4);
-        em.persist(application5);
+        postService.save(post1);
+        postService.save(post2);
+        postService.save(post3);
+        postService.save(post4);
 
 
         em.flush();
         em.clear();
     }
 
-    /**
-     * 기본 post 찾기
-     */
+
     @Test
-    public void findTest(){
-        Post findPost = em.find(Post.class, post1.getId());
+    public void selectServiceTest() throws Exception{
+        //when
+        Study studyOne = postService.findStudyOne(post1.getId());
 
-        assertThat(findPost.getId()).isEqualTo(post1.getId());
+        //then
+        assertThat(studyOne.getStudy()).isEqualTo(post1.getStudy());
     }
-    @Test
-    public void findStudy(){
-        Study findStudy = em.find(Study.class, post1.getId());
-        assertThat(findStudy.getStudy()).isEqualTo(post1.getStudy());
-    }
-
-
 }

@@ -2,6 +2,8 @@ package com.siy.KitMarket.repository;
 
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.siy.KitMarket.domain.entity.Application;
+import com.siy.KitMarket.domain.entity.QApplication;
 import com.siy.KitMarket.domain.entity.account.Account;
 import com.siy.KitMarket.domain.entity.account.QAccount;
 import com.siy.KitMarket.domain.entity.account.QAccountRole;
@@ -51,12 +53,24 @@ public class QPostRepository {
                 .fetch();
         return result;
     }
+    /**
+     * App과 같이 조회
+     */
+    public Post findPostWithAppById(Long Id){
+        QPost post = new QPost("p");
+        QApplication application = new QApplication("a");
 
-//    public Study findStudyWithApp(){
-//        QStudy study = new QStudy("s");
-//
-//        queryFactory
-//                .selectFrom(study)
-//                .fetchJoin()
-//    }
+
+        return queryFactory
+                .selectFrom(post)
+                .distinct()
+                .join(post.applications, application)
+                .fetchJoin()
+                .where(post.id.eq(Id))
+                .fetchOne();
+
+
+    }
+
+
 }

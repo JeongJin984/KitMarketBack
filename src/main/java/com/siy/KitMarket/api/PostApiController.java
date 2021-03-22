@@ -8,6 +8,7 @@ import com.siy.KitMarket.domain.entity.post.CarFull;
 import com.siy.KitMarket.domain.entity.post.Contest;
 import com.siy.KitMarket.domain.entity.post.Post;
 import com.siy.KitMarket.domain.entity.post.Study;
+import com.siy.KitMarket.repository.QPostRepository;
 import com.siy.KitMarket.service.post.PostService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,54 +27,53 @@ import static java.util.stream.Collectors.toList;
 public class PostApiController {
     private final PostService postService;
 
-    //postList
+    /**
+     * Post 전체 조회
+     */
     @GetMapping(value = "/postList")
     public Result postList() {
-        List<Post> postList = postService.findPostList();
-        List<PostDto> collect = postList.stream()
-                .map(p -> new PostDto(p.getTitle(), p.getContent()))
-                .collect(Collectors.toList());
-        return new Result(collect.size(), collect);
+        List<PostDto> postDtoList = postService.findPostList();
+        return new Result(postDtoList.size(), postDtoList);
     }
 
+    /**
+     * Study 전체 조회
+     */
     @GetMapping(value = "/studyList")
     public Result studyList() {
-        List<Study> studyList = postService.findStudyList();
-        List<StudyDto> collect = studyList.stream()
-                .map(s -> new StudyDto(s.getTitle(), s.getContent()))
-                .collect(Collectors.toList());
+        List<StudyDto> studyDtoList = postService.findStudyList();
 
-        return new Result(collect.size(), collect);
-
+        return new Result(studyDtoList.size(), studyDtoList);
     }
 
+    /**
+     * carFull 전체 조회
+     */
     @GetMapping(value = "/carFullList")
     public Result carFullList() {
-        List<CarFull> carFullList = postService.findCarFulList();
-        List<CarFullDto> collect = carFullList.stream()
-                .map(cf -> new CarFullDto(cf.getTitle(), cf.getContent()))
-                .collect(Collectors.toList());
+        List<CarFullDto> carFullDtoList = postService.findCarFulList();
 
-        return new Result(collect.size(), collect);
+        return new Result(carFullDtoList.size(), carFullDtoList);
     }
+
+    /**
+     * Contest 전체 조회
+     */
     @GetMapping(value = "/ContestList")
     public Result ContestList() {
-        List<Contest> contestList = postService.findContestList();
-        List<ContestDto> collect = contestList.stream()
-                .map(ct -> new ContestDto(ct.getTitle(), ct.getContent()))
-                .collect(Collectors.toList());
-
-        return new Result(collect.size(), collect);
+        List<ContestDto> contestDtoList = postService.findContestList();
+        return new Result(contestDtoList.size(), contestDtoList);
     }
 
+    /**
+     * Id 검색
+     */
     @GetMapping(value = "/study/{id}")
     public StudyDto findStudyById(@PathVariable("id") Long id){
-        Study findStudy = postService.findStudyOne(id);
-        StudyDto studyDto = new StudyDto(findStudy.getTitle(), findStudy.getContent());
-        return studyDto;
+        StudyDto findStudyDto = postService.findStudyOne(id);
+        System.out.println("findStudyDto = " + findStudyDto);
+        return findStudyDto;
     }
-
-
 
 
 }

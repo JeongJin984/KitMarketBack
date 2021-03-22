@@ -1,5 +1,6 @@
 package com.siy.KitMarket.service.post;
 
+import com.siy.KitMarket.domain.dto.post.StudyDto;
 import com.siy.KitMarket.domain.entity.Application;
 import com.siy.KitMarket.domain.entity.post.CarFull;
 import com.siy.KitMarket.domain.entity.post.Study;
@@ -50,11 +51,12 @@ class PostServiceTest {
 
 
     @Test
-    public void selectServiceTest() throws Exception{
+    @Commit
+    public void selectStudyWithAppbyId() throws Exception{
         //when
-        Study studyOne = postService.findStudyOne(post1.getId());
-
+        StudyDto findStudyDto = postService.findStudyOne(post1.getId());
         //then
-        assertThat(studyOne.getStudy()).isEqualTo(post1.getStudy());
+        System.out.println("findStudyDto = " + findStudyDto);
+
     }
 }

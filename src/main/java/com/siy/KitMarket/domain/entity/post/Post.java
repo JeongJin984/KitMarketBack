@@ -7,8 +7,8 @@ import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+
 
 import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.*;
@@ -56,6 +56,6 @@ public abstract class Post {
      */
     @BatchSize(size = 100)
     @OneToMany(mappedBy = "post", fetch = LAZY, cascade = ALL)
-    private Set<Application> applications = new HashSet<>();
+    private List<Application> applications = new ArrayList<>();
 
 }

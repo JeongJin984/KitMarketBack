@@ -2,6 +2,7 @@ package com.siy.KitMarket.repository;
 
 import com.siy.KitMarket.domain.entity.Application;
 import com.siy.KitMarket.domain.entity.post.CarFull;
+import com.siy.KitMarket.domain.entity.post.Post;
 import com.siy.KitMarket.domain.entity.post.Study;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,9 @@ class PostRepositoryTest {
 
     @Autowired
     PostRepository postRepository;
+
+    @Autowired
+    QPostRepository qPostRepository;
 
 
 
@@ -49,6 +53,20 @@ class PostRepositoryTest {
         em.clear();
     }
 
+    /**
+     * Repository save Test
+     */
+    @Test
+    public void saveStudyTest(){
+        postRepository.save(post1);
+        Study findStudy = (Study)postRepository.findById(post1.getId()).get();
+        assertThat(findStudy.getStudy()).isEqualTo(post1.getStudy());
+        System.out.println("study = " + findStudy);
+    }
+
+    /**
+     * Repository select Test
+     */
     @Test
     public void selectStudyTest(){
         Study findPost = (Study)postRepository.findById(post1.getId()).get();
@@ -57,6 +75,9 @@ class PostRepositoryTest {
         System.out.println("findPost = " + findPost);
     }
 
+    /**
+     * Repository update Test
+     */
     @Test
     public void updateStudyTest(){
         Study findStudy = (Study)postRepository.findById(post1.getId()).get();
@@ -64,6 +85,27 @@ class PostRepositoryTest {
         System.out.println("study = " + findStudy);
 
         findStudy.setStudy("new Study !!!");
+    }
+
+    /**
+     * Repository delect test
+     */
+    @Test
+    public void deleteStudyTest(){
+        Post findStudy = postRepository.findById(post1.getId()).get();
+        postRepository.delete(findStudy);
+    }
+
+    /**
+     * 포스트 1개 application 여러개 확인
+     */
+    @Test
+    public void findPostWithAppById(){
+        Post result = qPostRepository.findPostWithAppById(post1.getId());
+        System.out.println("result = " + result);
+        for (Application application : result.getApplications()) {
+            System.out.println("application = " + application);
+        }
     }
 
 }

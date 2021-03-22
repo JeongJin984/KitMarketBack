@@ -1,6 +1,7 @@
 package com.siy.KitMarket.domain.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.siy.KitMarket.domain.entity.account.Account;
 import com.siy.KitMarket.domain.entity.post.Post;
 import lombok.*;
@@ -36,6 +37,7 @@ public class Application {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "post_id")
+    @JsonIgnore
     private Post post;
 
 

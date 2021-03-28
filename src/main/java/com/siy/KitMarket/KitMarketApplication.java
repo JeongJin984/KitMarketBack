@@ -18,5 +18,4 @@ public class KitMarketApplication {
 	Hibernate5Module hibernate5Module() {
 		return new Hibernate5Module();
 	}
-
 }

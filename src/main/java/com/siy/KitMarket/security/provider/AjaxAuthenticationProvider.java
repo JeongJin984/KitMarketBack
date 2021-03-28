@@ -18,6 +18,10 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+     public PasswordEncoder getPasswordEncoder() {
+        return passwordEncoder;
+    }
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 

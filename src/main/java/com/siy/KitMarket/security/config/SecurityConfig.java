@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -55,11 +56,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
-
-    @Bean
     public AuthenticationProvider ajaxAuthenticationProvider() {
         return new AjaxAuthenticationProvider();
     }
@@ -88,8 +84,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors()
         .and()
                 .csrf().disable()
-                .antMatcher("/api/**")
                 .authorizeRequests()
+                .antMatchers("/api/signup").permitAll()
+                .antMatchers("/api/**").authenticated()
                 .anyRequest().authenticated()
         .and()
                 .rememberMe().key("seceret-key")

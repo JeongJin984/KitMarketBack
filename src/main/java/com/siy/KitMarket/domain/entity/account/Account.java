@@ -43,6 +43,10 @@ public class Account {
         this.age = age;
     }
 
+    public void setAge(int age) {
+        this.age = age;
+    }
+
     public void setAccountRoles(Set<AccountRole> accountRoles) {
         this.accountRoles = accountRoles;
         this.accountRoles.stream().forEach(accountRole -> {

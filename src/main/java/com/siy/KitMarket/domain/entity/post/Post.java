@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,6 +35,8 @@ public abstract class Post {
 
     private Long currentNumber;
     private Long MaxNumber;
+
+    private LocalDateTime localDateTime;
 
     public Post(String title, String content) {
         this.title = title;

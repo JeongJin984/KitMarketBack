@@ -1,5 +1,7 @@
 package com.siy.KitMarket.repository;
 
+import com.siy.KitMarket.domain.dto.post.PostDto;
+import com.siy.KitMarket.domain.dto.post.StudyDto;
 import com.siy.KitMarket.domain.entity.Application;
 import com.siy.KitMarket.domain.entity.post.CarFull;
 import com.siy.KitMarket.domain.entity.post.Post;
@@ -8,6 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-@Commit
 class PostRepositoryTest {
     @Autowired
     EntityManager em;
@@ -41,17 +44,6 @@ class PostRepositoryTest {
     Application application4 = new Application("댓글 4입니다.", post4);
     Application application5 = new Application("댓글 5입니다.", post1);
 
-    @BeforeEach
-    public void before(){
-        postRepository.save(post1);
-        postRepository.save(post2);
-        postRepository.save(post3);
-        postRepository.save(post4);
-
-
-        em.flush();
-        em.clear();
-    }
 
     /**
      * Repository save Test
@@ -107,5 +99,25 @@ class PostRepositoryTest {
             System.out.println("application = " + application);
         }
     }
+
+    @Test
+    public void searchPageTest(){
+        PageRequest page = PageRequest.of(0, 50);
+        Page<PostDto> postList = qPostRepository.findPostListWithPaging(page);
+
+        System.out.println("postList.getSize() = " + postList.getSize());
+        System.out.println("postList = " + postList.getTotalPages());
+        System.out.println("postList.getContent() = " + postList.getContent());
+    }
+    @Test
+    public void findStudyListWithPagingTest(){
+        PageRequest page = PageRequest.of(0, 10);
+        Page<StudyDto> studyList = qPostRepository.findStudyListWithPaging(page);
+
+        System.out.println("postList.getSize() = " + studyList.getSize());
+        System.out.println("postList = " + studyList.getTotalPages());
+        System.out.println("postList.getContent() = " + studyList.getContent());
+    }
+
 
 }

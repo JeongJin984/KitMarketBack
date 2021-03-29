@@ -4,12 +4,21 @@ import com.siy.KitMarket.domain.entity.account.Account;
 import com.siy.KitMarket.repository.AccountRepository;
 import com.siy.KitMarket.service.user.AccountRegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.server.Session;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
 @RestController
-public class UserController {
+public class UserApiController {
 
     @Autowired
     AccountRepository accountRepository;
@@ -18,12 +27,11 @@ public class UserController {
     AccountRegisterService accountRegisterService;
 
     @GetMapping(value = "/hello")
-    String jwtLogin() {
-        return "hello world";
-    }
+    String PostLogin(@SessionAttribute("SPRING_SECURITY_CONTEXT") SecurityContext securityContext) {
+        Authentication authentication = securityContext.getAuthentication();
 
-    @PostMapping(value = "/hello")
-    String PostLogin() {
+        Account account = (Account) authentication.getPrincipal();
+
         return "hello world";
     }
 
@@ -33,7 +41,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/api/signup")
-    String signup(@RequestBody Account account) throws Exception {
+    String signup(@ModelAttribute Account account) throws Exception {
         try {
             accountRegisterService.registerNewAccount(account);
         } catch (Exception e) {

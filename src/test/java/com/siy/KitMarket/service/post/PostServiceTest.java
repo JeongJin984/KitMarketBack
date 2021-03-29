@@ -26,35 +26,13 @@ class PostServiceTest {
     @Autowired
     EntityManager em;
 
-    Study post1 = new Study("Study1", "I'm Study1", "study1111");
-    CarFull post2 = new CarFull("CarFull1", "I'm CarFull1", "carfull");
-    Study post3 = new Study("Study2", "I'm Study2", "study22222");
-    CarFull post4 = new CarFull("CarFull2", "I'm CarFull2", "carfull");
-
-    Application application1 = new Application("댓글 1입니다.", post1);
-    Application application2 = new Application("댓글 2입니다.", post2);
-    Application application3 = new Application("댓글 3입니다.", post3);
-    Application application4 = new Application("댓글 4입니다.", post4);
-    Application application5 = new Application("댓글 5입니다.", post1);
-
-    @BeforeEach
-    public void before(){
-        postService.save(post1);
-        postService.save(post2);
-        postService.save(post3);
-        postService.save(post4);
-
-
-        em.flush();
-        em.clear();
-    }
 
 
     @Test
     @Commit
     public void selectStudyWithAppbyId() throws Exception{
         //when
-        StudyDto findStudyDto = postService.findStudyOne(post1.getId());
+        StudyDto findStudyDto = postService.findStudyOne(241L);
         //then
         System.out.println("findStudyDto = " + findStudyDto);
 

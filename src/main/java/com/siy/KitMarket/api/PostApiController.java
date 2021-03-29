@@ -34,7 +34,8 @@ public class PostApiController {
      * Post 전체 조회
      */
     @GetMapping(value = "/postList")
-    public Result postList(@RequestParam(value = "offset",defaultValue = "0",required = false)int offset, @RequestParam(value = "size",defaultValue = "10",required = false)int size) {
+    public Result postList(@RequestParam(value = "offset",defaultValue = "0",required = false)int offset,
+                           @RequestParam(value = "size",defaultValue = "10",required = false)int size) {
         Page<PostDto> postDtoList = postService.findPostList(offset, size);
 
         return new Result(postDtoList.getContent().size(), postDtoList.getNumber(), postDtoList.getTotalPages(), postDtoList.getContent());
@@ -44,7 +45,8 @@ public class PostApiController {
      * Study 전체 조회
      */
     @GetMapping(value = "/studyList")
-    public Result studyList(@RequestParam(value = "offset",defaultValue = "0",required = false)int offset, @RequestParam(value = "size",defaultValue = "10",required = false)int size) {
+    public Result studyList(@RequestParam(value = "offset",defaultValue = "0",required = false)int offset,
+                            @RequestParam(value = "size",defaultValue = "10",required = false)int size) {
         Page<StudyDto> postDtoList = postService.findStudyList(offset, size);
 
         return new Result(postDtoList.getContent().size(),  postDtoList.getNumber(), postDtoList.getTotalPages(),postDtoList.getContent());
@@ -54,7 +56,8 @@ public class PostApiController {
      * carFull 전체 조회
      */
     @GetMapping(value = "/carFullList")
-    public Result carFullList(@RequestParam(value = "offset",defaultValue = "0",required = false)int offset, @RequestParam(value = "size",defaultValue = "10",required = false)int size) {
+    public Result carFullList(@RequestParam(value = "offset",defaultValue = "0",required = false)int offset,
+                              @RequestParam(value = "size",defaultValue = "10",required = false)int size) {
         Page<CarFullDto> carFullDtoList = postService.findCarFulList(offset, size);
 
         return new Result(carFullDtoList.getContent().size(), carFullDtoList.getNumber(), carFullDtoList.getTotalPages(), carFullDtoList.getContent());
@@ -64,7 +67,8 @@ public class PostApiController {
      * Contest 전체 조회
      */
     @GetMapping(value = "/ContestList")
-    public Result ContestList(@RequestParam(value = "offset",defaultValue = "0",required = false)int offset, @RequestParam(value = "size",defaultValue = "10",required = false)int size) {
+    public Result ContestList(@RequestParam(value = "offset",defaultValue = "0",required = false)int offset,
+                              @RequestParam(value = "size",defaultValue = "10",required = false)int size) {
         Page<Contest> contestDtoList = postService.findContestList(offset, size);
         return new Result(contestDtoList.getContent().size(),  contestDtoList.getNumber(), contestDtoList.getTotalPages(),contestDtoList.get());
     }

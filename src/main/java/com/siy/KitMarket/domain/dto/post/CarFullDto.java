@@ -17,7 +17,7 @@ public class CarFullDto {
     private List<Application> applications;
 
     @QueryProjection
-    public CarFullDto(String title, String content) {
+    public CarFullDto(Long id, String title, String content) {
         this.id = id;
         this.title = title;
         this.content = content;

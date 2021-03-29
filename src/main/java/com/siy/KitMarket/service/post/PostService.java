@@ -8,7 +8,6 @@ import com.siy.KitMarket.domain.entity.post.Contest;
 import com.siy.KitMarket.domain.entity.post.Post;
 import com.siy.KitMarket.domain.entity.post.Study;
 import com.siy.KitMarket.repository.PostRepository;
-import com.siy.KitMarket.repository.QPostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
-    private final QPostRepository qPostRepository;
     /**
      *  포스트 저장
      */
@@ -36,7 +34,7 @@ public class PostService {
     public Page<PostDto> findPostList(int offset, int size){
         PageRequest page = PageRequest.of(offset, size);
 
-        Page<PostDto> results = qPostRepository.findPostListWithPaging(page);
+        Page<PostDto> results = postRepository.findPostListWithPaging(page);
 
         return results;
     }
@@ -48,7 +46,7 @@ public class PostService {
     public Page<StudyDto> findStudyList(int offset, int size){
         PageRequest page = PageRequest.of(offset, size);
 
-        Page<StudyDto> results = qPostRepository.findStudyListWithPaging(page);
+        Page<StudyDto> results =postRepository.findStudyListWithPaging(page);
         return results;
     }
     /**
@@ -58,7 +56,7 @@ public class PostService {
     public Page<CarFullDto> findCarFulList(int offset, int size){
         PageRequest page = PageRequest.of(offset, size);
 
-        Page<CarFullDto> results = qPostRepository.findCarFullListWithPaging(page);
+        Page<CarFullDto> results = postRepository.findCarFullListWithPaging(page);
         return results;
     }
 
@@ -69,7 +67,7 @@ public class PostService {
     public Page<Contest> findContestList(int offset, int size){
         PageRequest page = PageRequest.of(offset, size);
 
-        Page<Contest> results = qPostRepository.findContestListWithPaging(page);
+        Page<Contest> results = postRepository.findContestListWithPaging(page);
 
         return results;
     }
@@ -80,7 +78,7 @@ public class PostService {
      * */
     public StudyDto findStudyOne(Long postId){
         Study findStudy;
-        Post findPost = qPostRepository.findPostWithAppById(postId);
+        Post findPost = postRepository.findPostWithAppById(postId);
 
         if(findPost instanceof Study) {
             findStudy = (Study)findPost;

@@ -11,21 +11,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.List;
 
 import static com.siy.KitMarket.domain.entity.post.QCarFull.carFull;
-import static com.siy.KitMarket.domain.entity.post.QContest.*;
+import static com.siy.KitMarket.domain.entity.post.QContest.contest;
 import static com.siy.KitMarket.domain.entity.post.QPost.post;
 import static com.siy.KitMarket.domain.entity.post.QStudy.study1;
 
 @Repository
-public class QPostRepository {
+public class PostRepositoryImpl implements PostRepositoryCustom{
     @Autowired
     JPAQueryFactory queryFactory;
 
-    /**
-     * Study 전체 조회
-     */
+    @Override
     public List<Study> findStudyList() {
         QStudy study = new QStudy("s");
 
@@ -38,6 +36,7 @@ public class QPostRepository {
     /**
      * CarFull 전체 조회
      */
+    @Override
     public List<CarFull> findCarFullList() {
         QCarFull carFull = new QCarFull("cf");
 
@@ -50,6 +49,7 @@ public class QPostRepository {
     /**
      * Contest 전체조회
      */
+    @Override
     public List<Contest> findContestList() {
         QContest contest = new QContest("ct");
 
@@ -61,6 +61,7 @@ public class QPostRepository {
     /**
      * App과 같이 조회
      */
+    @Override
     public Post findPostWithAppById(Long Id){
         QPost post = new QPost("p");
         QApplication application = new QApplication("a");
@@ -78,6 +79,7 @@ public class QPostRepository {
      * Post Paging List
      * @return
      */
+    @Override
     public Page<PostDto> findPostListWithPaging(Pageable pageable) {
         List<PostDto> content = queryFactory
                 .select(new QPostDto(
@@ -99,6 +101,7 @@ public class QPostRepository {
      * Study Paging List
      * @return
      */
+    @Override
     public Page<StudyDto> findStudyListWithPaging(Pageable pageable) {
         List<StudyDto> content = queryFactory
                 .select(new QStudyDto(
@@ -120,6 +123,7 @@ public class QPostRepository {
      * CarFull Paging List
      * @return
      */
+    @Override
     public Page<CarFullDto> findCarFullListWithPaging(Pageable pageable) {
         List<CarFullDto> content = queryFactory
                 .select(new QCarFullDto(
@@ -140,6 +144,7 @@ public class QPostRepository {
     /**
      * Contest Paging List
      */
+    @Override
     public Page<Contest> findContestListWithPaging(Pageable pageable) {
         List<Contest> content = queryFactory
                 .selectFrom(contest)
@@ -167,6 +172,5 @@ public class QPostRepository {
 //    private BooleanExpression ageLoe(Integer ageLoe) {
 //        return ageLoe != null ? member.age.loe(ageLoe) : null;
 //    }
-
 
 }

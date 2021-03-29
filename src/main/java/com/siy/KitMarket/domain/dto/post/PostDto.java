@@ -22,6 +22,5 @@ public class PostDto {
         this.title = title;
         this.content = content;
     }
-//private List<Application> applications;
 
 }

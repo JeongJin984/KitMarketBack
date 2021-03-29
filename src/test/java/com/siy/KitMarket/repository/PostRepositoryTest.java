@@ -28,10 +28,6 @@ class PostRepositoryTest {
     @Autowired
     PostRepository postRepository;
 
-    @Autowired
-    QPostRepository qPostRepository;
-
-
 
     Study post1 = new Study("Study1", "I'm Study1", "study1111");
     CarFull post2 = new CarFull("CarFull1", "I'm CarFull1", "carfull");
@@ -93,7 +89,7 @@ class PostRepositoryTest {
      */
     @Test
     public void findPostWithAppById(){
-        Post result = qPostRepository.findPostWithAppById(post1.getId());
+        Post result = postRepository.findPostWithAppById(post1.getId());
         System.out.println("result = " + result);
         for (Application application : result.getApplications()) {
             System.out.println("application = " + application);
@@ -103,7 +99,7 @@ class PostRepositoryTest {
     @Test
     public void searchPageTest(){
         PageRequest page = PageRequest.of(0, 50);
-        Page<PostDto> postList = qPostRepository.findPostListWithPaging(page);
+        Page<PostDto> postList = postRepository.findPostListWithPaging(page);
 
         System.out.println("postList.getSize() = " + postList.getSize());
         System.out.println("postList = " + postList.getTotalPages());
@@ -112,7 +108,7 @@ class PostRepositoryTest {
     @Test
     public void findStudyListWithPagingTest(){
         PageRequest page = PageRequest.of(0, 10);
-        Page<StudyDto> studyList = qPostRepository.findStudyListWithPaging(page);
+        Page<StudyDto> studyList = postRepository.findStudyListWithPaging(page);
 
         System.out.println("postList.getSize() = " + studyList.getSize());
         System.out.println("postList = " + studyList.getTotalPages());

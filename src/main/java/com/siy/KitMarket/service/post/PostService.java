@@ -22,10 +22,12 @@ public class PostService {
     private final PostRepository postRepository;
     /**
      *  포스트 저장
+     * @return
      */
     @Transactional
-    public void save(Post post){
-        postRepository.save(post);
+    public Long save(Post post){
+        Post save = postRepository.save(post);
+        return save.getId();
     }
 
     /**

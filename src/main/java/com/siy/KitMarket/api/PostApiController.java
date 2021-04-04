@@ -4,16 +4,15 @@ import com.siy.KitMarket.domain.dto.post.CarFullDto;
 import com.siy.KitMarket.domain.dto.post.ContestDto;
 import com.siy.KitMarket.domain.dto.post.PostDto;
 import com.siy.KitMarket.domain.dto.post.StudyDto;
-import com.siy.KitMarket.domain.entity.post.Contest;
+import com.siy.KitMarket.domain.entity.post.Post;
 import com.siy.KitMarket.service.post.PostService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -86,6 +85,15 @@ public class PostApiController {
     public ContestDto findContestById(@PathVariable(value = "id") Long id){
         ContestDto findContestDto = postService.findContestOne(id);
         return findContestDto;
+    }
+
+    /**
+     * Post 저장
+     */
+    @PostMapping(value = "/api/Post")
+    public Long saveStudy(@RequestBody @Valid Post post){
+        Long saveId = postService.save(post);
+        return saveId;
     }
 
 

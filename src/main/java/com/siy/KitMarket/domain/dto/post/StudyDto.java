@@ -10,34 +10,21 @@ import java.util.*;
 
 @Data
 @NoArgsConstructor
-public class StudyDto {
-    private Long id;
-    private String account;
-    private String title;
-    private String content;
-    private List<Application> applications;
+public class StudyDto extends PostDto {
+    private String Study;
 
     @QueryProjection
     public StudyDto(Long id, String title, String content) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
+        super(id,title,content);
     }
 
     @QueryProjection
     public StudyDto(Long id, String account, String title, String content) {
-        this.id = id;
-        this.account = account;
-        this.title = title;
-        this.content = content;
+        super(id,account,title, content);
     }
 
     public StudyDto(Long id, String account, String title, String content,  List<Application> applications) {
-        this.id = id;
-        this.account = account;
-        this.title = title;
-        this.content = content;
-        this.applications = applications;
+        super(id,account,title,content,applications);
     }
 }
 

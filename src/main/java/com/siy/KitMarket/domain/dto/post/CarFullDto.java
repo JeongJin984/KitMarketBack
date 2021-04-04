@@ -11,34 +11,19 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class CarFullDto {
-    private Long id;
-    private String account;
-    private String title;
-    private String content;
-    private List<Application> applications;
-
+public class CarFullDto extends PostDto{
     @QueryProjection
     public CarFullDto(Long id, String title, String content) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
+        super(id,title,content);
     }
 
     @QueryProjection
-    public CarFullDto(Long id, String account, String title,  String content) {
-        this.id = id;
-        this.account = account;
-        this.title = title;
-        this.content = content;
+    public CarFullDto(Long id, String account, String title, String content) {
+        super(id,account,title, content);
     }
 
-    public CarFullDto(Long id, String account, String title, String content, List<Application> applications) {
-        this.id = id;
-        this.account = account;
-        this.title = title;
-        this.content = content;
-        this.applications = applications;
+    public CarFullDto(Long id, String account, String title, String content,  List<Application> applications) {
+        super(id,account,title,content,applications);
     }
 
 

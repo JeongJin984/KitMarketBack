@@ -2,6 +2,7 @@ package com.siy.KitMarket.repository;
 
 
 import com.siy.KitMarket.domain.dto.post.CarFullDto;
+import com.siy.KitMarket.domain.dto.post.ContestDto;
 import com.siy.KitMarket.domain.dto.post.PostDto;
 import com.siy.KitMarket.domain.dto.post.StudyDto;
 import com.siy.KitMarket.domain.entity.post.CarFull;
@@ -21,6 +22,6 @@ public interface PostRepositoryCustom {
     Page<PostDto> findPostListWithPaging(Pageable pageable);
     Page<StudyDto> findStudyListWithPaging(Pageable pageable);
     Page<CarFullDto> findCarFullListWithPaging(Pageable pageable);
-    Page<Contest> findContestListWithPaging(Pageable pageable);
+    Page<ContestDto> findContestListWithPaging(Pageable pageable);
 
 }

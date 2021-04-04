@@ -38,6 +38,12 @@ public abstract class Post {
 
     private LocalDateTime localDateTime;
 
+    public Post(String title, String content, Account account) {
+        this.title = title;
+        this.content = content;
+        this.account = account;
+    }
+
     public Post(String title, String content) {
         this.title = title;
         this.content = content;

@@ -58,6 +58,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                 .fetch();
         return result;
     }
+
     /**
      * App과 같이 조회
      */
@@ -77,13 +78,13 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
 
     /**
      * Post Paging List
-     * @return
      */
     @Override
     public Page<PostDto> findPostListWithPaging(Pageable pageable) {
         List<PostDto> content = queryFactory
                 .select(new QPostDto(
                         post.id.as("id"),
+                        post.account().username,
                         post.title,
                         post.content
                 ))
@@ -97,15 +98,16 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
+
     /**
      * Study Paging List
-     * @return
      */
     @Override
     public Page<StudyDto> findStudyListWithPaging(Pageable pageable) {
         List<StudyDto> content = queryFactory
                 .select(new QStudyDto(
-                        study1.id,
+                        study1.id.as("id"),
+                        study1.account().username,
                         study1.title,
                         study1.content
                 ))
@@ -119,6 +121,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
+
     /**
      * CarFull Paging List
      * @return
@@ -128,6 +131,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         List<CarFullDto> content = queryFactory
                 .select(new QCarFullDto(
                         carFull.id,
+                        carFull.account().username,
                         carFull.title,
                         carFull.content
                 ))
@@ -145,12 +149,19 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
      * Contest Paging List
      */
     @Override
-    public Page<Contest> findContestListWithPaging(Pageable pageable) {
-        List<Contest> content = queryFactory
-                .selectFrom(contest)
+    public Page<ContestDto> findContestListWithPaging(Pageable pageable) {
+        List<ContestDto> content = queryFactory
+                .select(new QContestDto(
+                        contest.id,
+                        contest.account().username,
+                        contest.title,
+                        contest.content
+                ))
+                .from(contest)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+
         JPAQuery<Contest> countQuery = queryFactory
                 .selectFrom(contest);
 

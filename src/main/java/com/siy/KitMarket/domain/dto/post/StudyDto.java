@@ -12,9 +12,9 @@ import java.util.*;
 @NoArgsConstructor
 public class StudyDto {
     private Long id;
+    private String account;
     private String title;
     private String content;
-
     private List<Application> applications;
 
     @QueryProjection
@@ -24,8 +24,17 @@ public class StudyDto {
         this.content = content;
     }
 
-    public StudyDto(Long id, String title, String content, List<Application> applications) {
+    @QueryProjection
+    public StudyDto(Long id, String account, String title, String content) {
         this.id = id;
+        this.account = account;
+        this.title = title;
+        this.content = content;
+    }
+
+    public StudyDto(Long id, String account, String title, String content,  List<Application> applications) {
+        this.id = id;
+        this.account = account;
         this.title = title;
         this.content = content;
         this.applications = applications;

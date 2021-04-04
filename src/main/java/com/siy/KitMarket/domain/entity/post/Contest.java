@@ -1,6 +1,7 @@
 package com.siy.KitMarket.domain.entity.post;
 
 
+import com.siy.KitMarket.domain.entity.account.Account;
 import lombok.*;
 
 import javax.persistence.DiscriminatorValue;
@@ -21,4 +22,12 @@ public class Contest extends Post{
         super(title, content);
         this.Contest = Contest;
     }
+
+    @Builder
+    public Contest(String title, String content, Account account, String Contest) {
+        super(title, content, account);
+        this.Contest = Contest;
+    }
+
+
 }

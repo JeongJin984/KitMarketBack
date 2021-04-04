@@ -1,6 +1,7 @@
 package com.siy.KitMarket.service.post;
 
 import com.siy.KitMarket.domain.dto.post.CarFullDto;
+import com.siy.KitMarket.domain.dto.post.ContestDto;
 import com.siy.KitMarket.domain.dto.post.PostDto;
 import com.siy.KitMarket.domain.dto.post.StudyDto;
 import com.siy.KitMarket.domain.entity.post.CarFull;
@@ -64,10 +65,10 @@ public class PostService {
      * Contest 전체 조회
      * @return
      */
-    public Page<Contest> findContestList(int offset, int size){
+    public Page<ContestDto> findContestList(int offset, int size){
         PageRequest page = PageRequest.of(offset, size);
 
-        Page<Contest> results = postRepository.findContestListWithPaging(page);
+        Page<ContestDto> results = postRepository.findContestListWithPaging(page);
 
         return results;
     }
@@ -82,7 +83,7 @@ public class PostService {
 
         if(findPost instanceof Study) {
             findStudy = (Study)findPost;
-            return new StudyDto(findPost.getId(),findPost.getTitle(),findPost.getContent(), findPost.getApplications());
+            return new StudyDto(findPost.getId(), findPost.getAccount().getUsername(),findPost.getTitle(),findPost.getContent(), findPost.getApplications());
         }
         else
             return null;
@@ -91,14 +92,31 @@ public class PostService {
     /**
      * 공모전 하나 조회
      * */
-    public Contest findContestOne(Long postId){
-        return (Contest)postRepository.findById(postId).get();
+    public ContestDto findContestOne(Long postId){
+        Contest findContest;
+        Post findPost = postRepository.findPostWithAppById(postId);
+
+        if(findPost instanceof Contest) {
+            findContest = (Contest)findPost;
+            return new ContestDto(findPost.getId(), findPost.getAccount().getUsername(),findPost.getTitle(),findPost.getContent(), findPost.getApplications());
+        }
+        else
+            return null;
     }
     /**
      * 카풀 하나 조회
      * */
-    public CarFull findCarFullOne(Long postId){
-        return (CarFull)postRepository.findById(postId).get();
+    public CarFullDto findCarFullOne(Long postId){
+        CarFull findCarFull;
+        Post findPost = postRepository.findPostWithAppById(postId);
+
+        if(findPost instanceof CarFull) {
+            findCarFull = (CarFull)findPost;
+            return new CarFullDto(findPost.getId(), findPost.getAccount().getUsername(),findPost.getTitle(),findPost.getContent(), findPost.getApplications());
+        }
+        else
+            return null;
+
     }
 
 

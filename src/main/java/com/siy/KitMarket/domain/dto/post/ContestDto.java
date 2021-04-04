@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ContestDto {
     private Long id;
+    private String account;
     private String title;
     private String content;
     private List<Application> applications;
@@ -22,4 +23,21 @@ public class ContestDto {
         this.title = title;
         this.content = content;
     }
+
+    @QueryProjection
+    public ContestDto(Long id, String account, String title,String content) {
+        this.id = id;
+        this.account = account;
+        this.title = title;
+        this.content = content;
+    }
+
+    public ContestDto(Long id, String account, String title, String content,  List<Application> applications) {
+        this.id = id;
+        this.account = account;
+        this.title = title;
+        this.content = content;
+        this.applications = applications;
+    }
+
 }

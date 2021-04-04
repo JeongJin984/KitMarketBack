@@ -1,5 +1,6 @@
 package com.siy.KitMarket.domain.entity.post;
 
+import com.siy.KitMarket.domain.entity.account.Account;
 import lombok.*;
 
 import javax.persistence.DiscriminatorValue;
@@ -18,6 +19,11 @@ public class CarFull extends Post{
     @Builder
     public CarFull(String title, String content, String CarFull) {
         super(title, content);
+        this.CarFull = CarFull;
+    }
+    @Builder
+    public CarFull(String title, String content, Account account, String CarFUll) {
+        super(title, content, account);
         this.CarFull = CarFull;
     }
 }

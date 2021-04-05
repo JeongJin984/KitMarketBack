@@ -1,6 +1,7 @@
 package com.siy.KitMarket.service.post;
 
 import com.siy.KitMarket.domain.dto.post.CarFullDto;
+import com.siy.KitMarket.domain.dto.post.ContestDto;
 import com.siy.KitMarket.domain.dto.post.PostDto;
 import com.siy.KitMarket.domain.dto.post.StudyDto;
 import com.siy.KitMarket.domain.entity.post.CarFull;
@@ -8,7 +9,6 @@ import com.siy.KitMarket.domain.entity.post.Contest;
 import com.siy.KitMarket.domain.entity.post.Post;
 import com.siy.KitMarket.domain.entity.post.Study;
 import com.siy.KitMarket.repository.PostRepository;
-import com.siy.KitMarket.repository.QPostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,13 +20,14 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
-    private final QPostRepository qPostRepository;
     /**
      *  포스트 저장
+     * @return
      */
     @Transactional
-    public void save(Post post){
-        postRepository.save(post);
+    public Long save(Post post){
+        Post save = postRepository.save(post);
+        return save.getId();
     }
 
     /**
@@ -36,7 +37,7 @@ public class PostService {
     public Page<PostDto> findPostList(int offset, int size){
         PageRequest page = PageRequest.of(offset, size);
 
-        Page<PostDto> results = qPostRepository.findPostListWithPaging(page);
+        Page<PostDto> results = postRepository.findPostListWithPaging(page);
 
         return results;
     }
@@ -48,7 +49,7 @@ public class PostService {
     public Page<StudyDto> findStudyList(int offset, int size){
         PageRequest page = PageRequest.of(offset, size);
 
-        Page<StudyDto> results = qPostRepository.findStudyListWithPaging(page);
+        Page<StudyDto> results =postRepository.findStudyListWithPaging(page);
         return results;
     }
     /**
@@ -58,7 +59,7 @@ public class PostService {
     public Page<CarFullDto> findCarFulList(int offset, int size){
         PageRequest page = PageRequest.of(offset, size);
 
-        Page<CarFullDto> results = qPostRepository.findCarFullListWithPaging(page);
+        Page<CarFullDto> results = postRepository.findCarFullListWithPaging(page);
         return results;
     }
 
@@ -66,10 +67,10 @@ public class PostService {
      * Contest 전체 조회
      * @return
      */
-    public Page<Contest> findContestList(int offset, int size){
+    public Page<ContestDto> findContestList(int offset, int size){
         PageRequest page = PageRequest.of(offset, size);
 
-        Page<Contest> results = qPostRepository.findContestListWithPaging(page);
+        Page<ContestDto> results = postRepository.findContestListWithPaging(page);
 
         return results;
     }
@@ -80,11 +81,11 @@ public class PostService {
      * */
     public StudyDto findStudyOne(Long postId){
         Study findStudy;
-        Post findPost = qPostRepository.findPostWithAppById(postId);
+        Post findPost = postRepository.findPostWithAppById(postId);
 
         if(findPost instanceof Study) {
             findStudy = (Study)findPost;
-            return new StudyDto(findPost.getId(),findPost.getTitle(),findPost.getContent(), findPost.getApplications());
+            return new StudyDto(findPost.getId(), findPost.getAccount().getUsername(),findPost.getTitle(),findPost.getContent(), findPost.getApplications());
         }
         else
             return null;
@@ -93,14 +94,31 @@ public class PostService {
     /**
      * 공모전 하나 조회
      * */
-    public Contest findContestOne(Long postId){
-        return (Contest)postRepository.findById(postId).get();
+    public ContestDto findContestOne(Long postId){
+        Contest findContest;
+        Post findPost = postRepository.findPostWithAppById(postId);
+
+        if(findPost instanceof Contest) {
+            findContest = (Contest)findPost;
+            return new ContestDto(findPost.getId(), findPost.getAccount().getUsername(),findPost.getTitle(),findPost.getContent(), findPost.getApplications());
+        }
+        else
+            return null;
     }
     /**
      * 카풀 하나 조회
      * */
-    public CarFull findCarFullOne(Long postId){
-        return (CarFull)postRepository.findById(postId).get();
+    public CarFullDto findCarFullOne(Long postId){
+        CarFull findCarFull;
+        Post findPost = postRepository.findPostWithAppById(postId);
+
+        if(findPost instanceof CarFull) {
+            findCarFull = (CarFull)findPost;
+            return new CarFullDto(findPost.getId(), findPost.getAccount().getUsername(),findPost.getTitle(),findPost.getContent(), findPost.getApplications());
+        }
+        else
+            return null;
+
     }
 
 

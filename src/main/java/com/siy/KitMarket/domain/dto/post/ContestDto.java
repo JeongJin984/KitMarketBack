@@ -10,16 +10,19 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class ContestDto {
-    private Long id;
-    private String title;
-    private String content;
-    private List<Application> applications;
-
+public class ContestDto extends PostDto{
     @QueryProjection
     public ContestDto(Long id, String title, String content) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
+        super(id,title,content);
     }
+
+    @QueryProjection
+    public ContestDto(Long id, String account, String title, String content) {
+        super(id, account,title, content);
+    }
+
+    public ContestDto(Long id, String account, String title, String content,  List<Application> applications) {
+        super(id,account,title,content,applications);
+    }
+
 }

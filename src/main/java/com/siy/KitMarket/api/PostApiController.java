@@ -4,26 +4,15 @@ import com.siy.KitMarket.domain.dto.post.CarFullDto;
 import com.siy.KitMarket.domain.dto.post.ContestDto;
 import com.siy.KitMarket.domain.dto.post.PostDto;
 import com.siy.KitMarket.domain.dto.post.StudyDto;
-import com.siy.KitMarket.domain.entity.post.CarFull;
-import com.siy.KitMarket.domain.entity.post.Contest;
 import com.siy.KitMarket.domain.entity.post.Post;
-import com.siy.KitMarket.domain.entity.post.Study;
-import com.siy.KitMarket.repository.QPostRepository;
 import com.siy.KitMarket.service.post.PostService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,9 +22,9 @@ public class PostApiController {
     /**
      * Post 전체 조회
      */
-    @GetMapping(value = "/postList")
+    @GetMapping(value = "/api/postList")
     public Result postList(@RequestParam(value = "offset",defaultValue = "0",required = false)int offset,
-                           @RequestParam(value = "size",defaultValue = "10",required = false)int size) {
+                           @RequestParam(value = "size",defaultValue = "8",required = false)int size) {
         Page<PostDto> postDtoList = postService.findPostList(offset, size);
 
         return new Result(postDtoList.getContent().size(), postDtoList.getNumber(), postDtoList.getTotalPages(), postDtoList.getContent());
@@ -44,9 +33,9 @@ public class PostApiController {
     /**
      * Study 전체 조회
      */
-    @GetMapping(value = "/studyList")
+    @GetMapping(value = "/api/studyList")
     public Result studyList(@RequestParam(value = "offset",defaultValue = "0",required = false)int offset,
-                            @RequestParam(value = "size",defaultValue = "10",required = false)int size) {
+                            @RequestParam(value = "size",defaultValue = "8",required = false)int size) {
         Page<StudyDto> postDtoList = postService.findStudyList(offset, size);
 
         return new Result(postDtoList.getContent().size(),  postDtoList.getNumber(), postDtoList.getTotalPages(),postDtoList.getContent());
@@ -55,9 +44,9 @@ public class PostApiController {
     /**
      * carFull 전체 조회
      */
-    @GetMapping(value = "/carFullList")
+    @GetMapping(value = "/api/carFullList")
     public Result carFullList(@RequestParam(value = "offset",defaultValue = "0",required = false)int offset,
-                              @RequestParam(value = "size",defaultValue = "10",required = false)int size) {
+                              @RequestParam(value = "size",defaultValue = "8",required = false)int size) {
         Page<CarFullDto> carFullDtoList = postService.findCarFulList(offset, size);
 
         return new Result(carFullDtoList.getContent().size(), carFullDtoList.getNumber(), carFullDtoList.getTotalPages(), carFullDtoList.getContent());
@@ -66,21 +55,45 @@ public class PostApiController {
     /**
      * Contest 전체 조회
      */
-    @GetMapping(value = "/ContestList")
+    @GetMapping(value = "/api/contestList")
     public Result ContestList(@RequestParam(value = "offset",defaultValue = "0",required = false)int offset,
-                              @RequestParam(value = "size",defaultValue = "10",required = false)int size) {
-        Page<Contest> contestDtoList = postService.findContestList(offset, size);
+                              @RequestParam(value = "size",defaultValue = "8",required = false)int size) {
+        Page<ContestDto> contestDtoList = postService.findContestList(offset, size);
         return new Result(contestDtoList.getContent().size(),  contestDtoList.getNumber(), contestDtoList.getTotalPages(),contestDtoList.get());
     }
 
     /**
-     * Id 검색
+     * study Id 검색
      */
-    @GetMapping(value = "/study/{id}")
+    @GetMapping(value = "/api/study/{id}")
     public StudyDto findStudyById(@PathVariable(value = "id") Long id){
         StudyDto findStudyDto = postService.findStudyOne(id);
-        System.out.println("findStudyDto = " + findStudyDto);
         return findStudyDto;
+    }
+    /**
+     * carFull Id 검색
+     */
+    @GetMapping(value = "/api/carFull/{id}")
+    public CarFullDto findCarFullById(@PathVariable(value = "id") Long id){
+        CarFullDto findCarFullDto = postService.findCarFullOne(id);
+        return findCarFullDto;
+    }
+    /**
+     * contest Id 검색
+     */
+    @GetMapping(value = "/api/contest/{id}")
+    public ContestDto findContestById(@PathVariable(value = "id") Long id){
+        ContestDto findContestDto = postService.findContestOne(id);
+        return findContestDto;
+    }
+
+    /**
+     * Post 저장
+     */
+    @PostMapping(value = "/api/Post")
+    public Long saveStudy(@RequestBody @Valid Post post){
+        Long saveId = postService.save(post);
+        return saveId;
     }
 
 

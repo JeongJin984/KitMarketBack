@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -35,6 +36,10 @@ public class Account {
 
     @OneToMany(mappedBy = "account",fetch = FetchType.LAZY, cascade={CascadeType.ALL})
     Set<AccountRole> accountRoles = new HashSet<>();
+
+    @OneToMany(mappedBy = "account")
+    Set<AccountPost> accountPosts = new HashSet<>();
+
 
     public Account(String username, String password, String email, @Min(0) int age) {
         this.username = username;

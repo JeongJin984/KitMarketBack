@@ -46,11 +46,6 @@ public abstract class Post {
     /**
      * Account 연결
      */
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "account_id")
-    private Account account;
-
-
     /**
      * Application 연결
      */

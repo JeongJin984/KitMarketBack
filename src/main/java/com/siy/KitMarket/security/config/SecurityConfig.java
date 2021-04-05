@@ -88,7 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/**").permitAll()
                 .anyRequest().authenticated()
         .and()
-                .rememberMe().key("seceret-key")
+                .rememberMe().key("secret-key")
                 .tokenValiditySeconds(3600)
                 .alwaysRemember(true)
                 .userDetailsService(userDetailsService)

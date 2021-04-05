@@ -18,7 +18,6 @@ import static javax.persistence.FetchType.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"content"})
 @Table(name = "APPLICATION")
-
 public class Application {
     @Id
     @GeneratedValue

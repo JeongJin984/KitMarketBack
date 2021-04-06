@@ -1,4 +1,4 @@
-package com.siy.KitMarket.repository;
+package com.siy.KitMarket.repository.PostRepository;
 
 
 import com.siy.KitMarket.domain.dto.post.CarFullDto;
@@ -18,10 +18,26 @@ public interface PostRepositoryCustom {
     List<Study> findStudyList();
     List<CarFull> findCarFullList();
     List<Contest> findContestList();
+    
+    /*
+    * 조건 탐색 함수
+    * */
     Post findPostWithAppById(Long Id);
+    Page<PostDto> findParticipatingPost(String username, Pageable pageable);
+    Post findPostById(Long Id);
+    
+    /*
+    * WithApplication 함수
+    * */
+
+    /*
+    * Paging 함수
+    * */
     Page<PostDto> findPostListWithPaging(Pageable pageable);
     Page<StudyDto> findStudyListWithPaging(Pageable pageable);
     Page<CarFullDto> findCarFullListWithPaging(Pageable pageable);
     Page<ContestDto> findContestListWithPaging(Pageable pageable);
+    
+    
 
 }

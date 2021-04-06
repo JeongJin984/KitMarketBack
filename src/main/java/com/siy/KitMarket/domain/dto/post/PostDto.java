@@ -1,8 +1,10 @@
 package com.siy.KitMarket.domain.dto.post;
 
 import com.querydsl.core.annotations.QueryProjection;
-import com.siy.KitMarket.domain.entity.Application;
-import lombok.AllArgsConstructor;
+import com.siy.KitMarket.domain.dto.account.SimpleAccountDto;
+import com.siy.KitMarket.domain.dto.accountPost.AccountPostDto;
+import com.siy.KitMarket.domain.entity.accountPost.AccountPost;
+import com.siy.KitMarket.domain.entity.post.Post;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,10 +14,11 @@ import java.util.*;
 @NoArgsConstructor
 public class PostDto {
     private Long id;
-    private String account;
+    private String writer;
     private String title;
     private String content;
-    private List<Application> applications;
+
+    private Set<String> participants = new HashSet<>();
 
     @QueryProjection
     public PostDto(Long id, String title, String content) {
@@ -23,19 +26,27 @@ public class PostDto {
         this.title = title;
         this.content = content;
     }
+
     @QueryProjection
-    public PostDto(Long id,  String account, String title, String content) {
+    public PostDto(Long id, String writer, String title, String content) {
         this.id = id;
-        this.account = account;
+        this.writer = writer;
         this.title = title;
         this.content = content;
     }
 
-    public PostDto(Long id, String account, String title, String content, List<Application> applications) {
-        this.id = id;
-        this.account = account;
-        this.title = title;
-        this.content = content;
-        this.applications = applications;
+    public PostDto(Post post, String writer ,Set<String> participants) {
+        this.id = post.getId();
+        this.writer = writer;
+        this.title = post.getTitle();
+        this.content = post.getContent();
+        this.participants = participants;
+    }
+
+    public PostDto(Post post, Set<String> participants) {
+        this.id = post.getId();
+        this.title = post.getTitle();
+        this.content = post.getContent();
+        this.participants = participants;
     }
 }

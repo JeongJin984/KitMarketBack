@@ -1,7 +1,9 @@
 package com.siy.KitMarket.service.user;
 
 import com.siy.KitMarket.domain.entity.account.Account;
-import com.siy.KitMarket.repository.AccountRepository;
+import com.siy.KitMarket.repository.AccountRepository.AccountRepository;
+import com.siy.KitMarket.repository.AccountRepository.AccountRepositoryImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,11 +12,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AccountRegisterService {
-    @Autowired
+
     private PasswordEncoder passwordEncoder;
+    private AccountRepository accountRepository;
 
     @Autowired
-    private AccountRepository accountRepository;
+    public AccountRegisterService(PasswordEncoder passwordEncoder, AccountRepository accountRepository, AccountRepositoryImpl accountRepositoryImpl) {
+        this.passwordEncoder = passwordEncoder;
+        this.accountRepository = accountRepository;
+    }
 
     @Transactional
     public Account registerNewAccount(Account account) throws Exception {

@@ -26,8 +26,6 @@ public class Application {
 
     private String content;
 
-    private Boolean Status;
-
     private LocalDateTime chatDate; //채팅 시간
 
     @ManyToOne(fetch = LAZY)

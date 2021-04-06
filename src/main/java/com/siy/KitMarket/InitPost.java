@@ -20,7 +20,7 @@ import javax.persistence.PersistenceContext;
 @Profile("local")
 @Component
 @RequiredArgsConstructor
-public class InitPost {
+public class InitPost {/*
     private final InitPostService initPostService;
 
     @PostConstruct
@@ -80,5 +80,5 @@ public class InitPost {
                 em.persist(application3);
             }
         }
-    }
+    }*/
 }

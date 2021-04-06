@@ -1,15 +1,13 @@
 package com.siy.KitMarket.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.siy.KitMarket.domain.dto.AccountDto;
+import com.siy.KitMarket.domain.dto.account.AccountDto;
 import com.siy.KitMarket.domain.entity.account.Account;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

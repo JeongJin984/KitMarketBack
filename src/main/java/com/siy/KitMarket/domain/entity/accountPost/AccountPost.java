@@ -1,15 +1,19 @@
-package com.siy.KitMarket.domain.entity.account;
+package com.siy.KitMarket.domain.entity.accountPost;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.siy.KitMarket.domain.entity.account.Account;
+import com.siy.KitMarket.domain.entity.account.AccountCode;
 import com.siy.KitMarket.domain.entity.post.Post;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "ACCOUNT_POST")
-@Getter
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccountPost {
@@ -27,4 +31,9 @@ public class AccountPost {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @Column(name = "username")
+    private String username;
+
+    @Enumerated(EnumType.STRING)
+    private AccountCode code;
 }

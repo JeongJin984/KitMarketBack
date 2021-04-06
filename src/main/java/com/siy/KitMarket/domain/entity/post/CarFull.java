@@ -12,7 +12,6 @@ import javax.persistence.Table;
 @Setter
 @DiscriminatorValue("CarFull")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "CARFULL")
 public class CarFull extends Post{
     private String CarFull;
 
@@ -23,7 +22,7 @@ public class CarFull extends Post{
     }
     @Builder
     public CarFull(String title, String content, Account account, String CarFUll) {
-        super(title, content, account);
+        super(title, content, account.getUsername());
         this.CarFull = CarFull;
     }
 }

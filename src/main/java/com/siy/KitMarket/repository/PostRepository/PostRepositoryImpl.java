@@ -1,27 +1,45 @@
-package com.siy.KitMarket.repository;
+package com.siy.KitMarket.repository.PostRepository;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.siy.KitMarket.domain.condition.AccountSearchCondition;
+import com.siy.KitMarket.domain.condition.PostSearchCondition;
+import com.siy.KitMarket.domain.dto.account.AccountDto;
 import com.siy.KitMarket.domain.dto.post.*;
 import com.siy.KitMarket.domain.entity.QApplication;
+import com.siy.KitMarket.domain.entity.account.Account;
 import com.siy.KitMarket.domain.entity.post.*;
+import com.siy.KitMarket.repository.AccountRepository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.siy.KitMarket.domain.entity.post.QCarFull.carFull;
 import static com.siy.KitMarket.domain.entity.post.QContest.contest;
 import static com.siy.KitMarket.domain.entity.post.QPost.post;
+import static com.siy.KitMarket.domain.entity.accountPost.QAccountPost.accountPost;
 import static com.siy.KitMarket.domain.entity.post.QStudy.study1;
+import static com.siy.KitMarket.domain.entity.account.QAccount.account;
+import static org.springframework.util.StringUtils.hasText;
 
 @Repository
 public class PostRepositoryImpl implements PostRepositoryCustom{
-    @Autowired
+
     JPAQueryFactory queryFactory;
+    AccountRepository accountRepository;
+
+    @Autowired
+    public PostRepositoryImpl(JPAQueryFactory queryFactory, AccountRepository accountRepository) {
+        this.queryFactory = queryFactory;
+        this.accountRepository = accountRepository;
+    }
 
     @Override
     public List<Study> findStudyList() {
@@ -70,8 +88,21 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         return queryFactory
                 .selectFrom(post)
                 .distinct()
+                .join(post.applications, application).fetchJoin()
+                .where(post.id.eq(Id))
+                .fetchOne();
+    }
+
+    @Override
+    public Post findPostById(Long Id){
+        QPost post = new QPost("p");
+        QApplication application = new QApplication("a");
+
+        return queryFactory
+                .selectFrom(post)
+                .distinct()
                 .join(post.applications, application)
-                .fetchJoin()
+                .join(post.accountPosts, accountPost)
                 .where(post.id.eq(Id))
                 .fetchOne();
     }
@@ -84,7 +115,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         List<PostDto> content = queryFactory
                 .select(new QPostDto(
                         post.id.as("id"),
-                        post.account().username,
+                        post.writer().username,
                         post.title,
                         post.content
                 ))
@@ -107,7 +138,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         List<StudyDto> content = queryFactory
                 .select(new QStudyDto(
                         study1.id.as("id"),
-                        study1.account().username,
+                        study1.writer().username,
                         study1.title,
                         study1.content
                 ))
@@ -131,7 +162,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         List<CarFullDto> content = queryFactory
                 .select(new QCarFullDto(
                         carFull.id,
-                        carFull.account().username,
+                        carFull.writer().username,
                         carFull.title,
                         carFull.content
                 ))
@@ -153,7 +184,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         List<ContestDto> content = queryFactory
                 .select(new QContestDto(
                         contest.id,
-                        contest.account().username,
+                        contest.writer().username,
                         contest.title,
                         contest.content
                 ))
@@ -168,20 +199,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
 
-
-
-//
-//    private BooleanExpression usernameEq(String username) {
-//        return StringUtils.hasText(username) ? post.username.eq(username) : null;
-//    }
-//    private BooleanExpression teamNameEq(String teamName) {
-//        return StringUtils.hasText(teamName) ? team.name.eq(teamName) : null;
-//    }
-//    private BooleanExpression ageGoe(Integer ageGoe) {
-//        return ageGoe != null ? member.age.goe(ageGoe) : null;
-//    }
-//    private BooleanExpression ageLoe(Integer ageLoe) {
-//        return ageLoe != null ? member.age.loe(ageLoe) : null;
-//    }
-
+    @Override
+    public Page<PostDto> findParticipatingPost(String username, Pageable pageable) {
+        return null;
+    }
 }

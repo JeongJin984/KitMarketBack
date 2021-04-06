@@ -26,15 +26,4 @@ class PostServiceTest {
     @Autowired
     EntityManager em;
 
-
-
-    @Test
-    @Commit
-    public void selectStudyWithAppbyId() throws Exception{
-        //when
-        StudyDto findStudyDto = postService.findStudyOne(241L);
-        //then
-        System.out.println("findStudyDto = " + findStudyDto);
-
-    }
 }

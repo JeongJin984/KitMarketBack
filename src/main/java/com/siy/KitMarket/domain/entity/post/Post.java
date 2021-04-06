@@ -1,7 +1,9 @@
 package com.siy.KitMarket.domain.entity.post;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.siy.KitMarket.domain.entity.Application;
 import com.siy.KitMarket.domain.entity.account.Account;
+import com.siy.KitMarket.domain.entity.accountPost.AccountPost;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 
@@ -21,7 +23,7 @@ import static javax.persistence.FetchType.*;
 @ToString(of = {"id", "title", "content"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "POST")
-public abstract class Post {
+public class Post {
     @Id
     @GeneratedValue
     @Column(name = "post_id")
@@ -36,22 +38,32 @@ public abstract class Post {
     private Long currentNumber;
     private Long MaxNumber;
 
-    private LocalDateTime localDateTime;
-
-    public Post(String title, String content, Account account) {
-        this.title = title;
-        this.content = content;
-        this.account = account;
-    }
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created;
 
     public Post(String title, String content) {
         this.title = title;
         this.content = content;
     }
 
+    public Post(String title, String content, String writer) {
+        this.title = title;
+        this.content = content;
+        this.writer = writer;
+    }
+
     /**
-     * Account 연결
+     * 작성자(Account) 연결
      */
+    private String writer;
+
+    /**
+     * 참여자(Account) 연결
+     */
+    @OneToMany(mappedBy = "post")
+    @JsonIgnore
+    private List<AccountPost> accountPosts = new ArrayList<>();
+
     /**
      * Application 연결
      */

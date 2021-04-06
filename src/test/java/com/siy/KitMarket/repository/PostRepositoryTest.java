@@ -6,13 +6,12 @@ import com.siy.KitMarket.domain.entity.Application;
 import com.siy.KitMarket.domain.entity.post.CarFull;
 import com.siy.KitMarket.domain.entity.post.Post;
 import com.siy.KitMarket.domain.entity.post.Study;
-import org.junit.jupiter.api.BeforeEach;
+import com.siy.KitMarket.repository.PostRepository.PostRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -46,8 +45,8 @@ class PostRepositoryTest {
      */
     @Test
     public void saveStudyTest(){
-        postRepository.save(post1);
-        Study findStudy = (Study)postRepository.findById(post1.getId()).get();
+        Post post = postRepository.saveAndFlush(post1);
+        Study findStudy = postRepository.findById(post.getId());
         assertThat(findStudy.getStudy()).isEqualTo(post1.getStudy());
         System.out.println("study = " + findStudy);
     }
@@ -57,7 +56,7 @@ class PostRepositoryTest {
      */
     @Test
     public void selectStudyTest(){
-        Study findPost = (Study)postRepository.findById(post1.getId()).get();
+        Study findPost = (Study)postRepository.findById(post1.getId());
         assertThat(findPost.getStudy()).isEqualTo(post1.getStudy());
 
         System.out.println("findPost = " + findPost);
@@ -68,7 +67,7 @@ class PostRepositoryTest {
      */
     @Test
     public void updateStudyTest(){
-        Study findStudy = (Study)postRepository.findById(post1.getId()).get();
+        Study findStudy = (Study)postRepository.findById(post1.getId());
         assertThat(findStudy.getStudy()).isEqualTo(post1.getStudy());
         System.out.println("study = " + findStudy);
 
@@ -80,7 +79,7 @@ class PostRepositoryTest {
      */
     @Test
     public void deleteStudyTest(){
-        Post findStudy = postRepository.findById(post1.getId()).get();
+        Post findStudy = postRepository.findById(post1.getId());
         postRepository.delete(findStudy);
     }
 

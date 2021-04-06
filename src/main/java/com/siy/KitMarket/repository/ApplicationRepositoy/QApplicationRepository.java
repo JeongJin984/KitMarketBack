@@ -1,4 +1,4 @@
-package com.siy.KitMarket.repository;
+package com.siy.KitMarket.repository.ApplicationRepositoy;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.siy.KitMarket.domain.entity.Application;

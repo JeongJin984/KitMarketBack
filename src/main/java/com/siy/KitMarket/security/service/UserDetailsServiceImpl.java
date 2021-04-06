@@ -1,7 +1,8 @@
 package com.siy.KitMarket.security.service;
 
 import com.siy.KitMarket.domain.entity.account.Account;
-import com.siy.KitMarket.repository.QAccountRepository;
+import com.siy.KitMarket.repository.AccountRepository.AccountRepository;
+import com.siy.KitMarket.repository.AccountRepository.AccountRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,10 +10,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,11 +21,14 @@ import java.util.stream.Collectors;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private QAccountRepository qAccountRepository;
+    private AccountRepository AccountRepository;
+
+    @Autowired
+    private AccountRepositoryImpl accountRepository;
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Account account = qAccountRepository.findByUsername(username);
+        Account account = accountRepository.findByUsername(username);
         if (account == null) {
             throw new UsernameNotFoundException("No user found with username: " + username);
         }

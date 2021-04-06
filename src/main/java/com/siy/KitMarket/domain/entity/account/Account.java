@@ -1,12 +1,14 @@
 package com.siy.KitMarket.domain.entity.account;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.siy.KitMarket.domain.entity.accountPost.AccountPost;
+import com.siy.KitMarket.domain.entity.post.Post;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "ACCOUNT")
@@ -35,10 +37,15 @@ public class Account {
     private int age;
 
     @OneToMany(mappedBy = "account",fetch = FetchType.LAZY, cascade={CascadeType.ALL})
-    Set<AccountRole> accountRoles = new HashSet<>();
+    List<AccountRole> accountRoles = new ArrayList<>();
 
     @OneToMany(mappedBy = "account")
-    Set<AccountPost> accountPosts = new HashSet<>();
+    @JsonIgnore
+    List<AccountPost> accountPosts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "writer")
+    @JsonIgnore
+    List<Post> createdPost = new ArrayList<>();
 
 
     public Account(String username, String password, String email, @Min(0) int age) {
@@ -52,7 +59,7 @@ public class Account {
         this.age = age;
     }
 
-    public void setAccountRoles(Set<AccountRole> accountRoles) {
+    public void setAccountRoles(List<AccountRole> accountRoles) {
         this.accountRoles = accountRoles;
         this.accountRoles.stream().forEach(accountRole -> {
             accountRole.setAccount(this);

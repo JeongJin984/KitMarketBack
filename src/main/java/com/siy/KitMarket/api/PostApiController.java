@@ -19,6 +19,8 @@ import javax.validation.Valid;
 public class PostApiController {
     private final PostService postService;
 
+
+
     /**
      * Post 전체 조회
      */
@@ -60,31 +62,6 @@ public class PostApiController {
                               @RequestParam(value = "size",defaultValue = "8",required = false)int size) {
         Page<ContestDto> contestDtoList = postService.findContestList(offset, size);
         return new Result(contestDtoList.getContent().size(),  contestDtoList.getNumber(), contestDtoList.getTotalPages(),contestDtoList.get());
-    }
-
-    /**
-     * study Id 검색
-     */
-    @GetMapping(value = "/api/study/{id}")
-    public StudyDto findStudyById(@PathVariable(value = "id") Long id){
-        StudyDto findStudyDto = postService.findStudyOne(id);
-        return findStudyDto;
-    }
-    /**
-     * carFull Id 검색
-     */
-    @GetMapping(value = "/api/carFull/{id}")
-    public CarFullDto findCarFullById(@PathVariable(value = "id") Long id){
-        CarFullDto findCarFullDto = postService.findCarFullOne(id);
-        return findCarFullDto;
-    }
-    /**
-     * contest Id 검색
-     */
-    @GetMapping(value = "/api/contest/{id}")
-    public ContestDto findContestById(@PathVariable(value = "id") Long id){
-        ContestDto findContestDto = postService.findContestOne(id);
-        return findContestDto;
     }
 
     /**

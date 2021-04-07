@@ -5,13 +5,15 @@ import com.siy.KitMarket.common.SimpleListener;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
+@EnableJpaAuditing
 public class KitMarketApplication {
 
 	public static void main(String[] args) {
 		SpringApplication springApplication = new SpringApplication();
-		//springApplication.addListeners(new SimpleListener());
+		springApplication.addListeners(new SimpleListener());
 		springApplication.run(KitMarketApplication.class, args);
 	}
 

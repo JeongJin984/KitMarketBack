@@ -8,6 +8,7 @@ import com.siy.KitMarket.domain.entity.post.Post;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Data
@@ -17,6 +18,11 @@ public class PostDto {
     private String writer;
     private String title;
     private String content;
+
+    private LocalDateTime createdAt;
+    private Integer maxNum;
+    private Integer curNum;
+
 
     private Set<String> participants = new HashSet<>();
 
@@ -35,18 +41,16 @@ public class PostDto {
         this.content = content;
     }
 
-    public PostDto(Post post, String writer ,Set<String> participants) {
-        this.id = post.getId();
-        this.writer = writer;
-        this.title = post.getTitle();
-        this.content = post.getContent();
-        this.participants = participants;
-    }
-
     public PostDto(Post post, Set<String> participants) {
         this.id = post.getId();
+        this.writer = post.getWriter();
         this.title = post.getTitle();
         this.content = post.getContent();
+
+        this.createdAt = post.getCreatedAt();
+        this.maxNum = post.getMaxNumber();
+        this.curNum = participants.size();
+
         this.participants = participants;
     }
 }

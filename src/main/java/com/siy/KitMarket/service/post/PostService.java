@@ -31,26 +31,6 @@ public class PostService {
         return postRepository.save(post).getId();
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /**
      * 포스트 전체 조회
      * @return

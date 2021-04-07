@@ -38,7 +38,7 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom {
     }
 
     /*
-    * 이름으로 User 관련 정보만(Post 연관관계는 X) 찾기
+    * 이름으로 Account & 연관관계 찾기
     * */
     public Account findByUsername(String name) {
 
@@ -50,7 +50,7 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom {
     }
 
     /*
-     * 이름으로 User 와 관련 Post 찾기
+     * condition 기반 Account 탐색
      * */
     public List<Account> findAccounts(AccountSearchCondition condition) {
         return queryFactory

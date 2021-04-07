@@ -21,8 +21,8 @@ public class CarFull extends Post{
         this.CarFull = CarFull;
     }
     @Builder
-    public CarFull(String title, String content, Account account, String CarFUll) {
-        super(title, content, account.getUsername());
+    public CarFull(String title, String content, Account account, String CarFUll, int currentNum, int maxNum) {
+        super(title, content, account.getUsername(), currentNum, maxNum);
         this.CarFull = CarFull;
     }
 }

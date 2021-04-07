@@ -23,8 +23,4 @@ public class SimpleAccountDto {
         this.id = account.getId();
         this.username = account.getUsername();
     }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 }

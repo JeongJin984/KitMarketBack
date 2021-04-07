@@ -63,16 +63,14 @@ public class AccountSearchService {
         fullAccountDto.setCreatedPost(createdPosts);
         fullAccountDto.setParticipatingPost(participatedPosts);
 
-
-
         return fullAccountDto;
     }
 
-    private List<PostDto> collectPostDtoList(Page<AccountPost> accountPostDtoPage, boolean isWriter) {
+    private List<PostDto> collectPostDtoList(Page<AccountPost> accountPostPage, boolean isWriter) {
         HashMap<Long, String> writerMap = new HashMap<>();
         HashMap<Long, Set<String>> participantMap = new HashMap<>();
 
-        accountPostDtoPage.getContent().forEach(accountPost -> {
+        accountPostPage.getContent().forEach(accountPost -> {
             Long id = accountPost.getPost().getId();
 
             if(accountPost.getCode().equals(AccountCode.WRITER)){
@@ -92,10 +90,9 @@ public class AccountSearchService {
             }
         });
 
-        return accountPostDtoPage.getContent().stream().map(accountPost -> {
+        return accountPostPage.getContent().stream().map(accountPost -> {
             Long id = accountPost.getPost().getId();
-            PostDto postDto = new PostDto(id, writerMap.get(id), accountPost.getPost().getTitle(), accountPost.getPost().getContent());
-            postDto.setParticipants(participantMap.get(id));
+            PostDto postDto = new PostDto(accountPost.getPost(), participantMap.get(id));
             return postDto;
         }).collect(Collectors.toList());
     }

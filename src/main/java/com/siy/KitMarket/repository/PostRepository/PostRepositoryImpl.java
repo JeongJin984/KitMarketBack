@@ -115,7 +115,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         List<PostDto> content = queryFactory
                 .select(new QPostDto(
                         post.id.as("id"),
-                        post.writer().username,
+                        post.writer,
                         post.title,
                         post.content
                 ))
@@ -138,7 +138,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         List<StudyDto> content = queryFactory
                 .select(new QStudyDto(
                         study1.id.as("id"),
-                        study1.writer().username,
+                        study1.writer,
                         study1.title,
                         study1.content
                 ))
@@ -162,7 +162,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         List<CarFullDto> content = queryFactory
                 .select(new QCarFullDto(
                         carFull.id,
-                        carFull.writer().username,
+                        carFull.writer,
                         carFull.title,
                         carFull.content
                 ))
@@ -184,7 +184,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         List<ContestDto> content = queryFactory
                 .select(new QContestDto(
                         contest.id,
-                        contest.writer().username,
+                        contest.writer,
                         contest.title,
                         contest.content
                 ))

@@ -6,10 +6,12 @@ import com.siy.KitMarket.domain.dto.post.PostDto;
 import com.siy.KitMarket.domain.dto.post.QPostDto;
 import com.siy.KitMarket.domain.entity.post.Post;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class FullAccountDto {
     private String username;
     private String email;
@@ -19,20 +21,9 @@ public class FullAccountDto {
     private List<PostDto> participatingPost;
 
     @QueryProjection
-    public FullAccountDto(String username, String email, int age, List<PostDto> joiningPost) {
-        this.username = username;
-        this.email = email;
-        this.age = age;
-    }
-
-    @QueryProjection
     public FullAccountDto(String username, String email, int age) {
         this.username = username;
         this.email = email;
         this.age = age;
-    }
-
-    public FullAccountDto() {
-
     }
 }

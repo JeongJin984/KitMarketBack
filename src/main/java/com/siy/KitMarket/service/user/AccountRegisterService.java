@@ -26,7 +26,7 @@ public class AccountRegisterService {
     public Account registerNewAccount(Account account) throws Exception {
         if (accountRepository.findByUsername(account.getUsername()) != null) {
             throw new UsernameNotFoundException(
-                    "There is an account with that email adress:" + account.getUsername());
+                    "There is an account with that email address:" + account.getUsername());
         }
         Account user = new Account(
                 account.getUsername(),

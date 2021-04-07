@@ -68,6 +68,10 @@ public class AccountPostRepositoryImpl implements AccountPostRepositoryCustom {
         return list.stream().map(AccountPost::getUsername).collect(Collectors.toSet());
     }
 
+
+    /*
+    * BooleanExpressions
+    * */
     private BooleanExpression usernameEq(String username) {
         return hasText(username) ? accountPost.username.eq(username) : null;
     }

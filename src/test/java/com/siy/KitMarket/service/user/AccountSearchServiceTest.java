@@ -1,5 +1,7 @@
 package com.siy.KitMarket.service.user;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.siy.KitMarket.domain.condition.AccountSearchCondition;
 import com.siy.KitMarket.domain.dto.account.FullAccountDto;
 import com.siy.KitMarket.domain.entity.account.Account;
@@ -15,13 +17,16 @@ class AccountSearchServiceTest {
     @Autowired
     AccountSearchService accountSearchService;
 
+    @Autowired
+    ObjectMapper mapper;
+
     @Test
-    void AccountServiceTest() {
+    void AccountServiceTest() throws JsonProcessingException {
         AccountSearchCondition condition = new AccountSearchCondition();
         condition.setUserName("user");
 
         FullAccountDto fullAccountDto = accountSearchService.findFullAccountDto(null, condition, 0, 5);
-        System.out.println(fullAccountDto.toString());
+        System.out.println(mapper.writeValueAsString(fullAccountDto));
     }
 
 }

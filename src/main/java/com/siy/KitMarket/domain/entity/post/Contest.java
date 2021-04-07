@@ -23,10 +23,9 @@ public class Contest extends Post{
     }
 
     @Builder
-    public Contest(String title, String content, Account account, String Contest) {
-        super(title, content, account.getUsername());
+    public Contest(String title, String content, Account account, String Contest, int currentNum, int maxNum) {
+        super(title, content, account.getUsername(), currentNum, maxNum);
         this.Contest = Contest;
     }
-
 
 }

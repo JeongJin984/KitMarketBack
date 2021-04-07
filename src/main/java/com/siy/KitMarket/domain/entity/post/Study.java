@@ -21,8 +21,8 @@ public class Study extends Post{
         this.study = study;
     }
     @Builder
-    public Study(String title, String content, Account account, String study) {
-        super(title, content, account.getUsername());
+    public Study(String title, String content, Account account, String study, int currentNum, int maxNum) {
+        super(title, content, account.getUsername(), currentNum, maxNum);
         this.study = study;
     }
 }

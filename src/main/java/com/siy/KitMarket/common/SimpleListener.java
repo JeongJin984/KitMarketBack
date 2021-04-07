@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @NoArgsConstructor
+@Component
 public class SimpleListener implements ApplicationListener<ApplicationStartedEvent> {
 
     private EntityManagerFactory entityManagerFactory;
@@ -30,6 +31,7 @@ public class SimpleListener implements ApplicationListener<ApplicationStartedEve
         this.entityManagerFactory = entityManagerFactory;
         this.passwordEncoder = passwordEncoder;
     }
+
 
     @Override
     public void onApplicationEvent(ApplicationStartedEvent event) {
@@ -85,7 +87,7 @@ public class SimpleListener implements ApplicationListener<ApplicationStartedEve
 
 
         for(int i = 0; i<10; i++){
-            Post post = new Post("Study" + i, "I'm Study" + i, accountUser.getUsername());
+            Post post = new Post("Study" + i, "I'm Study" + i, accountUser.getUsername(), 1, 5);
 
             AccountPost accountPost = new AccountPost();
             accountPost.setAccount(accountUser);
@@ -115,7 +117,7 @@ public class SimpleListener implements ApplicationListener<ApplicationStartedEve
         }
 
         for(int i = 0; i<10; i++){
-            Post post = new Post("Study" + i, "I'm Study" + i, accountManager.getUsername());
+            Post post = new Post("Study" + i, "I'm Study" + i, accountManager.getUsername(),1, 5);
 
             Application application1 = new Application("댓글 1입니다.", post);
             Application application2 = new Application("댓글 2입니다.", post);

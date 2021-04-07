@@ -31,7 +31,7 @@ public class AccountPost {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @Column(name = "username")
+    @Column(name = "participant")
     private String username;
 
     @Enumerated(EnumType.STRING)

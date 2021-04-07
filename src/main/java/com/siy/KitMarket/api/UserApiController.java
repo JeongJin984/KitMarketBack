@@ -1,6 +1,7 @@
 package com.siy.KitMarket.api;
 
 import com.siy.KitMarket.domain.condition.AccountSearchCondition;
+import com.siy.KitMarket.domain.dto.account.AccountDto;
 import com.siy.KitMarket.domain.dto.account.FullAccountDto;
 import com.siy.KitMarket.domain.entity.account.Account;
 import com.siy.KitMarket.repository.AccountRepository.AccountRepository;
@@ -29,15 +30,10 @@ public class UserApiController {
         this.accountSearchService = accountSearchService;
     }
 
-    @GetMapping(value = "/api/{username}")
-    FullAccountDto getFullUser(
-            @PathVariable(value = "username") String username,
-            @RequestParam(value = "offset",defaultValue = "0", required = false)int offset,
-            @RequestParam(value = "size", defaultValue = "8", required = false)int size) {
-        AccountSearchCondition condition = new AccountSearchCondition();
-        condition.setUserName(username);
-        if(username == null) return null;
-        return accountSearchService.findFullAccountDto(null, condition, offset, size);
+    @GetMapping(value = "/api/user")
+    AccountDto getUser(@SessionAttribute("SPRING_SECURITY_CONTEXT") SecurityContext securityContext) {
+        Authentication authentication = securityContext.getAuthentication();
+        return new AccountDto((Account)authentication.getPrincipal());
     }
 
     @GetMapping(value = "/api/profile")
@@ -51,7 +47,19 @@ public class UserApiController {
 
         AccountSearchCondition condition = new AccountSearchCondition();
         condition.setUserName(account.getUsername());
+
         return accountSearchService.findFullAccountDto(account, condition, offset, size);
+    }
+
+    @GetMapping(value = "/api/profile/{username}")
+    FullAccountDto getFullUser(
+            @PathVariable(value = "username") String username,
+            @RequestParam(value = "offset",defaultValue = "0", required = false)int offset,
+            @RequestParam(value = "size", defaultValue = "8", required = false)int size) {
+        AccountSearchCondition condition = new AccountSearchCondition();
+        condition.setUserName(username);
+        if(username == null) return null;
+        return accountSearchService.findFullAccountDto(null, condition, offset, size);
     }
 
     @GetMapping(value = "/hello")

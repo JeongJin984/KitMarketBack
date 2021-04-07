@@ -43,11 +43,6 @@ public class Account {
     @JsonIgnore
     List<AccountPost> accountPosts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "writer")
-    @JsonIgnore
-    List<Post> createdPost = new ArrayList<>();
-
-
     public Account(String username, String password, String email, @Min(0) int age) {
         this.username = username;
         this.password = password;

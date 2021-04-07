@@ -47,6 +47,7 @@ public class Post {
      * 작성자(Account) 연결
      */
     @NotNull
+    @Column(name = "post_writer")
     private String writer;
 
     @NotNull

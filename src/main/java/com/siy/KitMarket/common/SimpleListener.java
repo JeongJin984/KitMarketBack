@@ -20,7 +20,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @NoArgsConstructor
-@Component
 public class SimpleListener implements ApplicationListener<ApplicationStartedEvent> {
 
     private EntityManagerFactory entityManagerFactory;

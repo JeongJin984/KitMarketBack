@@ -64,6 +64,10 @@ public class PostApiController {
         return new Result(contestDtoList.getContent().size(),  contestDtoList.getNumber(), contestDtoList.getTotalPages(),contestDtoList.get());
     }
 
+
+
+
+
     /**
      * Post 저장
      */

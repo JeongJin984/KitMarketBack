@@ -14,6 +14,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.annotation.Nullable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -61,17 +62,31 @@ public class Post {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    private LocalDate deadLine;
+
     public Post(String title, String content) {
         this.title = title;
         this.content = content;
     }
 
-    public Post(String title, String content, String writer, int currentNumber, int maxNumber) {
+    public Post(String title, String content, @NotNull String writer, @NotNull Integer currentNumber, @NotNull Integer maxNumber) {
+        this.title = title;
+        this.content = content;
+        this.writer = writer;
+        this.currentNumber = currentNumber;
+        this.maxNumber = maxNumber;
+    }
+
+    public Post(String title, String content, String writer, int currentNumber, int maxNumber, LocalDate deadLine) {
         this.title = title;
         this.content = content;
         this.writer = writer;
         this.maxNumber = maxNumber;
         this.currentNumber = currentNumber;
+        this.deadLine = deadLine;
+    }
+    public void increaseCurrentNumber(){
+        currentNumber++;
     }
 
     /**

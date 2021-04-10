@@ -7,9 +7,14 @@ import com.siy.KitMarket.domain.entity.accountPost.AccountPost;
 import com.siy.KitMarket.domain.entity.post.Post;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.tomcat.jni.Local;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.*;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Data
 @NoArgsConstructor
@@ -18,13 +23,22 @@ public class PostDto {
     private String writer;
     private String title;
     private String content;
+    private Integer deadLine;
 
-    private LocalDateTime createdAt;
+    private String createdAt;
     private Integer maxNum;
     private Integer curNum;
 
+    private String category;
 
     private Set<String> participants = new HashSet<>();
+    public Integer calDeadLine(LocalDate deadLine){
+        LocalDate currentDay = LocalDate.now();
+
+        long between = DAYS.between(currentDay, deadLine);
+
+        return (int)between;
+    }
 
     @QueryProjection
     public PostDto(Long id, String title, String content) {
@@ -41,13 +55,31 @@ public class PostDto {
         this.content = content;
     }
 
+    @QueryProjection
+    public PostDto(Long id, String writer, String title, String content, LocalDateTime createdAt,
+                   Integer maxNum, Integer curNum, LocalDate deadLine) {
+
+        this.id = id;
+
+        this.writer = writer;
+        this.title = title;
+        this.content = content;
+
+        this.createdAt = createdAt.toString();
+        this.maxNum = maxNum;
+        this.curNum = curNum;
+
+        this.deadLine = calDeadLine(deadLine);
+        this.category = "post";
+    }
+
     public PostDto(Post post, Set<String> participants) {
         this.id = post.getId();
         this.writer = post.getWriter();
         this.title = post.getTitle();
         this.content = post.getContent();
 
-        this.createdAt = post.getCreatedAt();
+        this.createdAt = post.getCreatedAt().toString();
         this.maxNum = post.getMaxNumber();
         this.curNum = participants.size();
 

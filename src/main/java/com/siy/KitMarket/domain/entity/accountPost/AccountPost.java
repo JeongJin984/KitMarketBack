@@ -36,4 +36,12 @@ public class AccountPost {
 
     @Enumerated(EnumType.STRING)
     private AccountCode code;
+
+    public AccountPost(Post post, Account participant){
+        this.account = participant;
+        this.post = post;
+        account.getAccountPosts().add(this);
+        post.getAccountPosts().add(this);
+    }
+
 }

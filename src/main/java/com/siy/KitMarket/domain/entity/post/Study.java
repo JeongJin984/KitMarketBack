@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -21,8 +22,8 @@ public class Study extends Post{
         this.study = study;
     }
     @Builder
-    public Study(String title, String content, Account account, String study, int currentNum, int maxNum) {
-        super(title, content, account.getUsername(), currentNum, maxNum);
+    public Study(String title, String content, Account account, String study, int currentNum, int maxNum, LocalDate deadLine) {
+        super(title, content, account.getUsername(), currentNum, maxNum, deadLine);
         this.study = study;
     }
 }

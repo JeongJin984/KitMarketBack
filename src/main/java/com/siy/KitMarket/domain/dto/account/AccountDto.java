@@ -16,4 +16,10 @@ public class AccountDto {
         this.email = account.getEmail();
         this.age = account.getAge();
     }
+
+    public AccountDto(String username, String email, int age) {
+        this.username = username;
+        this.email = email;
+        this.age = age;
+    }
 }

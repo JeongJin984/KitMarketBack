@@ -7,6 +7,7 @@ import lombok.*;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -19,12 +20,14 @@ public class Contest extends Post{
     @Builder
     public Contest(String title, String content, String Contest) {
         super(title, content);
+        this.setCategory("contest");
         this.Contest = Contest;
     }
 
     @Builder
-    public Contest(String title, String content, Account account, String Contest, int currentNum, int maxNum) {
-        super(title, content, account.getUsername(), currentNum, maxNum);
+    public Contest(String title, String content, Account account, String Contest, int currentNum, int maxNum, LocalDate deadLine) {
+        super(title, content, account.getUsername(), currentNum, maxNum, deadLine);
+        setCategory("contest");
         this.Contest = Contest;
     }
 

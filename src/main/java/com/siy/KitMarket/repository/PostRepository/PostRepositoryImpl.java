@@ -101,8 +101,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         return queryFactory
                 .selectFrom(post)
                 .distinct()
-                .join(post.applications, application)
-                .join(post.accountPosts, accountPost)
+                .join(post.applications, application).fetchJoin()
+                .join(post.accountPosts, accountPost).fetchJoin()
                 .where(post.id.eq(Id))
                 .fetchOne();
     }
@@ -117,7 +117,12 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                         post.id.as("id"),
                         post.writer,
                         post.title,
-                        post.content
+                        post.content,
+                        post.createdAt,
+                        post.maxNumber,
+                        post.currentNumber,
+                        post.deadLine,
+                        post.category
                 ))
                 .from(post)
                 .offset(pageable.getOffset())
@@ -140,7 +145,12 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                         study1.id.as("id"),
                         study1.writer,
                         study1.title,
-                        study1.content
+                        study1.content,
+                        study1.createdAt,
+                        study1.maxNumber,
+                        study1.currentNumber,
+                        study1.deadLine,
+                        study1.category
                 ))
                 .from(study1)
                 .offset(pageable.getOffset())
@@ -161,10 +171,15 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     public Page<CarFullDto> findCarFullListWithPaging(Pageable pageable) {
         List<CarFullDto> content = queryFactory
                 .select(new QCarFullDto(
-                        carFull.id,
+                        carFull.id.as("id"),
                         carFull.writer,
                         carFull.title,
-                        carFull.content
+                        carFull.content,
+                        carFull.createdAt,
+                        carFull.maxNumber,
+                        carFull.currentNumber,
+                        carFull.deadLine,
+                        carFull.category
                 ))
                 .from(carFull)
                 .offset(pageable.getOffset())
@@ -183,10 +198,15 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     public Page<ContestDto> findContestListWithPaging(Pageable pageable) {
         List<ContestDto> content = queryFactory
                 .select(new QContestDto(
-                        contest.id,
+                        contest.id.as("id"),
                         contest.writer,
                         contest.title,
-                        contest.content
+                        contest.content,
+                        contest.createdAt,
+                        contest.maxNumber,
+                        contest.currentNumber,
+                        contest.deadLine,
+                        contest.category
                 ))
                 .from(contest)
                 .offset(pageable.getOffset())
@@ -203,4 +223,5 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     public Page<PostDto> findParticipatingPost(String username, Pageable pageable) {
         return null;
     }
+
 }

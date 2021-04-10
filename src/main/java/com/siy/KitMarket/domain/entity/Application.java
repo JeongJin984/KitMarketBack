@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.siy.KitMarket.domain.entity.account.Account;
 import com.siy.KitMarket.domain.entity.post.Post;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 
@@ -26,6 +27,7 @@ public class Application {
 
     private String content;
 
+    @CreatedDate
     private LocalDateTime chatDate; //채팅 시간
 
     @ManyToOne(fetch = LAZY)

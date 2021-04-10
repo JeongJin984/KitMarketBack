@@ -19,11 +19,13 @@ public class CarFull extends Post{
     @Builder
     public CarFull(String title, String content, String CarFull) {
         super(title, content);
+        this.setCategory("carFool");
         this.CarFull = CarFull;
     }
     @Builder
     public CarFull(String title, String content, Account account, String CarFUll, int currentNum, int maxNum, LocalDate deadLine) {
         super(title, content, account.getUsername(), currentNum, maxNum, deadLine);
+        this.setCategory("carFool");
         this.CarFull = CarFull;
     }
 }

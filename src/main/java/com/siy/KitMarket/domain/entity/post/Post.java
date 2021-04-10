@@ -64,6 +64,8 @@ public class Post {
 
     private LocalDate deadLine;
 
+    private String category;
+
     public Post(String title, String content) {
         this.title = title;
         this.content = content;
@@ -94,14 +96,14 @@ public class Post {
      */
     @OneToMany(mappedBy = "post")
     @JsonIgnore
-    private List<AccountPost> accountPosts = new ArrayList<>();
+    private Set<AccountPost> accountPosts = new HashSet<>();
 
     /**
      * Application 연결
      */
     @BatchSize(size = 100)
     @OneToMany(mappedBy = "post", fetch = LAZY, cascade = ALL)
-    private List<Application> applications = new ArrayList<>();
+    private Set<Application> applications = new HashSet<>();
 
 
 }

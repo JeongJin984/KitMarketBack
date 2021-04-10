@@ -28,9 +28,8 @@ public class StudyDto extends PostDto {
 
     @QueryProjection
     public StudyDto(Long id, String writer, String title, String content, LocalDateTime createdAt,
-                    Integer maxNum, Integer curNum, LocalDate deadLine) {
-        super(id, writer, title, content, createdAt, maxNum, curNum, deadLine);
-        this.setCategory("study");
+                    Integer maxNum, Integer curNum, LocalDate deadLine, String category) {
+        super(id, writer, title, content, createdAt, maxNum, curNum, deadLine, category);
     }
 
     public StudyDto(Post post, Set<String> list) {

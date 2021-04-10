@@ -101,8 +101,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         return queryFactory
                 .selectFrom(post)
                 .distinct()
-                .join(post.applications, application)
-                .join(post.accountPosts, accountPost)
+                .join(post.applications, application).fetchJoin()
+                .join(post.accountPosts, accountPost).fetchJoin()
                 .where(post.id.eq(Id))
                 .fetchOne();
     }
@@ -121,7 +121,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                         post.createdAt,
                         post.maxNumber,
                         post.currentNumber,
-                        post.deadLine
+                        post.deadLine,
+                        post.category
                 ))
                 .from(post)
                 .offset(pageable.getOffset())
@@ -148,7 +149,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                         study1.createdAt,
                         study1.maxNumber,
                         study1.currentNumber,
-                        study1.deadLine
+                        study1.deadLine,
+                        study1.category
                 ))
                 .from(study1)
                 .offset(pageable.getOffset())
@@ -176,7 +178,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                         carFull.createdAt,
                         carFull.maxNumber,
                         carFull.currentNumber,
-                        carFull.deadLine
+                        carFull.deadLine,
+                        carFull.category
                 ))
                 .from(carFull)
                 .offset(pageable.getOffset())
@@ -202,7 +205,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                         contest.createdAt,
                         contest.maxNumber,
                         contest.currentNumber,
-                        contest.deadLine
+                        contest.deadLine,
+                        contest.category
                 ))
                 .from(contest)
                 .offset(pageable.getOffset())
@@ -219,4 +223,5 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     public Page<PostDto> findParticipatingPost(String username, Pageable pageable) {
         return null;
     }
+
 }

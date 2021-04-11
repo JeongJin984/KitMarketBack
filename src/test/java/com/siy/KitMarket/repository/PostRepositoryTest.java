@@ -1,5 +1,6 @@
 package com.siy.KitMarket.repository;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.siy.KitMarket.domain.dto.post.PostDto;
 import com.siy.KitMarket.domain.dto.post.StudyDto;
 import com.siy.KitMarket.domain.entity.Application;
@@ -26,6 +27,9 @@ class PostRepositoryTest {
 
     @Autowired
     PostRepository postRepository;
+
+    @Autowired
+    JPAQueryFactory queryFactory;
 
 
     Study post1 = new Study("Study1", "I'm Study1", "study1111");
@@ -83,6 +87,7 @@ class PostRepositoryTest {
         postRepository.delete(findStudy);
     }
 
+
     /**
      * 포스트 1개 application 여러개 확인
      */
@@ -113,6 +118,17 @@ class PostRepositoryTest {
         System.out.println("postList = " + studyList.getTotalPages());
         System.out.println("postList.getContent() = " + studyList.getContent());
     }
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

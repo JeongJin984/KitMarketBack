@@ -22,8 +22,6 @@ import javax.validation.Valid;
 public class PostApiController {
     private final PostService postService;
 
-
-
     /**
      * Post 전체 조회
      */

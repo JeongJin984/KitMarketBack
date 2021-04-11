@@ -14,18 +14,23 @@ import java.time.LocalDate;
 @DiscriminatorValue("CarFull")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CarFull extends Post{
-    private String CarFull;
+    private String category;
 
     @Builder
-    public CarFull(String title, String content, String CarFull) {
+    public CarFull(String title, String content, String category) {
         super(title, content);
-        this.setCategory("carFool");
-        this.CarFull = CarFull;
+        this.setCategory("study");
+        this.category = category;
     }
     @Builder
-    public CarFull(String title, String content, Account account, String CarFUll, int currentNum, int maxNum, LocalDate deadLine) {
-        super(title, content, account.getUsername(), currentNum, maxNum, deadLine);
-        this.setCategory("carFool");
-        this.CarFull = CarFull;
+    public CarFull(Post post, String category) {
+        super(post.getTitle(),
+                post.getContent(),
+                post.getWriter(),
+                post.getCurrentNumber(),
+                post.getMaxNumber(),
+                post.getDeadLine());
+        this.setCategory("study");
+        this.category = category;
     }
 }

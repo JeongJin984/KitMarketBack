@@ -15,20 +15,24 @@ import java.time.LocalDate;
 @DiscriminatorValue("Contest")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Contest extends Post{
-    private String Contest;
+    private String category;
 
     @Builder
-    public Contest(String title, String content, String Contest) {
+    public Contest(String title, String content, String category) {
         super(title, content);
-        this.setCategory("contest");
-        this.Contest = Contest;
+        this.setCategory("study");
+        this.category = category;
     }
-
     @Builder
-    public Contest(String title, String content, Account account, String Contest, int currentNum, int maxNum, LocalDate deadLine) {
-        super(title, content, account.getUsername(), currentNum, maxNum, deadLine);
-        setCategory("contest");
-        this.Contest = Contest;
+    public Contest(Post post, String category) {
+        super(post.getTitle(),
+                post.getContent(),
+                post.getWriter(),
+                post.getCurrentNumber(),
+                post.getMaxNumber(),
+                post.getDeadLine());
+        this.setCategory("study");
+        this.category = category;
     }
 
 }

@@ -13,7 +13,7 @@ public class KitMarketApplication {
 
 	public static void main(String[] args) {
 		SpringApplication springApplication = new SpringApplication();
-		//springApplication.addListeners(new SimpleListener());
+		springApplication.addListeners(new SimpleListener());
 		springApplication.run(KitMarketApplication.class, args);
 	}
 

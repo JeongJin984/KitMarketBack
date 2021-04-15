@@ -16,7 +16,7 @@ public class ContestDtoDetail extends PostDtoDetail{
     @QueryProjection
     public ContestDtoDetail(Contest contest, Set<AccountDto> participants, Set<ApplicationDto> applications){
         super(contest, participants, applications);
-        this.contest = contest.getContest();
+        this.contest = contest.getCategory();
     }
 
 }

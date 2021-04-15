@@ -45,6 +45,7 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom {
         return queryFactory
                 .selectFrom(account)
                 .where(account.username.eq(name))
+                .distinct()
                 .join(account.accountRoles, accountRole).fetchJoin()
                 .fetchOne();
     }

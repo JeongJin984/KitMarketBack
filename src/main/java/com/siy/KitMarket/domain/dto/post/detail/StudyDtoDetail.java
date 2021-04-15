@@ -18,7 +18,7 @@ public class StudyDtoDetail extends PostDtoDetail{
     @QueryProjection
     public StudyDtoDetail(Study study, Set<AccountDto> participants, Set<ApplicationDto> applications){
         super(study, participants, applications);
-        this.study = study.getStudy();
+        this.study = study.getCategory();
     }
 
 }

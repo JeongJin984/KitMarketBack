@@ -38,6 +38,7 @@ public class Post {
     @Column(name = "post_id")
     private Long id;
 
+    @NotNull
     private String title;
 
     private String content;
@@ -53,6 +54,7 @@ public class Post {
 
     @NotNull
     private Integer currentNumber;
+
     @NotNull
     private Integer maxNumber;
 
@@ -62,6 +64,7 @@ public class Post {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    @NotNull
     private LocalDate deadLine;
 
     private String category;
@@ -71,15 +74,12 @@ public class Post {
         this.content = content;
     }
 
-    public Post(String title, String content, @NotNull String writer, @NotNull Integer currentNumber, @NotNull Integer maxNumber) {
-        this.title = title;
-        this.content = content;
-        this.writer = writer;
-        this.currentNumber = currentNumber;
-        this.maxNumber = maxNumber;
-    }
-
-    public Post(String title, String content, String writer, int currentNumber, int maxNumber, LocalDate deadLine) {
+    public Post(String title,
+                String content,
+                @NotNull String writer,
+                @NotNull Integer currentNumber,
+                @NotNull Integer maxNumber,
+                @NotNull LocalDate deadLine) {
         this.title = title;
         this.content = content;
         this.writer = writer;

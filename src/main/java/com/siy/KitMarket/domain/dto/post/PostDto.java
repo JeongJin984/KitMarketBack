@@ -89,7 +89,7 @@ public class PostDto {
         this.maxNum = maxNum;
         this.curNum = curNum;
 
-        this.deadLine = calDeadLine(deadLine);
+        this.deadLine = deadLine == null ? null : calDeadLine(deadLine);
         this.category = category;
     }
 

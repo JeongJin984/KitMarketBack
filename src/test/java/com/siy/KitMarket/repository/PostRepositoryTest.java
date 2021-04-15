@@ -1,7 +1,12 @@
 package com.siy.KitMarket.repository;
 
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.siy.KitMarket.domain.dto.post.PostDto;
+import com.siy.KitMarket.domain.dto.post.QPostDto;
 import com.siy.KitMarket.domain.dto.post.StudyDto;
 import com.siy.KitMarket.domain.entity.Application;
 import com.siy.KitMarket.domain.entity.post.CarFull;
@@ -13,10 +18,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
+import java.util.List;
+
+import static com.siy.KitMarket.domain.entity.post.QPost.post;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -28,6 +37,11 @@ class PostRepositoryTest {
     @Autowired
     PostRepository postRepository;
 
+    @Autowired
+    JPAQueryFactory queryFactory;
+
+    @Autowired
+    ObjectMapper mapper;
 
 
     Study post1 = new Study("Study1", "I'm Study1", "study1111");
@@ -49,7 +63,7 @@ class PostRepositoryTest {
     public void saveStudyTest(){
         Post post = postRepository.saveAndFlush(post1);
         Study findStudy = postRepository.findById(post.getId());
-        assertThat(findStudy.getStudy()).isEqualTo(post1.getStudy());
+        assertThat(findStudy.getCategory()).isEqualTo(post1.getCategory());
         System.out.println("study = " + findStudy);
     }
 
@@ -59,7 +73,7 @@ class PostRepositoryTest {
     @Test
     public void selectStudyTest(){
         Study findPost = (Study)postRepository.findById(post1.getId());
-        assertThat(findPost.getStudy()).isEqualTo(post1.getStudy());
+        assertThat(findPost.getCategory()).isEqualTo(post1.getCategory());
 
         System.out.println("findPost = " + findPost);
     }
@@ -70,10 +84,10 @@ class PostRepositoryTest {
     @Test
     public void updateStudyTest(){
         Study findStudy = (Study)postRepository.findById(post1.getId());
-        assertThat(findStudy.getStudy()).isEqualTo(post1.getStudy());
+        assertThat(findStudy.getCategory()).isEqualTo(post1.getCategory());
         System.out.println("study = " + findStudy);
 
-        findStudy.setStudy("new Study !!!");
+        findStudy.setCategory("new Study !!!");
     }
 
     /**
@@ -117,21 +131,34 @@ class PostRepositoryTest {
         System.out.println("postList.getContent() = " + studyList.getContent());
     }
 
-//
-//    @Test
-//    public void findParticipantsTest(){
-//        PageRequest page = PageRequest.of(0,8);
-//        postRepository.findParticipatingPost()
-//    }
 
+    @Test
+    void findAllPostList() throws JsonProcessingException {
+        PageRequest page = PageRequest.of(0, 8);
 
+        List<PostDto> content = queryFactory
+                .select(new QPostDto(
+                        post.id.as("id"),
+                        post.writer,
+                        post.title,
+                        post.content,
+                        post.createdAt,
+                        post.maxNumber,
+                        post.currentNumber,
+                        post.deadLine,
+                        post.category
+                ))
+                .from(post)
+                .offset(page.getOffset())
+                .limit(page.getPageSize())
+                .fetch();
 
+        JPAQuery<Post> countQuery = queryFactory
+                .selectFrom(post);
 
+        Page<PostDto> result = PageableExecutionUtils.getPage(content, page, countQuery::fetchCount);
 
-
-
-
-
-
+        System.out.println(mapper.writeValueAsString(result));
+    }
 
 }

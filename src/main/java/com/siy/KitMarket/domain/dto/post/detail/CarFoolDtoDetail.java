@@ -20,7 +20,7 @@ public class CarFoolDtoDetail extends PostDtoDetail{
     @QueryProjection
     public CarFoolDtoDetail(CarFull carFull, Set<AccountDto> participants, Set<ApplicationDto> applications){
         super(carFull, participants, applications);
-        this.carFool = carFull.getCarFull();
+        this.carFool = carFull.getCategory();
     }
 
 

@@ -60,7 +60,7 @@ class PostTest {
     @Test
     public void findStudy(){
         Study findStudy = em.find(Study.class, post1.getId());
-        assertThat(findStudy.getStudy()).isEqualTo(post1.getStudy());
+        assertThat(findStudy.getCategory()).isEqualTo(post1.getCategory());
     }
 
 

@@ -7,6 +7,7 @@ import com.siy.KitMarket.domain.dto.post.detail.CarFoolDtoDetail;
 import com.siy.KitMarket.domain.dto.post.detail.ContestDtoDetail;
 import com.siy.KitMarket.domain.dto.post.detail.PostDtoDetail;
 import com.siy.KitMarket.domain.dto.post.detail.StudyDtoDetail;
+import com.siy.KitMarket.domain.entity.accountPost.AccountPost;
 import com.siy.KitMarket.domain.entity.post.CarFull;
 import com.siy.KitMarket.domain.entity.post.Contest;
 import com.siy.KitMarket.domain.entity.post.Post;
@@ -84,15 +85,9 @@ public class PostService {
         Post findPost = postRepository.findPostById(id);
 
 
-        Set<ApplicationDto> applications = findPost.getApplications()
-                .stream()
-                .map(a -> new ApplicationDto(a.getId(), a.getContent(), a.getChatDate()))
-                .collect(Collectors.toSet());
+        Set<ApplicationDto> applications = getApplicationDtoList(findPost);
 
-        Set<AccountDto> participants = findPost.getAccountPosts()
-                .stream()
-                .map(a -> new AccountDto(a.getAccount().getUsername(), a.getAccount().getEmail(), a.getAccount().getAge()))
-                .collect(Collectors.toSet());
+        Set<ParticipantsDto> participants = getParticipantsList(findPost.getAccountPosts());
 
         PostDtoDetail postDtoDetail = new PostDtoDetail(findPost, participants, applications);
         return postDtoDetail;
@@ -102,15 +97,9 @@ public class PostService {
     public PostDtoDetail findStudyById(Long id) {
         Study findPost = (Study)postRepository.findPostById(id);
 
-        Set<ApplicationDto> applications = findPost.getApplications()
-                .stream()
-                .map(a -> new ApplicationDto(a.getId(), a.getContent(), a.getChatDate()))
-                .collect(Collectors.toSet());
+        Set<ApplicationDto> applications = getApplicationDtoList(findPost);
 
-        Set<AccountDto> participants = findPost.getAccountPosts()
-                .stream()
-                .map(a -> new AccountDto(a.getAccount().getUsername(), a.getAccount().getEmail(), a.getAccount().getAge()))
-                .collect(Collectors.toSet());
+        Set<ParticipantsDto> participants = getParticipantsList(findPost.getAccountPosts());
 
         StudyDtoDetail postDtoDetail = new StudyDtoDetail(findPost, participants, applications);
         return postDtoDetail;
@@ -120,15 +109,9 @@ public class PostService {
     public ContestDtoDetail findContestById(Long id) {
         Contest findPost = (Contest)postRepository.findPostById(id);
 
-        Set<ApplicationDto> applications = findPost.getApplications()
-                .stream()
-                .map(a -> new ApplicationDto(a.getId(), a.getContent(), a.getChatDate()))
-                .collect(Collectors.toSet());
+        Set<ApplicationDto> applications = getApplicationDtoList(findPost);
 
-        Set<AccountDto> participants = findPost.getAccountPosts()
-                .stream()
-                .map(a -> new AccountDto(a.getAccount().getUsername(), a.getAccount().getEmail(), a.getAccount().getAge()))
-                .collect(Collectors.toSet());
+        Set<ParticipantsDto> participants = getParticipantsList(findPost.getAccountPosts());
 
         ContestDtoDetail postDtoDetail = new ContestDtoDetail(findPost, participants, applications);
         return postDtoDetail;
@@ -137,15 +120,9 @@ public class PostService {
     public CarFoolDtoDetail findCarFoolById(Long id) {
         CarFull findPost = (CarFull)postRepository.findPostById(id);
 
-        Set<ApplicationDto> applications = findPost.getApplications()
-                .stream()
-                .map(a -> new ApplicationDto(a.getId(), a.getContent(), a.getChatDate()))
-                .collect(Collectors.toSet());
+        Set<ApplicationDto> applications = getApplicationDtoList(findPost);
 
-        Set<AccountDto> participants = findPost.getAccountPosts()
-                .stream()
-                .map(a -> new AccountDto(a.getAccount().getUsername(), a.getAccount().getEmail(), a.getAccount().getAge()))
-                .collect(Collectors.toSet());
+        Set<ParticipantsDto> participants = getParticipantsList(findPost.getAccountPosts());
 
         CarFoolDtoDetail postDtoDetail = new CarFoolDtoDetail(findPost, participants, applications);
         return postDtoDetail;
@@ -159,13 +136,27 @@ public class PostService {
         return result;
     }
 
+    private Set<ApplicationDto> getApplicationDtoList(Post findPost) {
+        return findPost.getApplications()
+                .stream()
+                .map(a -> new ApplicationDto(a.getId(), a.getContent(), a.getChatDate()))
+                .collect(Collectors.toSet());
+    }
+
     public Page<PostLinearDto> findParticipatingList(String username, int offset, int size){
         PageRequest page = PageRequest.of(offset,size);
+        Page<PostLinearDto> result = postRepository.findParticipatingPost(username, page);
 
-        return  postRepository.findParticipatingPost(username, page);
+        return result;
 
     }
 
 
+    private Set<ParticipantsDto> getParticipantsList(Set<AccountPost> accountPosts) {
+        return accountPosts
+                .stream()
+                .map(a -> new ParticipantsDto(a.getAccount().getUsername(), a.getAccount().getEmail(), a.getAccount().getAge(),a.getCode()))
+                .collect(Collectors.toSet());
+    }
 
 }

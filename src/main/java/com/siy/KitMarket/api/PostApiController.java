@@ -27,9 +27,9 @@ public class PostApiController {
     @GetMapping(value = "/api/postList")
     public Result postList(@RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
                            @RequestParam(value = "size", defaultValue = "8", required = false) int size) {
-        Page<PostDto> postDtoList = postService.findPostList(offset, size);
+        Page<PostDto> result = postService.findPostList(offset, size);
 
-        return new Result(postDtoList.getContent().size(), postDtoList.getNumber(), postDtoList.getTotalPages(), postDtoList.getContent());
+        return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.getContent());
     }
 
     /**
@@ -38,9 +38,9 @@ public class PostApiController {
     @GetMapping(value = "/api/studyList")
     public Result studyList(@RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
                             @RequestParam(value = "size", defaultValue = "8", required = false) int size) {
-        Page<StudyDto> postDtoList = postService.findStudyList(offset, size);
+        Page<StudyDto> result = postService.findStudyList(offset, size);
 
-        return new Result(postDtoList.getContent().size(), postDtoList.getNumber(), postDtoList.getTotalPages(), postDtoList.getContent());
+        return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.getContent());
     }
 
     /**
@@ -49,9 +49,9 @@ public class PostApiController {
     @GetMapping(value = "/api/carFoolList")
     public Result carFullList(@RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
                               @RequestParam(value = "size", defaultValue = "8", required = false) int size) {
-        Page<CarFullDto> carFullDtoList = postService.findCarFulList(offset, size);
+        Page<CarFullDto> result = postService.findCarFulList(offset, size);
 
-        return new Result(carFullDtoList.getContent().size(), carFullDtoList.getNumber(), carFullDtoList.getTotalPages(), carFullDtoList.getContent());
+        return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.getContent());
     }
 
     /**
@@ -60,9 +60,34 @@ public class PostApiController {
     @GetMapping(value = "/api/contestList")
     public Result ContestList(@RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
                               @RequestParam(value = "size", defaultValue = "8", required = false) int size) {
-        Page<ContestDto> contestDtoList = postService.findContestList(offset, size);
+        Page<ContestDto> result = postService.findContestList(offset, size);
 
-        return new Result(contestDtoList.getContent().size(), contestDtoList.getNumber(), contestDtoList.getTotalPages(), contestDtoList.get());
+        return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.get());
+    }
+
+
+    /**
+     * 참여중인 post 보기
+     */
+    @GetMapping(value = "/api/participating")
+    public Result findParticipating(@RequestParam String username,
+                                    @RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
+                                    @RequestParam(value = "size", defaultValue = "8", required = false) int size){
+        Page<PostLinearDto> result = postService.findParticipatingList(username, offset, size);
+
+        return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.get());
+    }
+
+    /**
+     * post Linear 버전 출력
+     */
+    @GetMapping(value = "/api/postLinear")
+    public Result postLinearList(@RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
+                                 @RequestParam(value = "size", defaultValue = "8", required = false) int size) {
+        Page<PostLinearDto> result = postService.findPostLinearList(offset, size);
+
+
+        return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.get());
     }
 
 
@@ -116,23 +141,7 @@ public class PostApiController {
         return saveId;
     }
 
-    @GetMapping(value = "/api/participating")
-    public Page<PostLinearDto> findParticipating(@RequestParam String username, @RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
-                                                 @RequestParam(value = "size", defaultValue = "8", required = false) int size){
-        return postService.findParticipatingList(username, offset, size);
-    }
 
-    /**
-     * PostLinearList
-     */
-    @GetMapping(value = "/api/postLinear")
-    public Result postLinearList(@RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
-                                 @RequestParam(value = "size", defaultValue = "8", required = false) int size) {
-        Page<PostLinearDto> postLinearList = postService.findPostLinearList(offset, size);
-
-
-        return new Result(postLinearList.getContent().size(), postLinearList.getNumber(), postLinearList.getTotalPages(), postLinearList.get());
-    }
 }
 @Data
 @AllArgsConstructor

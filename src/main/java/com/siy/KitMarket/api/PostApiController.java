@@ -1,5 +1,6 @@
 package com.siy.KitMarket.api;
 
+import com.siy.KitMarket.domain.condition.PostSearchCondition;
 import com.siy.KitMarket.domain.dto.post.*;
 import com.siy.KitMarket.domain.dto.post.Linear.PostLinearDto;
 import com.siy.KitMarket.domain.dto.post.detail.CarFoolDtoDetail;
@@ -73,6 +74,8 @@ public class PostApiController {
     public Result findParticipating(@RequestParam String username,
                                     @RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
                                     @RequestParam(value = "size", defaultValue = "8", required = false) int size){
+
+
         Page<PostLinearDto> result = postService.findParticipatingList(username, offset, size);
 
         return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.get());
@@ -96,7 +99,10 @@ public class PostApiController {
      */
     @GetMapping(value = "/api/post")
     public PostDtoDetail PostOne(@RequestParam(value = "id") Long id) {
-        PostDtoDetail findPostDetail = postService.findPostById(id);
+
+        PostSearchCondition condition = new PostSearchCondition(id, null, null);
+
+        PostDtoDetail findPostDetail = postService.findPostById(condition);
 
         return findPostDetail;
     }
@@ -106,7 +112,9 @@ public class PostApiController {
      */
     @GetMapping(value = "/api/study")
     public PostDtoDetail StudyOne(@RequestParam(value = "id") Long id) {
-        PostDtoDetail findPostDetail = postService.findStudyById(id);
+        PostSearchCondition condition = new PostSearchCondition(id, null, null);
+
+        PostDtoDetail findPostDetail = postService.findStudyById(condition);
 
         return findPostDetail;
     }
@@ -116,7 +124,10 @@ public class PostApiController {
      */
     @GetMapping(value = "/api/contest")
     public PostDtoDetail contestOne(@RequestParam(value = "id") Long id) {
-        ContestDtoDetail findPostDetail = postService.findContestById(id);
+
+        PostSearchCondition condition = new PostSearchCondition(id, null, null);
+
+        ContestDtoDetail findPostDetail = postService.findContestById(condition);
 
         return findPostDetail;
     }
@@ -126,7 +137,10 @@ public class PostApiController {
      */
     @GetMapping(value = "/api/carFool")
     public PostDtoDetail carFoolOne(@RequestParam(value = "id") Long id) {
-        CarFoolDtoDetail findPostDetail = postService.findCarFoolById(id);
+
+        PostSearchCondition condition = new PostSearchCondition(id, null, null);
+
+        CarFoolDtoDetail findPostDetail = postService.findCarFoolById(condition);
 
         return findPostDetail;
     }

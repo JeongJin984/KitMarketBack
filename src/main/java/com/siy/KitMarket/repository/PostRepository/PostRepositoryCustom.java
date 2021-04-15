@@ -1,6 +1,7 @@
 package com.siy.KitMarket.repository.PostRepository;
 
 
+import com.siy.KitMarket.domain.condition.PostSearchCondition;
 import com.siy.KitMarket.domain.dto.post.*;
 import com.siy.KitMarket.domain.dto.post.Linear.PostLinearDto;
 import com.siy.KitMarket.domain.entity.post.CarFull;
@@ -20,9 +21,9 @@ public interface PostRepositoryCustom {
     /*
     * 조건 탐색 함수
     * */
-    Post findPostWithAppById(Long Id);
-    Page<PostLinearDto> findParticipatingPost(String username, Pageable pageable);
-    Post findPostById(Long Id);
+    Post findPostWithAppById(PostSearchCondition condition);
+    Page<PostLinearDto> findParticipatingPost(PostSearchCondition condition, Pageable pageable);
+    Post findPostById(PostSearchCondition condition);
     
     /*
     * WithApplication 함수

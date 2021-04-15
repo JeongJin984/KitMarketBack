@@ -103,14 +103,14 @@ class PostRepositoryTest {
     /**
      * 포스트 1개 application 여러개 확인
      */
-    @Test
-    public void findPostWithAppById(){
-        Post result = postRepository.findPostWithAppById(post1.getId());
-        System.out.println("result = " + result);
-        for (Application application : result.getApplications()) {
-            System.out.println("application = " + application);
-        }
-    }
+//    @Test
+//    public void findPostWithAppById(){
+//        Post result = postRepository.findPostWithAppById(post1.getId());
+//        System.out.println("result = " + result);
+//        for (Application application : result.getApplications()) {
+//            System.out.println("application = " + application);
+//        }
+//    }
 
     @Test
     public void searchPageTest(){

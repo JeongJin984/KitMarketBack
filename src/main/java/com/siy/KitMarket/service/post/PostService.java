@@ -1,5 +1,6 @@
 package com.siy.KitMarket.service.post;
 
+import com.siy.KitMarket.domain.condition.PostSearchCondition;
 import com.siy.KitMarket.domain.dto.account.AccountDto;
 import com.siy.KitMarket.domain.dto.post.*;
 import com.siy.KitMarket.domain.dto.post.Linear.PostLinearDto;
@@ -81,8 +82,8 @@ public class PostService {
         return results;
     }
 
-    public PostDtoDetail findPostById(Long id) {
-        Post findPost = postRepository.findPostById(id);
+    public PostDtoDetail findPostById(PostSearchCondition condition) {
+        Post findPost = postRepository.findPostById(condition);
 
 
         Set<ApplicationDto> applications = getApplicationDtoList(findPost);
@@ -94,8 +95,8 @@ public class PostService {
     }
 
 
-    public PostDtoDetail findStudyById(Long id) {
-        Study findPost = (Study)postRepository.findPostById(id);
+    public PostDtoDetail findStudyById(PostSearchCondition condition) {
+        Study findPost = (Study)postRepository.findPostById(condition);
 
         Set<ApplicationDto> applications = getApplicationDtoList(findPost);
 
@@ -106,8 +107,8 @@ public class PostService {
     }
 
 
-    public ContestDtoDetail findContestById(Long id) {
-        Contest findPost = (Contest)postRepository.findPostById(id);
+    public ContestDtoDetail findContestById(PostSearchCondition condition ) {
+        Contest findPost = (Contest)postRepository.findPostById(condition);
 
         Set<ApplicationDto> applications = getApplicationDtoList(findPost);
 
@@ -117,8 +118,8 @@ public class PostService {
         return postDtoDetail;
     }
 
-    public CarFoolDtoDetail findCarFoolById(Long id) {
-        CarFull findPost = (CarFull)postRepository.findPostById(id);
+    public CarFoolDtoDetail findCarFoolById(PostSearchCondition condition) {
+        CarFull findPost = (CarFull)postRepository.findPostById(condition);
 
         Set<ApplicationDto> applications = getApplicationDtoList(findPost);
 
@@ -145,7 +146,9 @@ public class PostService {
 
     public Page<PostLinearDto> findParticipatingList(String username, int offset, int size){
         PageRequest page = PageRequest.of(offset,size);
-        Page<PostLinearDto> result = postRepository.findParticipatingPost(username, page);
+        PostSearchCondition condition = new PostSearchCondition(null, null, username);
+
+        Page<PostLinearDto> result = postRepository.findParticipatingPost(condition, page);
 
         return result;
 

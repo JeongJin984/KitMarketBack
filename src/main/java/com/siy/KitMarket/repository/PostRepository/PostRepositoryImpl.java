@@ -3,6 +3,7 @@ package com.siy.KitMarket.repository.PostRepository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.siy.KitMarket.domain.condition.PostSearchCondition;
 import com.siy.KitMarket.domain.dto.post.*;
 import com.siy.KitMarket.domain.dto.post.Linear.PostLinearDto;
 import com.siy.KitMarket.domain.entity.QApplication;
@@ -44,11 +45,10 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
      */
     @Override
     public List<Study> findStudyList() {
-        QStudy study = new QStudy("s");
-
         List<Study> result = queryFactory
                 .selectFrom(study)
                 .fetch();
+
         return result;
     }
 
@@ -57,8 +57,6 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
      */
     @Override
     public List<CarFull> findCarFullList() {
-        QCarFull carFull = new QCarFull("cf");
-
         List<CarFull> result = queryFactory
                 .selectFrom(carFull)
                 .fetch();
@@ -70,8 +68,6 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
      */
     @Override
     public List<Contest> findContestList() {
-        QContest contest = new QContest("ct");
-
         List<Contest> result = queryFactory
                 .selectFrom(contest)
                 .fetch();
@@ -82,14 +78,14 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
      * App과 같이 Post 전체 조회
      */
     @Override
-    public Post findPostWithAppById(Long Id){
+    public Post findPostWithAppById(PostSearchCondition condition){
         QApplication application = new QApplication("a");
 
         Post post = queryFactory
                 .selectFrom(QPost.post)
                 .distinct()
                 .join(QPost.post.applications, application).fetchJoin()
-                .where(postIdEqual(Id))
+                .where(postIdEqual(condition.getId()))
                 .fetchOne();
 
         return post;
@@ -99,7 +95,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
      *  내가 참여하고 있는 post 전체 검색
      */
     @Override
-    public Page<PostLinearDto> findParticipatingPost(String username, Pageable pageable) {
+    public Page<PostLinearDto> findParticipatingPost(PostSearchCondition condition, Pageable pageable) {
         QAccountPost accountPost = new QAccountPost("accountPost");
         QAccount account = new QAccount("account");
 
@@ -114,12 +110,12 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                 .distinct()
                 .from(post)
                 .join(post.accountPosts, accountPost)
-                .where(usernameEq(username))
+                .where(usernameEq(condition.getParticipantName()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Post> countQuery = countPostJoinAccountPostQuery(username, accountPost);
+        JPAQuery<Post> countQuery = countPostJoinAccountPostQuery(condition.getParticipantName(), accountPost);
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
@@ -128,13 +124,13 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
      *  단순 post 1개 검색
      */
     @Override
-    public Post findPostById(Long Id){
+    public Post findPostById(PostSearchCondition condition){
         QApplication application = new QApplication("a");
 
         return queryFactory
                 .selectFrom(post)
                 .distinct()
-                .where(postIdEqual(Id))
+                .where(postIdEqual(condition.getId()))
                 .fetchOne();
     }
 

@@ -1,14 +1,13 @@
 package com.siy.KitMarket.repository.PostRepository;
 
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.siy.KitMarket.domain.condition.AccountSearchCondition;
-import com.siy.KitMarket.domain.condition.PostSearchCondition;
-import com.siy.KitMarket.domain.dto.account.AccountDto;
 import com.siy.KitMarket.domain.dto.post.*;
+import com.siy.KitMarket.domain.dto.post.Linear.PostLinearDto;
 import com.siy.KitMarket.domain.entity.QApplication;
-import com.siy.KitMarket.domain.entity.account.Account;
+import com.siy.KitMarket.domain.entity.account.QAccount;
+import com.siy.KitMarket.domain.entity.accountPost.AccountPost;
+import com.siy.KitMarket.domain.entity.accountPost.QAccountPost;
 import com.siy.KitMarket.domain.entity.post.*;
 import com.siy.KitMarket.repository.AccountRepository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +15,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.siy.KitMarket.domain.entity.post.QCarFull.carFull;
 import static com.siy.KitMarket.domain.entity.post.QContest.contest;
 import static com.siy.KitMarket.domain.entity.post.QPost.post;
-import static com.siy.KitMarket.domain.entity.accountPost.QAccountPost.accountPost;
 import static com.siy.KitMarket.domain.entity.post.QStudy.study1;
-import static com.siy.KitMarket.domain.entity.account.QAccount.account;
 import static org.springframework.util.StringUtils.hasText;
 
 @Repository
@@ -94,6 +89,36 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     }
 
     @Override
+    public Page<PostLinearDto> findParticipatingPost(String username, Pageable pageable) {
+        QAccountPost accountPost = new QAccountPost("accountPost");
+        QAccount account = new QAccount("account");
+
+        List<PostLinearDto> content = queryFactory
+                .select(new QPostLinearDto(
+                        post.id,
+                        post.category,
+                        post.title,
+                        post.writer,
+                        post.createdAt
+                ))
+                .from(post)
+                .join(post.accountPosts, accountPost)
+                .where(accountPost.username.eq(username))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Post> countQuery = queryFactory
+                .select(post)
+                .from(post)
+                .join(post.accountPosts, accountPost).fetchJoin()
+                .where(accountPost.username.eq(username));
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
+    }
+
+
+    @Override
     public Post findPostById(Long Id){
         QPost post = new QPost("p");
         QApplication application = new QApplication("a");
@@ -101,8 +126,6 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         return queryFactory
                 .selectFrom(post)
                 .distinct()
-                .join(post.applications, application).fetchJoin()
-                .join(post.accountPosts, accountPost).fetchJoin()
                 .where(post.id.eq(Id))
                 .fetchOne();
     }
@@ -129,10 +152,34 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Post> countQuery = queryFactory
-                .selectFrom(post);
+        JPAQuery<Post> countQuery = countQuery();
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
+    }
+
+    @Override
+    public Page<PostLinearDto> findPostLinearListWithPaging(Pageable pageable) {
+        List<PostLinearDto> content = queryFactory
+                .select(new QPostLinearDto(
+                        post.id,
+                        post.category,
+                        post.title,
+                        post.writer,
+                        post.createdAt
+                ))
+                .from(post)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Post> countQuery = countQuery();
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
+    }
+
+    private JPAQuery<Post> countQuery() {
+        return queryFactory
+                .selectFrom(post);
     }
 
     /**
@@ -219,9 +266,6 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
 
-    @Override
-    public Page<PostDto> findParticipatingPost(String username, Pageable pageable) {
-        return null;
-    }
+
 
 }

@@ -44,4 +44,11 @@ public class AccountPost {
         post.getAccountPosts().add(this);
     }
 
+    public AccountPost(Post post, Account account, String username) {
+        this.account = account;
+        this.post = post;
+        this.username = username;
+        account.getAccountPosts().add(this);
+        post.getAccountPosts().add(this);
+    }
 }

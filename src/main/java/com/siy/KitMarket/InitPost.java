@@ -65,9 +65,9 @@ public class InitPost {
                 Application application3 = new Application("댓글 3입니다.", study);
 
 
-                AccountPost accountPost1 = new AccountPost(study, participants[0]);
-                AccountPost accountPost2 = new AccountPost(study, participants[1]);
-                AccountPost accountPost3 = new AccountPost(study, participants[2]);
+                AccountPost accountPost1 = new AccountPost(study, participants[0], participants[0].getUsername());
+                AccountPost accountPost2 = new AccountPost(study, participants[1], participants[1].getUsername());
+                AccountPost accountPost3 = new AccountPost(study, participants[2], participants[2].getUsername());
 
 
                 em.persist(study);
@@ -92,9 +92,9 @@ public class InitPost {
                 Application application3 = new Application("댓글 3입니다.", carFull);
 
 
-                AccountPost accountPost1 = new AccountPost(carFull, participants[0]);
-                AccountPost accountPost2 = new AccountPost(carFull, participants[1]);
-                AccountPost accountPost3 = new AccountPost(carFull, participants[2]);
+                AccountPost accountPost1 = new AccountPost(carFull, participants[0], participants[0].getUsername());
+                AccountPost accountPost2 = new AccountPost(carFull, participants[1], participants[1].getUsername());
+                AccountPost accountPost3 = new AccountPost(carFull, participants[2], participants[2].getUsername());
 
 
                 em.persist(carFull);
@@ -119,9 +119,11 @@ public class InitPost {
                 Application application3 = new Application("댓글 3입니다.", contest);
 
 
-                AccountPost accountPost1 = new AccountPost(contest, participants[0]);
-                AccountPost accountPost2 = new AccountPost(contest, participants[1]);
-                AccountPost accountPost3 = new AccountPost(contest, participants[2]);
+                AccountPost accountPost1 = new AccountPost(contest, participants[0], participants[0].getUsername());
+                AccountPost accountPost2 = new AccountPost(contest, participants[1], participants[1].getUsername());
+                AccountPost accountPost3 = new AccountPost(contest, participants[2], participants[2].getUsername());
+
+
 
 
                 em.persist(contest);

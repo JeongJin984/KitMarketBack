@@ -2,6 +2,7 @@ package com.siy.KitMarket.service.post;
 
 import com.siy.KitMarket.domain.dto.account.AccountDto;
 import com.siy.KitMarket.domain.dto.post.*;
+import com.siy.KitMarket.domain.dto.post.Linear.PostLinearDto;
 import com.siy.KitMarket.domain.dto.post.detail.CarFoolDtoDetail;
 import com.siy.KitMarket.domain.dto.post.detail.ContestDtoDetail;
 import com.siy.KitMarket.domain.dto.post.detail.PostDtoDetail;
@@ -149,4 +150,22 @@ public class PostService {
         CarFoolDtoDetail postDtoDetail = new CarFoolDtoDetail(findPost, participants, applications);
         return postDtoDetail;
     }
+
+    public Page<PostLinearDto> findPostLinearList(int offset, int size){
+        PageRequest page = PageRequest.of(offset,size);
+
+        Page<PostLinearDto> result = postRepository.findPostLinearListWithPaging(page);
+
+        return result;
+    }
+
+    public Page<PostLinearDto> findParticipatingList(String username, int offset, int size){
+        PageRequest page = PageRequest.of(offset,size);
+
+        return  postRepository.findParticipatingPost(username, page);
+
+    }
+
+
+
 }

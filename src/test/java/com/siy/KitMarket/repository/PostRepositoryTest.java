@@ -28,8 +28,6 @@ class PostRepositoryTest {
     @Autowired
     PostRepository postRepository;
 
-    @Autowired
-    JPAQueryFactory queryFactory;
 
 
     Study post1 = new Study("Study1", "I'm Study1", "study1111");
@@ -119,7 +117,12 @@ class PostRepositoryTest {
         System.out.println("postList.getContent() = " + studyList.getContent());
     }
 
-
+//
+//    @Test
+//    public void findParticipantsTest(){
+//        PageRequest page = PageRequest.of(0,8);
+//        postRepository.findParticipatingPost()
+//    }
 
 
 

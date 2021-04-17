@@ -26,7 +26,7 @@ public class CarFullDto extends PostDto{
 
     @QueryProjection
     public CarFullDto(Long id, String writer, String title, String content, LocalDateTime createdAt,
-                      Integer maxNum, Integer curNum, LocalDate deadLine, String category) {
+                      Integer maxNum, Integer curNum, LocalDateTime deadLine, String category) {
         super(id, writer, title, content, createdAt, maxNum, curNum, deadLine, category);
     }
     public CarFullDto(Post post, Set<String> list) { super(post, list); }

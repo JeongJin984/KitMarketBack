@@ -152,6 +152,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                         post.category
                 ))
                 .from(post)
+                .orderBy(post.createdAt.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -204,6 +205,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                         study.category
                 ))
                 .from(study)
+                .orderBy(study.createdAt.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -234,6 +236,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                         carFull.category
                 ))
                 .from(carFull)
+                .orderBy(carFull.createdAt.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -261,6 +264,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                         contest.category
                 ))
                 .from(contest)
+                .orderBy(contest.createdAt.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();

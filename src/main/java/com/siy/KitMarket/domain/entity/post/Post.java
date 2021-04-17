@@ -27,8 +27,8 @@ import static javax.persistence.FetchType.*;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype")
 @Getter @Setter
-@ToString(of = {"id", "title", "content"})
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "POST")
 @EntityListeners(AuditingEntityListener.class)
 public class Post {
@@ -65,7 +65,7 @@ public class Post {
     private LocalDateTime updatedAt;
 
     @NotNull
-    private LocalDate deadLine;
+    private LocalDateTime deadLine;
 
     private String category;
 
@@ -79,7 +79,7 @@ public class Post {
                 @NotNull String writer,
                 @NotNull Integer currentNumber,
                 @NotNull Integer maxNumber,
-                @NotNull LocalDate deadLine) {
+                @NotNull LocalDateTime deadLine) {
         this.title = title;
         this.content = content;
         this.writer = writer;
@@ -104,6 +104,10 @@ public class Post {
     @BatchSize(size = 100)
     @OneToMany(mappedBy = "post", fetch = LAZY, cascade = ALL)
     private Set<Application> applications = new HashSet<>();
+
+    public void plusCurrentNumber(){
+        this.currentNumber++;
+    }
 
 
 }

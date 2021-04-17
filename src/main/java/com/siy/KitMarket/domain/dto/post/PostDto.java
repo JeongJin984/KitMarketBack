@@ -39,8 +39,8 @@ public class PostDto {
     private Set<String> applications = new HashSet<>();
 
 
-    public Integer calDeadLine(LocalDate deadLine){
-        LocalDate currentDay = LocalDate.now();
+    public Integer calDeadLine(LocalDateTime deadLine){
+        LocalDateTime currentDay = LocalDateTime.now();
 
         long between = DAYS.between(currentDay, deadLine);
 
@@ -77,7 +77,7 @@ public class PostDto {
 
     @QueryProjection
     public PostDto(Long id, String writer, String title, String content, LocalDateTime createdAt,
-                   Integer maxNum, Integer curNum, LocalDate deadLine, String category) {
+                   Integer maxNum, Integer curNum, LocalDateTime deadLine, String category) {
 
         this.id = id;
 

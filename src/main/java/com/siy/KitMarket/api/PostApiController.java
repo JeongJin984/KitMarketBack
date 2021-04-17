@@ -6,20 +6,27 @@ import com.siy.KitMarket.domain.dto.post.Linear.PostLinearDto;
 import com.siy.KitMarket.domain.dto.post.detail.CarFoolDtoDetail;
 import com.siy.KitMarket.domain.dto.post.detail.ContestDtoDetail;
 import com.siy.KitMarket.domain.dto.post.detail.PostDtoDetail;
+import com.siy.KitMarket.domain.entity.Application;
 import com.siy.KitMarket.domain.entity.post.Post;
+import com.siy.KitMarket.repository.ApplicationRepositoy.ApplicationRepository;
+import com.siy.KitMarket.service.ApplicationService;
 import com.siy.KitMarket.service.post.PostService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.type.SpecialOneToOneType;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequiredArgsConstructor
 public class PostApiController {
     private final PostService postService;
+    private final ApplicationService applicationService;
 
 
     /**
@@ -150,11 +157,49 @@ public class PostApiController {
      * Post 저장
      */
     @PostMapping(value = "/api/post")
-    public Long saveStudy(@RequestBody @Valid Post post) {
-        Long saveId = postService.save(post);
-        return saveId;
+    public String savePost(@RequestBody @Valid CreatePostRequest request) {
+        System.out.println("request = " + request);
+        Post post = PostRequestToPostEntity(request);
+
+        postService.save(post);
+        return "redirect:/";
     }
 
+    @PostMapping("/api/join")
+    public void JoinPost(@RequestBody @Valid JoinPostRequest request, @RequestParam(value = "postId") Long id){
+        System.out.println("id = " + id);
+        System.out.println("request = " + request);
+
+
+        // protected로 바꾸기
+        PostSearchCondition condition = new PostSearchCondition(id, null, null);
+        Post findPost = postService.getPostEntity(condition);
+        System.out.println("findPost = " + findPost);
+
+
+        Application application = new Application(request.getUsername(), findPost);
+        Long save = applicationService.save(application);
+        System.out.println("save = " + save);
+
+    }
+
+    private Post PostRequestToPostEntity(CreatePostRequest request) {
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        LocalDateTime deadLine = LocalDateTime.parse(request.getDeadLine(), format);
+
+        // 쓰고 생성자 protected로 바꿀것!
+        Post post = new Post();
+
+        post.setWriter(request.getWriter());
+        post.setTitle(request.getTitle());
+        post.setContent(request.getContent());
+        post.setDeadLine(deadLine);
+        post.setMaxNumber(request.getMaxNum());
+        post.setCurrentNumber(request.getCurNum());
+        post.setCategory(request.getCategory());
+        System.out.println("post = " + post);
+        return post;
+    }
 
 }
 @Data
@@ -165,3 +210,25 @@ class Result<T> {
     private int maxPage;
     private T data;
 }
+
+@Data
+class CreatePostRequest{
+    private String writer;
+    private String title;
+    private String content;
+    private String deadLine;
+    private String createdAt;
+    private Integer maxNum;
+    private Integer curNum;
+    private String category;
+}
+@Data
+class JoinPostRequest{
+    private String username;
+}
+
+
+
+
+
+

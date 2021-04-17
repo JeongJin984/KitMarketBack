@@ -1,7 +1,6 @@
 package com.siy.KitMarket.service.post;
 
 import com.siy.KitMarket.domain.condition.PostSearchCondition;
-import com.siy.KitMarket.domain.dto.account.AccountDto;
 import com.siy.KitMarket.domain.dto.post.*;
 import com.siy.KitMarket.domain.dto.post.Linear.PostLinearDto;
 import com.siy.KitMarket.domain.dto.post.detail.CarFoolDtoDetail;
@@ -33,8 +32,10 @@ public class PostService {
     /*
     * 포스트 저장
     * */
+    @Transactional
     public Long save(Post post) {
-        return postRepository.save(post).getId();
+        Post save = postRepository.save(post);
+        return save.getId();
     }
 
     /**
@@ -137,12 +138,7 @@ public class PostService {
         return result;
     }
 
-    private Set<ApplicationDto> getApplicationDtoList(Post findPost) {
-        return findPost.getApplications()
-                .stream()
-                .map(a -> new ApplicationDto(a.getId(), a.getContent(), a.getChatDate()))
-                .collect(Collectors.toSet());
-    }
+
 
     public Page<PostLinearDto> findParticipatingList(String username, int offset, int size){
         PageRequest page = PageRequest.of(offset,size);
@@ -154,6 +150,18 @@ public class PostService {
 
     }
 
+    public Post getPostEntity(PostSearchCondition condition){
+        Post findPost = postRepository.findPostById(condition);
+        return findPost;
+
+    }
+
+    private Set<ApplicationDto> getApplicationDtoList(Post findPost) {
+        return findPost.getApplications()
+                .stream()
+                .map(a -> new ApplicationDto(a.getId(), a.getContent(), a.getChatDate()))
+                .collect(Collectors.toSet());
+    }
 
     private Set<ParticipantsDto> getParticipantsList(Set<AccountPost> accountPosts) {
         return accountPosts
@@ -161,5 +169,7 @@ public class PostService {
                 .map(a -> new ParticipantsDto(a.getAccount().getUsername(), a.getAccount().getEmail(), a.getAccount().getAge(),a.getCode()))
                 .collect(Collectors.toSet());
     }
+
+
 
 }

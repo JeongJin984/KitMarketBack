@@ -26,7 +26,7 @@ public class ContestDto extends PostDto{
 
     @QueryProjection
     public ContestDto(Long id, String writer, String title, String content, LocalDateTime createdAt,
-                      Integer maxNum, Integer curNum, LocalDate deadLine, String category) {
+                      Integer maxNum, Integer curNum, LocalDateTime deadLine, String category) {
         super(id, writer, title, content, createdAt, maxNum, curNum, deadLine, category);
     }
 

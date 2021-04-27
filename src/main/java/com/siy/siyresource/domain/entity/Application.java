@@ -6,6 +6,7 @@ import com.siy.siyresource.domain.entity.account.Account;
 import com.siy.siyresource.domain.entity.post.Post;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
@@ -16,9 +17,10 @@ import static javax.persistence.FetchType.*;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @ToString(of = {"content"})
 @Table(name = "APPLICATION")
+@EntityListeners(AuditingEntityListener.class)
 public class Application {
     @Id
     @GeneratedValue

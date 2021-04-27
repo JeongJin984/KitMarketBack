@@ -84,7 +84,7 @@ public class SimpleListener implements ApplicationListener<ApplicationStartedEve
 
 
         for(int i = 0; i<10; i++){
-            Post post = new Post("Study" + i, "I'm Study" + i, accountUser.getUsername(), 1, 5, LocalDate.of(2022,3,25));
+            Post post = new Post("Study" + i, "I'm Study" + i, accountUser.getUsername(), 1, 5, LocalDateTime.of(2022,3,25,18,19,03));
             Study study = new Study(post, "study");
 
             AccountPost accountPost = new AccountPost();
@@ -115,7 +115,7 @@ public class SimpleListener implements ApplicationListener<ApplicationStartedEve
         }
 
         for(int i = 0; i<10; i++){
-            Post post = new Post("Study" + i, "I'm Study" + i, accountUser.getUsername(), 1, 5, LocalDate.of(2022,1,2));
+            Post post = new Post("Study" + i, "I'm Study" + i, accountUser.getUsername(), 1, 5, LocalDateTime.of(2022,1,2,14,05,02));
             Contest contest = new Contest(post, "contest");
 
             Application application1 = new Application("댓글 1입니다.", contest);

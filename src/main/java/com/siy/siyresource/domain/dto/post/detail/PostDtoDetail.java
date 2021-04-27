@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,7 +36,7 @@ public class PostDtoDetail {
     private Set<AccountDto> participants = new HashSet<>();
     private Set<ApplicationDto> applications = new HashSet<>();
 
-    public Integer calDeadLine(LocalDate deadLine){
+    public Integer calDeadLine(LocalDateTime deadLine){
         LocalDate currentDay = LocalDate.now();
 
         long between = DAYS.between(currentDay, deadLine);

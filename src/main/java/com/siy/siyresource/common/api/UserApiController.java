@@ -1,7 +1,6 @@
-package com.siy.siyresource.api;
+package com.siy.siyresource.common.api;
 
 import com.siy.siyresource.domain.condition.AccountSearchCondition;
-import com.siy.siyresource.domain.dto.account.AccountDto;
 import com.siy.siyresource.domain.dto.account.FullAccountDto;
 import com.siy.siyresource.domain.entity.account.Account;
 import com.siy.siyresource.repository.AccountRepository.AccountRepository;
@@ -10,7 +9,6 @@ import com.siy.siyresource.service.user.AccountSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

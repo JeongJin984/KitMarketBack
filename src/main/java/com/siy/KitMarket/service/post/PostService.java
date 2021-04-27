@@ -1,18 +1,18 @@
 package com.siy.KitMarket.service.post;
 
-import com.siy.KitMarket.domain.condition.PostSearchCondition;
-import com.siy.KitMarket.domain.dto.post.*;
-import com.siy.KitMarket.domain.dto.post.Linear.PostLinearDto;
-import com.siy.KitMarket.domain.dto.post.detail.CarFoolDtoDetail;
-import com.siy.KitMarket.domain.dto.post.detail.ContestDtoDetail;
-import com.siy.KitMarket.domain.dto.post.detail.PostDtoDetail;
-import com.siy.KitMarket.domain.dto.post.detail.StudyDtoDetail;
-import com.siy.KitMarket.domain.entity.accountPost.AccountPost;
-import com.siy.KitMarket.domain.entity.post.CarFull;
-import com.siy.KitMarket.domain.entity.post.Contest;
-import com.siy.KitMarket.domain.entity.post.Post;
-import com.siy.KitMarket.domain.entity.post.Study;
-import com.siy.KitMarket.repository.PostRepository.PostRepository;
+
+import com.siy.siyresource.domain.condition.PostSearchCondition;
+import com.siy.siyresource.domain.dto.post.*;
+import com.siy.siyresource.domain.dto.post.detail.CarFoolDtoDetail;
+import com.siy.siyresource.domain.dto.post.detail.ContestDtoDetail;
+import com.siy.siyresource.domain.dto.post.detail.PostDtoDetail;
+import com.siy.siyresource.domain.dto.post.detail.StudyDtoDetail;
+import com.siy.siyresource.domain.entity.accountPost.AccountPost;
+import com.siy.siyresource.domain.entity.post.CarFull;
+import com.siy.siyresource.domain.entity.post.Contest;
+import com.siy.siyresource.domain.entity.post.Post;
+import com.siy.siyresource.domain.entity.post.Study;
+import com.siy.siyresource.repository.PostRepository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

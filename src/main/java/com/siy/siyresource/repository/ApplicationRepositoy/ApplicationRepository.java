@@ -1,12 +1,10 @@
-package com.siy.KitMarket.repository.ApplicationRepositoy;
+package com.siy.siyresource.repository.ApplicationRepositoy;
 
-import com.siy.KitMarket.domain.entity.Application;
-import com.siy.KitMarket.domain.entity.post.Post;
-import com.siy.KitMarket.repository.CommonRepository;
-import com.siy.KitMarket.repository.PostRepository.PostRepositoryCustom;
-import org.springframework.stereotype.Repository;
+import com.siy.siyresource.domain.entity.Application;
+import com.siy.siyresource.domain.entity.post.Post;
+import com.siy.siyresource.repository.CommonRepository;
+import com.siy.siyresource.repository.PostRepository.PostRepositoryCustom;
 
-@Repository
-public interface ApplicationRepository  extends CommonRepository<Application, Long>, ApplicationRepositoryCustom{
+public interface ApplicationRepository  extends CommonRepository<Application, Long>, ApplicationRepositoryCustom {
 
 }

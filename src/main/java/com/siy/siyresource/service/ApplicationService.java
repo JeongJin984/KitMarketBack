@@ -1,7 +1,9 @@
-package com.siy.KitMarket.service;
+package com.siy.siyresource.service;
 
-import com.siy.KitMarket.domain.entity.Application;
-import com.siy.KitMarket.repository.ApplicationRepositoy.ApplicationRepository;
+
+
+import com.siy.siyresource.domain.entity.Application;
+import com.siy.siyresource.repository.ApplicationRepositoy.ApplicationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

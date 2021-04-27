@@ -1,4 +1,4 @@
-package com.siy.KitMarket.repository.ApplicationRepositoy;
+package com.siy.siyresource.repository.ApplicationRepositoy;
 
 public class ApplicationRepositoryImpl {
 }

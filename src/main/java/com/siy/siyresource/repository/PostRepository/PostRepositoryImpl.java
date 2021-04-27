@@ -1,10 +1,16 @@
 package com.siy.siyresource.repository.PostRepository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.siy.siyresource.domain.condition.PostSearchCondition;
 import com.siy.siyresource.domain.dto.post.*;
+import com.siy.siyresource.domain.dto.post.Linear.PostLinearDto;
+import com.siy.siyresource.domain.dto.post.Linear.QPostLinearDto;
 import com.siy.siyresource.domain.entity.QApplication;
+import com.siy.siyresource.domain.entity.account.QAccount;
+import com.siy.siyresource.domain.entity.accountPost.QAccountPost;
 import com.siy.siyresource.domain.entity.post.*;
 import com.siy.siyresource.repository.AccountRepository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +32,7 @@ import static com.siy.siyresource.domain.entity.account.QAccount.account;
 import static org.springframework.util.StringUtils.hasText;
 
 @Repository
-public class PostRepositoryImpl implements PostRepositoryCustom{
+public class PostRepositoryImpl implements PostRepositoryCustom {
 
     JPAQueryFactory queryFactory;
     AccountRepository accountRepository;
@@ -37,36 +43,35 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         this.accountRepository = accountRepository;
     }
 
+    /**
+     * 단순 study 전체 조회
+     */
     @Override
     public List<Study> findStudyList() {
-        QStudy study = new QStudy("s");
-
         List<Study> result = queryFactory
                 .selectFrom(study)
                 .fetch();
+
         return result;
     }
 
     /**
-     * CarFull 전체 조회
+     * 단순 CarFull 전체 조회
      */
     @Override
     public List<CarFull> findCarFullList() {
-        QCarFull carFull = new QCarFull("cf");
-
         List<CarFull> result = queryFactory
                 .selectFrom(carFull)
                 .fetch();
 
         return result;
     }
+
     /**
-     * Contest 전체조회
+     * 단순 Contest 전체 조회
      */
     @Override
     public List<Contest> findContestList() {
-        QContest contest = new QContest("ct");
-
         List<Contest> result = queryFactory
                 .selectFrom(contest)
                 .fetch();
@@ -74,37 +79,67 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     }
 
     /**
-     * App과 같이 조회
+     * App과 같이 Post 전체 조회
      */
     @Override
-    public Post findPostWithAppById(Long Id){
-        QPost post = new QPost("p");
+    public Post findPostWithAppById(PostSearchCondition condition) {
         QApplication application = new QApplication("a");
 
-        return queryFactory
-                .selectFrom(post)
+        Post post = queryFactory
+                .selectFrom(QPost.post)
                 .distinct()
-                .join(post.applications, application).fetchJoin()
-                .where(post.id.eq(Id))
+                .join(QPost.post.applications, application).fetchJoin()
+                .where(postIdEqual(condition.getId()))
                 .fetchOne();
+
+        return post;
     }
 
+    /**
+     * 내가 참여하고 있는 post 전체 검색
+     */
     @Override
-    public Post findPostById(Long Id){
-        QPost post = new QPost("p");
+    public Page<PostLinearDto> findParticipatingPost(PostSearchCondition condition, Pageable pageable) {
+        QAccountPost accountPost = new QAccountPost("accountPost");
+        QAccount account = new QAccount("account");
+
+        List<PostLinearDto> content = queryFactory
+                .select(new QPostLinearDto(
+                        post.id,
+                        post.category,
+                        post.title,
+                        post.writer,
+                        post.createdAt
+                ))
+                .distinct()
+                .from(post)
+                .join(post.accountPosts, accountPost)
+                .where(usernameEq(condition.getParticipantName()))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Post> countQuery = countPostJoinAccountPostQuery(condition.getParticipantName(), accountPost);
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
+    }
+
+    /**
+     * 단순 post 1개 검색
+     */
+    @Override
+    public Post findPostById(PostSearchCondition condition) {
         QApplication application = new QApplication("a");
 
         return queryFactory
                 .selectFrom(post)
                 .distinct()
-                .join(post.applications, application).fetchJoin()
-                .join(post.accountPosts, accountPost).fetchJoin()
-                .where(post.id.eq(Id))
+                .where(postIdEqual(condition.getId()))
                 .fetchOne();
     }
 
     /**
-     * Post Paging List
+     * Paging post 전체 조회
      */
     @Override
     public Page<PostDto> findPostListWithPaging(Pageable pageable) {
@@ -126,11 +161,34 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Post> countQuery = queryFactory
-                .selectFrom(post);
+        JPAQuery<Post> countQuery = countPostQuery();
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
+
+    /**
+     * Paging, Linear 방식 Post 전체 조회
+     */
+    @Override
+    public Page<PostLinearDto> findPostLinearListWithPaging(Pageable pageable) {
+        List<PostLinearDto> content = queryFactory
+                .select(new QPostLinearDto(
+                        post.id,
+                        post.category,
+                        post.title,
+                        post.writer,
+                        post.createdAt
+                ))
+                .from(post)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Post> countQuery = countPostQuery();
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
+    }
+
 
     /**
      * Study Paging List
@@ -155,14 +213,15 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Study> countQuery = queryFactory
-                .selectFrom(study);
+        JPAQuery<Study> countQuery = countStudyQuery();
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
 
+
     /**
      * CarFull Paging List
+     *
      * @return
      */
     @Override
@@ -184,11 +243,11 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
-        JPAQuery<CarFull> countQuery = queryFactory
-                .selectFrom(carFull);
+        JPAQuery<CarFull> countQuery = countCarPoolQuery();
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
+
 
     /**
      * Contest Paging List
@@ -213,15 +272,47 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Contest> countQuery = queryFactory
-                .selectFrom(contest);
+        JPAQuery<Contest> countQuery = countContestQuery();
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
 
-    @Override
-    public Page<PostDto> findParticipatingPost(String username, Pageable pageable) {
-        return null;
+    private JPAQuery<Contest> countContestQuery() {
+        JPAQuery<Contest> countQuery = queryFactory
+                .selectFrom(contest);
+        return countQuery;
     }
 
+    private JPAQuery<Post> countPostQuery() {
+        return queryFactory
+                .selectFrom(post);
+    }
+
+    private JPAQuery<CarFull> countCarPoolQuery() {
+        JPAQuery<CarFull> countQuery = queryFactory
+                .selectFrom(carFull);
+        return countQuery;
+    }
+
+    private JPAQuery<Study> countStudyQuery() {
+        JPAQuery<Study> countQuery = queryFactory
+                .selectFrom(study);
+        return countQuery;
+    }
+
+    private JPAQuery<Post> countPostJoinAccountPostQuery(String username, QAccountPost accountPost) {
+        return queryFactory
+                .select(post)
+                .from(post)
+                .join(post.accountPosts, accountPost).fetchJoin()
+                .where(usernameEq(username));
+    }
+
+    private BooleanExpression postIdEqual(Long id) {
+        return id != null ? post.id.eq(id) : null;
+    }
+
+    private BooleanExpression usernameEq(String username) {
+        return StringUtils.hasText(username) ? accountPost.username.eq(username) : null;
+    }
 }

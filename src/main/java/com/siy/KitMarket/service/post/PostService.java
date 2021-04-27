@@ -3,6 +3,7 @@ package com.siy.KitMarket.service.post;
 
 import com.siy.siyresource.domain.condition.PostSearchCondition;
 import com.siy.siyresource.domain.dto.post.*;
+import com.siy.siyresource.domain.dto.post.Linear.PostLinearDto;
 import com.siy.siyresource.domain.dto.post.detail.CarFoolDtoDetail;
 import com.siy.siyresource.domain.dto.post.detail.ContestDtoDetail;
 import com.siy.siyresource.domain.dto.post.detail.PostDtoDetail;

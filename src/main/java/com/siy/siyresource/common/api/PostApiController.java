@@ -1,17 +1,17 @@
 package com.siy.siyresource.common.api;
 
-import com.siy.KitMarket.service.ApplicationService;
-import com.siy.KitMarket.service.post.PostService;
+
+
 import com.siy.siyresource.domain.condition.PostSearchCondition;
-import com.siy.siyresource.domain.dto.post.CarFullDto;
-import com.siy.siyresource.domain.dto.post.ContestDto;
-import com.siy.siyresource.domain.dto.post.PostDto;
-import com.siy.siyresource.domain.dto.post.StudyDto;
+import com.siy.siyresource.domain.dto.post.*;
+import com.siy.siyresource.domain.dto.post.Linear.PostLinearDto;
 import com.siy.siyresource.domain.dto.post.detail.CarFoolDtoDetail;
 import com.siy.siyresource.domain.dto.post.detail.ContestDtoDetail;
 import com.siy.siyresource.domain.dto.post.detail.PostDtoDetail;
-import com.siy.siyresource.domain.entity.Application;
+import com.siy.siyresource.domain.entity.*;
 import com.siy.siyresource.domain.entity.post.Post;
+import com.siy.siyresource.service.ApplicationService;
+import com.siy.siyresource.service.post.PostService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

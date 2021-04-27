@@ -2,6 +2,7 @@ package com.siy.siyresource.domain.dto.post.detail;
 
 import com.siy.siyresource.domain.dto.account.AccountDto;
 import com.siy.siyresource.domain.dto.post.ApplicationDto;
+import com.siy.siyresource.domain.dto.post.ParticipantsDto;
 import com.siy.siyresource.domain.entity.post.CarFull;
 import com.siy.siyresource.domain.entity.post.Contest;
 import com.siy.siyresource.domain.entity.post.Post;
@@ -33,7 +34,7 @@ public class PostDtoDetail {
 
     private String category;
 
-    private Set<AccountDto> participants = new HashSet<>();
+    private Set<ParticipantsDto> participants = new HashSet<>();
     private Set<ApplicationDto> applications = new HashSet<>();
 
     public Integer calDeadLine(LocalDateTime deadLine){
@@ -44,20 +45,7 @@ public class PostDtoDetail {
         return (int)between;
     }
 
-    public String settingCategory(Post post){
-        if(post instanceof Study){
-            return "study";
-        }
-        else if( post instanceof CarFull){
-            return "carFool";
-        }
-        else if (post instanceof Contest){
-            return "contest";
-        }
-        return null;
-    }
-
-    public PostDtoDetail(Post post, Set<AccountDto> participants, Set<ApplicationDto> applications) {
+    public PostDtoDetail(Post post, Set<ParticipantsDto> participants, Set<ApplicationDto> applications) {
         this.id = post.getId();
         this.writer = post.getWriter();
         this.title = post.getTitle();
@@ -66,7 +54,7 @@ public class PostDtoDetail {
         this.createdAt = post.getCreatedAt().toString();
         this.maxNum = post.getMaxNumber();
         this.curNum = post.getCurrentNumber();
-        this.category = settingCategory(post);
+        this.category = post.getCategory();
 
         this.participants = participants;
         this.applications = applications;

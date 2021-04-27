@@ -1,6 +1,5 @@
-package com.siy.KitMarket.repository.ApplicationRepositoy;
+package com.siy.siyresource.repository.ApplicationRepositoy;
 
-import com.siy.KitMarket.domain.entity.Application;
 
 public interface ApplicationRepositoryCustom {
 

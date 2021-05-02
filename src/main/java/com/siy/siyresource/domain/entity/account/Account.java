@@ -1,6 +1,7 @@
 package com.siy.siyresource.domain.entity.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.siy.siyresource.domain.entity.Application;
 import com.siy.siyresource.domain.entity.accountPost.AccountPost;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -46,6 +47,8 @@ public class Account implements UserDetails {
     @OneToMany(mappedBy = "account")
     @JsonIgnore
     List<AccountPost> accountPosts = new ArrayList<>();
+
+
 
     public Account(String username, String password, String email, int age) {
         this.username = username;

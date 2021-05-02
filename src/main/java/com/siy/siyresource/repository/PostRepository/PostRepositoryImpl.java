@@ -1,6 +1,5 @@
 package com.siy.siyresource.repository.PostRepository;
 
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -15,20 +14,20 @@ import com.siy.siyresource.domain.entity.post.*;
 import com.siy.siyresource.repository.AccountRepository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+import static com.siy.siyresource.domain.entity.QApplication.application;
 import static com.siy.siyresource.domain.entity.post.QStudy.study;
 import static com.siy.siyresource.domain.entity.post.QCarFull.carFull;
 import static com.siy.siyresource.domain.entity.post.QContest.contest;
 import static com.siy.siyresource.domain.entity.post.QPost.post;
 import static com.siy.siyresource.domain.entity.accountPost.QAccountPost.accountPost;
-import static com.siy.siyresource.domain.entity.account.QAccount.account;
 import static org.springframework.util.StringUtils.hasText;
 
 @Repository
@@ -114,7 +113,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .distinct()
                 .from(post)
                 .join(post.accountPosts, accountPost)
-                .where(usernameEq(condition.getParticipantName()))
+                .where(accountPostUserNameEq(condition.getParticipantName()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -129,12 +128,10 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
      */
     @Override
     public Post findPostById(PostSearchCondition condition) {
-        QApplication application = new QApplication("a");
-
+        Long id = condition.getId();
         return queryFactory
                 .selectFrom(post)
-                .distinct()
-                .where(postIdEqual(condition.getId()))
+                .where(postIdEqual(id))
                 .fetchOne();
     }
 
@@ -187,6 +184,59 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         JPAQuery<Post> countQuery = countPostQuery();
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
+    }
+
+    @Override
+    public Page<PostLinearDto> findPostListByUsername(PostSearchCondition condition, Pageable pageable) {
+        List<PostLinearDto> content = queryFactory
+                .select(new QPostLinearDto(
+                        post.id,
+                        post.category,
+                        post.title,
+                        post.writer,
+                        post.createdAt
+                ))
+                .from(post)
+                .where(postWriterEqual(condition.getUsername()))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Post> countQuery = countPostWriterQuery(condition.getUsername());
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
+
+    }
+
+    @Override
+    public Page<PostLinearDto> findPostListByApplicationUserName(PostSearchCondition condition, PageRequest pageable) {
+
+        List<PostLinearDto> content = queryFactory
+                .select(new QPostLinearDto(
+                        post.id,
+                        post.category,
+                        post.title,
+                        post.writer,
+                        post.createdAt
+                ))
+                .from(post,application)
+                .join(post.applications, application)
+                .where(
+                        applicationPostUserNameEq(condition.getUsername())
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Post> countQuery = countPostByApplicationUserNameQuery(condition.getUsername());
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
+    }
+
+    private JPAQuery<Post> countPostByApplicationUserNameQuery(String username) {
+        JPAQuery<Post> result = queryFactory
+                .selectFrom(post)
+                .join(post.applications, application)
+                .where(applicationPostUserNameEq(username));
+        return result;
     }
 
 
@@ -300,19 +350,40 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         return countQuery;
     }
 
+
+    private JPAQuery<Post> countPostWriterQuery(String username) {
+        JPAQuery<Post> countQuery = queryFactory
+                .selectFrom(post)
+                .where(postWriterEqual(username));
+
+        return countQuery;
+
+    }
+
     private JPAQuery<Post> countPostJoinAccountPostQuery(String username, QAccountPost accountPost) {
         return queryFactory
                 .select(post)
                 .from(post)
                 .join(post.accountPosts, accountPost).fetchJoin()
-                .where(usernameEq(username));
+                .where(accountPostUserNameEq(username));
     }
 
     private BooleanExpression postIdEqual(Long id) {
         return id != null ? post.id.eq(id) : null;
     }
 
-    private BooleanExpression usernameEq(String username) {
-        return StringUtils.hasText(username) ? accountPost.username.eq(username) : null;
+    private BooleanExpression postWriterEqual(String username) {
+        return hasText(username) ? post.writer.eq(username) :null;
     }
+
+    private BooleanExpression accountPostUserNameEq(String username) {
+        return hasText(username) ? accountPost.username.eq(username) : null;
+    }
+
+    private BooleanExpression applicationPostUserNameEq(String username) {
+        return hasText(username) ? application.username.eq(username):null;
+    }
+
+
+
 }

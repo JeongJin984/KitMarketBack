@@ -1,7 +1,6 @@
 package com.siy.siyresource.service.post;
 
 import com.siy.siyresource.domain.condition.PostSearchCondition;
-import com.siy.siyresource.domain.dto.account.AccountDto;
 import com.siy.siyresource.domain.dto.post.*;
 import com.siy.siyresource.domain.dto.post.Linear.PostLinearDto;
 import com.siy.siyresource.domain.dto.post.detail.CarFoolDtoDetail;
@@ -173,5 +172,25 @@ public class PostService {
                 .stream()
                 .map(a -> new ParticipantsDto(a.getAccount().getUsername(), a.getAccount().getEmail(), a.getAccount().getAge(), a.getCode()))
                 .collect(Collectors.toSet());
+    }
+
+    public Page<PostLinearDto> findPostListByUsername(PostSearchCondition condition, int offset, int size) {
+        PageRequest page = PageRequest.of(offset, size);
+        Page<PostLinearDto> result = postRepository.findPostListByUsername(condition, page);
+        return result;
+    }
+
+    public Page<PostLinearDto> findPostListByApplicationUserName(PostSearchCondition condition, int offset, int size) {
+        PageRequest page = PageRequest.of(offset, size);
+        Page<PostLinearDto> result = postRepository.findPostListByApplicationUserName(condition, page);
+
+        return result;
+    }
+
+    public Page<PostLinearDto> findPostListByParticipants(PostSearchCondition condition, int offset, int size) {
+        PageRequest page = PageRequest.of(offset, size);
+        Page<PostLinearDto> result = postRepository.findParticipatingPost(condition, page);
+        return result;
+
     }
 }

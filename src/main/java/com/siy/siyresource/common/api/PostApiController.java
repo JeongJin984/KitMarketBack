@@ -9,7 +9,9 @@ import com.siy.siyresource.domain.dto.post.detail.CarFoolDtoDetail;
 import com.siy.siyresource.domain.dto.post.detail.ContestDtoDetail;
 import com.siy.siyresource.domain.dto.post.detail.PostDtoDetail;
 import com.siy.siyresource.domain.entity.*;
+import com.siy.siyresource.domain.entity.account.Account;
 import com.siy.siyresource.domain.entity.post.Post;
+import com.siy.siyresource.repository.AccountRepository.AccountRepository;
 import com.siy.siyresource.service.ApplicationService;
 import com.siy.siyresource.service.post.PostService;
 import lombok.AllArgsConstructor;
@@ -27,7 +29,7 @@ import java.time.format.DateTimeFormatter;
 public class PostApiController {
     private final PostService postService;
     private final ApplicationService applicationService;
-
+    private final AccountRepository accountRepository;
 
     /**
      * Post 전체 조회
@@ -35,7 +37,7 @@ public class PostApiController {
     @GetMapping(value = "/api/postList")
     public Result postList(@RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
                            @RequestParam(value = "size", defaultValue = "8", required = false) int size) {
-        Page<PostDto> result = (Page<PostDto>) postService.findPostList(offset, size);
+        Page<PostDto> result = postService.findPostList(offset, size);
 
         return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.getContent());
     }
@@ -165,41 +167,70 @@ public class PostApiController {
         return "redirect:/";
     }
 
-    @PostMapping("/api/post/join")
-    public void JoinPost(@RequestBody @Valid JoinPostRequest request, @RequestParam(value = "postId") Long id){
+    @PostMapping("/api/join")
+    public void JoinPost(@RequestBody @Valid PostRequest request, @RequestParam(value = "postId") Long id){
         System.out.println("id = " + id);
         System.out.println("request = " + request);
-
 
         // protected로 바꾸기
         PostSearchCondition condition = new PostSearchCondition(id, null, null);
         Post findPost = postService.getPostEntity(condition);
         System.out.println("findPost = " + findPost);
 
+        Account findAccount = accountRepository.findByUsername(request.getUsername());
 
-        Application application = new Application(request.getUsername(), findPost);
+
+        Application application = new Application(request.getContent(), findAccount, findPost);
         Long save = applicationService.save(application);
+
         System.out.println("save = " + save);
 
     }
-    @DeleteMapping("/api/post/cancle")
+    @DeleteMapping("/api/cancle")
     public void JoinPost(@RequestBody @Valid CanclePostRequest request, @RequestParam(value = "postId") Long id){
         System.out.println("id = " + id);
         System.out.println("request = " + request);
 
+        PostSearchCondition condition = new PostSearchCondition(id, "", "");
 
-        // protected로 바꾸기
-        PostSearchCondition condition = new PostSearchCondition(id, null, null);
-        Post findPost = postService.getPostEntity(condition);
-        System.out.println("findPost = " + findPost);
-
-
-
-
-
-
-
+        Application findApp = applicationService.findByUsernameAndPostId(request.getUsername(), id);
+        applicationService.delete(findApp);
     }
+
+    @GetMapping("/api/post/my")
+    public Result findPostMyMakeByUsername(@RequestParam(value = "username") @Valid PostRequest request,
+                                           @RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
+                                           @RequestParam(value = "size", defaultValue = "8", required = false) int size) {
+        System.out.println("request.getUsername() = " + request.getUsername());
+        PostSearchCondition condition = new PostSearchCondition(null, request.getUsername(), null);
+
+        Page<PostLinearDto> result = postService.findPostListByUsername(condition, offset, size);
+        return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.getContent());
+    }
+
+    @GetMapping("/api/post/application")
+    public Result findPostApplicatingByUsername(@RequestParam(value = "username") @Valid PostRequest request,
+                                                @RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
+                                                @RequestParam(value = "size", defaultValue = "8", required = false) int size) {
+        System.out.println("request.getUsername() = " + request.getUsername());
+        PostSearchCondition condition = new PostSearchCondition(null, request.getUsername(), null);
+
+        Page<PostLinearDto> result = postService.findPostListByApplicationUserName(condition, offset, size);
+        return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.getContent());
+    }
+
+    @GetMapping("/api/post/participants")
+    public Result findPostparticipantsByUsername(@RequestParam(value = "username") @Valid PostRequest request,
+                                                 @RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
+                                                 @RequestParam(value = "size", defaultValue = "8", required = false) int size) {
+        System.out.println("request.getUsername() = " + request.getUsername());
+        PostSearchCondition condition = new PostSearchCondition(null, null, request.getUsername());
+        Page<PostLinearDto> result = postService.findPostListByParticipants(condition, offset, size);
+
+
+        return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.getContent());
+    }
+
 
     private Post PostRequestToPostEntity(CreatePostRequest request) {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
@@ -218,8 +249,8 @@ public class PostApiController {
         System.out.println("post = " + post);
         return post;
     }
-
 }
+
 @Data
 @AllArgsConstructor
 class Result<T> {
@@ -241,8 +272,9 @@ class CreatePostRequest{
     private String category;
 }
 @Data
-class JoinPostRequest{
+class PostRequest{
     private String username;
+    private String content;
 }
 
 @Data

@@ -34,6 +34,7 @@ public class Application {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "account_id")
+    @JsonIgnore
     private Account account;
 
     @ManyToOne(fetch = LAZY)
@@ -41,10 +42,13 @@ public class Application {
     @JsonIgnore
     private Post post;
 
+    private String username;
 
-    public Application(String content, Post post) {
+    public Application(String content, Account account, Post post) {
         this.content = content;
         this.post = post;
+        this.account = account;
+        this.username = account.getUsername();
         post.getApplications().add(this);
     }
 

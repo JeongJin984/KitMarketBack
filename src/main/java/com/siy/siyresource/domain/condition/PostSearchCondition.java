@@ -7,6 +7,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class PostSearchCondition {
     private Long id;
-    private String writerName;
+    private String username;
     private String participantName;
 }

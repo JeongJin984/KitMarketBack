@@ -15,12 +15,23 @@ public class ApplicationService {
 
     private final ApplicationRepository applicationRepository;
 
+    public Application findByUsernameAndPostId(String username, Long postId){
+        return applicationRepository.findByUserName(username, postId);
+    }
+
+
     @Transactional
     public Long save(Application application){
         Application save = applicationRepository.save(application);
-        application.getPost().plusCurrentNumber();
 
         return save.getId();
+    }
+
+
+
+    @Transactional
+    public void delete(Application application){
+        applicationRepository.delete(application);
     }
 
 

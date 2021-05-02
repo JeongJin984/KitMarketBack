@@ -1,6 +1,8 @@
 package com.siy.siyresource.repository.ApplicationRepositoy;
 
 
-public interface ApplicationRepositoryCustom {
+import com.siy.siyresource.domain.entity.Application;
 
+public interface ApplicationRepositoryCustom {
+//    Application findByUserName(String username);
 }

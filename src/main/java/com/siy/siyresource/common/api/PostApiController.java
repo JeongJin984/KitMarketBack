@@ -165,7 +165,7 @@ public class PostApiController {
         return "redirect:/";
     }
 
-    @PostMapping("/api/join")
+    @PostMapping("/api/post/join")
     public void JoinPost(@RequestBody @Valid JoinPostRequest request, @RequestParam(value = "postId") Long id){
         System.out.println("id = " + id);
         System.out.println("request = " + request);
@@ -180,6 +180,24 @@ public class PostApiController {
         Application application = new Application(request.getUsername(), findPost);
         Long save = applicationService.save(application);
         System.out.println("save = " + save);
+
+    }
+    @DeleteMapping("/api/post/cancle")
+    public void JoinPost(@RequestBody @Valid CanclePostRequest request, @RequestParam(value = "postId") Long id){
+        System.out.println("id = " + id);
+        System.out.println("request = " + request);
+
+
+        // protected로 바꾸기
+        PostSearchCondition condition = new PostSearchCondition(id, null, null);
+        Post findPost = postService.getPostEntity(condition);
+        System.out.println("findPost = " + findPost);
+
+
+
+
+
+
 
     }
 
@@ -224,6 +242,11 @@ class CreatePostRequest{
 }
 @Data
 class JoinPostRequest{
+    private String username;
+}
+
+@Data
+class CanclePostRequest{
     private String username;
 }
 

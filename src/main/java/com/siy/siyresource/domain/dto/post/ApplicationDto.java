@@ -15,4 +15,6 @@ public class ApplicationDto {
     private String content;
 
     private LocalDateTime chatDate; //채팅 시간
+
+    private String username;
 }

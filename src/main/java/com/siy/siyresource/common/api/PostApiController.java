@@ -1,15 +1,11 @@
 package com.siy.siyresource.common.api;
 
-
-
 import com.siy.siyresource.domain.condition.PostSearchCondition;
 import com.siy.siyresource.domain.dto.post.*;
 import com.siy.siyresource.domain.dto.post.Linear.PostLinearDto;
 import com.siy.siyresource.domain.dto.post.detail.CarFoolDtoDetail;
 import com.siy.siyresource.domain.dto.post.detail.ContestDtoDetail;
 import com.siy.siyresource.domain.dto.post.detail.PostDtoDetail;
-import com.siy.siyresource.domain.entity.*;
-import com.siy.siyresource.domain.entity.account.Account;
 import com.siy.siyresource.domain.entity.post.Post;
 import com.siy.siyresource.repository.AccountRepository.AccountRepository;
 import com.siy.siyresource.service.ApplicationService;
@@ -90,6 +86,8 @@ public class PostApiController {
         return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.get());
     }
 
+
+
     /**
      * post Linear 버전 출력
      */
@@ -154,7 +152,6 @@ public class PostApiController {
         return findPostDetail;
     }
 
-
     /**
      * Post 저장
      */
@@ -167,35 +164,29 @@ public class PostApiController {
         return "redirect:/";
     }
 
-    @PostMapping("/api/join")
-    public void JoinPost(@RequestBody @Valid PostRequest request, @RequestParam(value = "postId") Long id){
-        System.out.println("id = " + id);
-        System.out.println("request = " + request);
+    /**
+     * Post 삭제
+     */
+    @DeleteMapping(value = "/api/post/{id}")
+    public String delete(@PathVariable("id") Long id){
+        postService.deleteById(id);
 
-        // protected로 바꾸기
+        return "redirect:/";
+    }
+
+    /**
+     * Post 수정
+     */
+    @PutMapping(value = "/api/post/{id}")
+    public String put(@RequestBody @Valid CreatePostRequest request, @PathVariable("id")Long id){
         PostSearchCondition condition = new PostSearchCondition(id, null, null);
         Post findPost = postService.getPostEntity(condition);
-        System.out.println("findPost = " + findPost);
+        UpdatePost(findPost, request);
 
-        Account findAccount = accountRepository.findByUsername(request.getUsername());
-
-
-        Application application = new Application(request.getContent(), findAccount, findPost);
-        Long save = applicationService.save(application);
-
-        System.out.println("save = " + save);
-
+        return "redirect:/";
     }
-    @DeleteMapping("/api/cancle")
-    public void JoinPost(@RequestBody @Valid CanclePostRequest request, @RequestParam(value = "postId") Long id){
-        System.out.println("id = " + id);
-        System.out.println("request = " + request);
 
-        PostSearchCondition condition = new PostSearchCondition(id, "", "");
 
-        Application findApp = applicationService.findByUsernameAndPostId(request.getUsername(), id);
-        applicationService.delete(findApp);
-    }
 
     @GetMapping("/api/post/my")
     public Result findPostMyMakeByUsername(@RequestParam(value = "username") @Valid PostRequest request,
@@ -248,6 +239,20 @@ public class PostApiController {
         post.setCategory(request.getCategory());
         System.out.println("post = " + post);
         return post;
+    }
+
+    private void UpdatePost(Post post, CreatePostRequest request) {
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        LocalDateTime deadLine = LocalDateTime.parse(request.getDeadLine(), format);
+
+        post.setWriter(request.getWriter());
+        post.setTitle(request.getTitle());
+        post.setContent(request.getContent());
+        post.setDeadLine(deadLine);
+        post.setMaxNumber(request.getMaxNum());
+        post.setCurrentNumber(request.getCurNum());
+        post.setCategory(request.getCategory());
+        System.out.println("post = " + post);
     }
 }
 

@@ -15,5 +15,5 @@ public interface CommonRepository<T, Id extends Serializable> extends Repository
     <E extends T> E findById(Id id);
     <E extends T> void delete(E var1);
     <E extends T> List<E> findAll();
-
+    void deleteById(Id id);
 }

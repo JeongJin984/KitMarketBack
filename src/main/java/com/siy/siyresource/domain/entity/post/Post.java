@@ -93,7 +93,7 @@ public class Post {
     /**
      * 참여자(Account) 연결
      */
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", fetch = LAZY, cascade = ALL)
     @JsonIgnore
     private Set<AccountPost> accountPosts = new HashSet<>();
 

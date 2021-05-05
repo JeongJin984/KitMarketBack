@@ -163,7 +163,7 @@ public class PostService {
     private Set<ApplicationDto> getApplicationDtoList(Post findPost) {
         return findPost.getApplications()
                 .stream()
-                .map(a -> new ApplicationDto(a.getId(), a.getContent(), a.getChatDate()))
+                .map(a -> new ApplicationDto(a.getId(), a.getContent(), a.getCreatedAt(),a.getUsername()))
                 .collect(Collectors.toSet());
     }
 
@@ -192,5 +192,10 @@ public class PostService {
         Page<PostLinearDto> result = postRepository.findParticipatingPost(condition, page);
         return result;
 
+    }
+
+    @Transactional
+    public void deleteById(Long id) {
+        postRepository.deleteById(id);
     }
 }

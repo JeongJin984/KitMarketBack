@@ -30,7 +30,7 @@ public class Application {
     private String content;
 
     @CreatedDate
-    private LocalDateTime chatDate; //채팅 시간
+    private LocalDateTime createdAt; //생성 시간
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "account_id")

@@ -34,5 +34,10 @@ public class ApplicationService {
         applicationRepository.delete(application);
     }
 
+    @Transactional
+    public void deleteById(Long id){
+        applicationRepository.deleteById(id);
+    }
+
 
 }

@@ -3,6 +3,7 @@ package com.siy.siyresource.repository.ApplicationRepositoy;
 import com.siy.siyresource.common.api.PostApiController;
 import com.siy.siyresource.domain.condition.PostSearchCondition;
 import com.siy.siyresource.domain.dto.post.Linear.PostLinearDto;
+import com.siy.siyresource.domain.dto.post.PostDto;
 import com.siy.siyresource.domain.dto.post.detail.PostDtoDetail;
 import com.siy.siyresource.domain.entity.Application;
 import com.siy.siyresource.domain.entity.post.Post;
@@ -85,6 +86,11 @@ class ApplicationRepositoryImplTest {
         PostSearchCondition condition = new PostSearchCondition(null, "", "user");
         Page<PostLinearDto> result = postService.findPostListByParticipants(condition, 0, 10);
         System.out.println("result = " + result.getContent());
+    }
+
+    @Test
+    public void delete(){
+        postRepository.deleteById(10L);
     }
 
 }

@@ -25,6 +25,7 @@ public class ApplicationApiController {
     @PostMapping("/api/app/join")
     public void JoinPost(@RequestBody @Valid PostRequest request, @RequestParam(value = "postId") Long id){
         System.out.println("JoinPost Application");
+        System.out.println("request = " + request);
 
         // protected로 바꾸기
         PostSearchCondition condition = new PostSearchCondition(id, null, null);

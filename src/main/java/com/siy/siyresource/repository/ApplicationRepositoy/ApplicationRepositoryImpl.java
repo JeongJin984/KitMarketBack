@@ -32,10 +32,10 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom{
 
 
     private BooleanExpression usernameEq(String username) {
-        return StringUtils.hasText(username) ? application.account().username.eq(username):null;
+        return StringUtils.hasText(username) ? application.username.eq(username):null;
     }
     private BooleanExpression postEq(Long id) {
-        return id != null ? post.id.eq(id) : null;
+        return id != null ? application.post().id.eq(id) : null;
     }
 
 }

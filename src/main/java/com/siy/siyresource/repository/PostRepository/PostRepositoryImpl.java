@@ -134,6 +134,17 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .where(postIdEqual(id))
                 .fetchOne();
     }
+    /**
+     * 단순 Contest 1개 검색
+     */
+    @Override
+    public Contest findContestById(PostSearchCondition condition) {
+        Long id = condition.getId();
+        return queryFactory
+                .selectFrom(contest)
+                .where(postIdEqual(id))
+                .fetchOne();
+    }
 
     /**
      * Paging post 전체 조회
@@ -153,10 +164,11 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                         post.category
                 ))
                 .from(post)
-                .orderBy(post.createdAt.asc())
+                .orderBy(post.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+        System.out.println("content = " + content);
 
         JPAQuery<Post> countQuery = countPostQuery();
 
@@ -258,7 +270,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                         study.category
                 ))
                 .from(study)
-                .orderBy(study.createdAt.asc())
+                .orderBy(study.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -289,7 +301,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                         carFull.category
                 ))
                 .from(carFull)
-                .orderBy(carFull.createdAt.asc())
+                .orderBy(carFull.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -317,7 +329,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                         contest.category
                 ))
                 .from(contest)
-                .orderBy(contest.createdAt.asc())
+                .orderBy(contest.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();

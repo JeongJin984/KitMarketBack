@@ -91,7 +91,7 @@ public class Post {
     }
 
     /**
-     * 참여자(Account) 연결
+     * 참가중인 사람들
      */
     @OneToMany(mappedBy = "post", fetch = LAZY, cascade = ALL)
     @JsonIgnore
@@ -107,6 +107,5 @@ public class Post {
     public void plusCurrentNumber(){
         this.currentNumber++;
     }
-
 
 }

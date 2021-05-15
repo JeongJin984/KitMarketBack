@@ -1,12 +1,16 @@
 package com.siy.siyresource.common.api;
 
+import com.siy.siyresource.common.api.request.CreatePostRequest;
 import com.siy.siyresource.domain.condition.PostSearchCondition;
 import com.siy.siyresource.domain.dto.post.*;
 import com.siy.siyresource.domain.dto.post.Linear.PostLinearDto;
 import com.siy.siyresource.domain.dto.post.detail.CarFoolDtoDetail;
 import com.siy.siyresource.domain.dto.post.detail.ContestDtoDetail;
 import com.siy.siyresource.domain.dto.post.detail.PostDtoDetail;
+import com.siy.siyresource.domain.entity.post.CarFull;
+import com.siy.siyresource.domain.entity.post.Contest;
 import com.siy.siyresource.domain.entity.post.Post;
+import com.siy.siyresource.domain.entity.post.Study;
 import com.siy.siyresource.repository.AccountRepository.AccountRepository;
 import com.siy.siyresource.service.ApplicationService;
 import com.siy.siyresource.service.post.PostService;
@@ -34,6 +38,7 @@ public class PostApiController {
     public Result postList(@RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
                            @RequestParam(value = "size", defaultValue = "8", required = false) int size) {
         Page<PostDto> result = postService.findPostList(offset, size);
+
 
         return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.getContent());
     }
@@ -158,10 +163,60 @@ public class PostApiController {
     @PostMapping(value = "/api/post")
     public String savePost(@RequestBody @Valid CreatePostRequest request) {
         System.out.println("request = " + request);
-        Post post = PostRequestToPostEntity(request);
+        Post post = new Post();
+        PostRequestToPostEntity(post, request);
 
         postService.save(post);
         return "redirect:/";
+    }
+
+    /**
+     * Contest 저장
+     */
+    @PostMapping(value = "/api/contest")
+    public String saveContest(@RequestBody @Valid CreatePostRequest request) {
+        System.out.println("request = " + request);
+        Contest post = Contest.CreateContest();
+        PostRequestToContestEntity(post, request);
+
+        postService.save(post);
+        return "redirect:/";
+    }
+
+    private void PostRequestToContestEntity(Contest contest, CreatePostRequest request) {
+        PostRequestToPostEntity(contest, request);
+    }
+
+    /**
+     * CarFool 저장
+     */
+    @PostMapping(value = "/api/carfool")
+    public String saveCarFool(@RequestBody @Valid CreatePostRequest request) {
+        CarFull post = CarFull.CreateCarFool();
+        PostRequestToCarFoolEntity(post, request);
+
+        postService.save(post);
+        return "redirect:/";
+    }
+
+    private void PostRequestToCarFoolEntity(CarFull post, CreatePostRequest request) {
+        PostRequestToPostEntity(post, request);
+    }
+
+    /**
+     * Study 저장
+     */
+    @PostMapping(value = "/api/study")
+    public String saveStudy(@RequestBody @Valid CreatePostRequest request) {
+        Study post = Study.CreateStudy();
+        PostRequestToStudyEntity(post, request);
+
+        postService.save(post);
+        return "redirect:/";
+    }
+
+    private void PostRequestToStudyEntity(Study post, CreatePostRequest request) {
+        PostRequestToPostEntity(post, request);
     }
 
     /**
@@ -178,44 +233,81 @@ public class PostApiController {
      * Post 수정
      */
     @PutMapping(value = "/api/post/{id}")
-    public String put(@RequestBody @Valid CreatePostRequest request, @PathVariable("id")Long id){
-        PostSearchCondition condition = new PostSearchCondition(id, null, null);
-        Post findPost = postService.getPostEntity(condition);
-        UpdatePost(findPost, request);
+    public String updatePost(@RequestBody @Valid CreatePostRequest request, @PathVariable("id")Long id){
+        postService.updatePost(id, request);
+
+        return "redirect:/";
+    }
+
+    /**
+     *  Contest 수정
+     * */
+    @PutMapping(value = "/api/contest/{id}")
+    public String updateContest(@RequestBody @Valid CreatePostRequest request, @PathVariable("id")Long id){
+        postService.updateContest(id, request);
+
+        return "redirect:/";
+    }
+
+    /**
+     *  Study 수정
+     * */
+    @PutMapping(value = "/api/study/{id}")
+    public String updateStudy(@RequestBody @Valid CreatePostRequest request, @PathVariable("id")Long id){
+        postService.updateStudy(id, request);
+
+        return "redirect:/";
+    }
+    /**
+     *  carFool 수정
+     * */
+    @PutMapping(value = "/api/carFool/{id}")
+    public String updateCarFool(@RequestBody @Valid CreatePostRequest request, @PathVariable("id")Long id){
+        postService.updatecarFool(id, request);
 
         return "redirect:/";
     }
 
 
-
+    /**
+     * 내가 만든 모임 리스트
+     * */
     @GetMapping("/api/post/my")
-    public Result findPostMyMakeByUsername(@RequestParam(value = "username") @Valid PostRequest request,
+    public Result findPostMyMakeByUsername(@RequestParam(value = "username") @Valid String request,
                                            @RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
                                            @RequestParam(value = "size", defaultValue = "8", required = false) int size) {
-        System.out.println("request.getUsername() = " + request.getUsername());
-        PostSearchCondition condition = new PostSearchCondition(null, request.getUsername(), null);
+        System.out.println("내가 만든 모임 리스트");
+        PostSearchCondition condition = new PostSearchCondition(null, request, null);
 
         Page<PostLinearDto> result = postService.findPostListByUsername(condition, offset, size);
         return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.getContent());
     }
 
+
+    /**
+     * 내가 신청한 모임 리스트
+     * */
     @GetMapping("/api/post/application")
-    public Result findPostApplicatingByUsername(@RequestParam(value = "username") @Valid PostRequest request,
+    public Result findPostApplicatingByUsername(@RequestParam(value = "username") @Valid String request,
                                                 @RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
                                                 @RequestParam(value = "size", defaultValue = "8", required = false) int size) {
-        System.out.println("request.getUsername() = " + request.getUsername());
-        PostSearchCondition condition = new PostSearchCondition(null, request.getUsername(), null);
+        System.out.println("내가 신청한 모임 리스트");
+        
+        PostSearchCondition condition = new PostSearchCondition(null, request, null);
 
         Page<PostLinearDto> result = postService.findPostListByApplicationUserName(condition, offset, size);
         return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.getContent());
     }
 
+    /**
+     * 내가 참여하고 있는 모임 리스트
+     */
     @GetMapping("/api/post/participants")
-    public Result findPostparticipantsByUsername(@RequestParam(value = "username") @Valid PostRequest request,
+    public Result findPostparticipantsByUsername(@RequestParam(value = "username") @Valid String request,
                                                  @RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
                                                  @RequestParam(value = "size", defaultValue = "8", required = false) int size) {
-        System.out.println("request.getUsername() = " + request.getUsername());
-        PostSearchCondition condition = new PostSearchCondition(null, null, request.getUsername());
+        System.out.println("내가 참여하고 있는 모임 리스트");
+        PostSearchCondition condition = new PostSearchCondition(null, null, request);
         Page<PostLinearDto> result = postService.findPostListByParticipants(condition, offset, size);
 
 
@@ -223,12 +315,11 @@ public class PostApiController {
     }
 
 
-    private Post PostRequestToPostEntity(CreatePostRequest request) {
+
+
+    private Post PostRequestToPostEntity(Post post, CreatePostRequest request) {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         LocalDateTime deadLine = LocalDateTime.parse(request.getDeadLine(), format);
-
-        // 쓰고 생성자 protected로 바꿀것!
-        Post post = new Post();
 
         post.setWriter(request.getWriter());
         post.setTitle(request.getTitle());
@@ -238,22 +329,10 @@ public class PostApiController {
         post.setCurrentNumber(request.getCurNum());
         post.setCategory(request.getCategory());
         System.out.println("post = " + post);
+
         return post;
     }
 
-    private void UpdatePost(Post post, CreatePostRequest request) {
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-        LocalDateTime deadLine = LocalDateTime.parse(request.getDeadLine(), format);
-
-        post.setWriter(request.getWriter());
-        post.setTitle(request.getTitle());
-        post.setContent(request.getContent());
-        post.setDeadLine(deadLine);
-        post.setMaxNumber(request.getMaxNum());
-        post.setCurrentNumber(request.getCurNum());
-        post.setCategory(request.getCategory());
-        System.out.println("post = " + post);
-    }
 }
 
 @Data
@@ -265,21 +344,15 @@ class Result<T> {
     private T data;
 }
 
-@Data
-class CreatePostRequest{
-    private String writer;
-    private String title;
-    private String content;
-    private String deadLine;
-    private String createdAt;
-    private Integer maxNum;
-    private Integer curNum;
-    private String category;
-}
+
 @Data
 class PostRequest{
     private String username;
     private String content;
+}
+@Data
+class MyRequest{
+    private String username;
 }
 
 @Data

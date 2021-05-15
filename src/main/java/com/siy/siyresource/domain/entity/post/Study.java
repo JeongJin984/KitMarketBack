@@ -35,4 +35,8 @@ public class Study extends Post{
         this.setCategory("study");
         this.category = category;
     }
+
+    public static Study CreateStudy() {
+        return new Study();
+    }
 }

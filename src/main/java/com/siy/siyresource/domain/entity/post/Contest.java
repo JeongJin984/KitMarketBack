@@ -33,5 +33,8 @@ public class Contest extends Post {
         this.setCategory("study");
         this.category = category;
     }
+    public static Contest CreateContest(){
+        return new Contest();
+    }
 
 }

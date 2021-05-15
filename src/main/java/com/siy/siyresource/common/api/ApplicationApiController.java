@@ -1,5 +1,6 @@
 package com.siy.siyresource.common.api;
 
+import com.siy.siyresource.common.api.request.UpdateAppRequest;
 import com.siy.siyresource.domain.condition.PostSearchCondition;
 import com.siy.siyresource.domain.entity.Application;
 import com.siy.siyresource.domain.entity.account.Account;
@@ -23,8 +24,7 @@ public class ApplicationApiController {
      */
     @PostMapping("/api/app/join")
     public void JoinPost(@RequestBody @Valid PostRequest request, @RequestParam(value = "postId") Long id){
-        System.out.println("id = " + id);
-        System.out.println("request = " + request);
+        System.out.println("JoinPost Application");
 
         // protected로 바꾸기
         PostSearchCondition condition = new PostSearchCondition(id, null, null);
@@ -45,8 +45,7 @@ public class ApplicationApiController {
      */
     @DeleteMapping("/api/app/cancle")
     public String JoinPost(@RequestBody @Valid CanclePostRequest request, @RequestParam(value = "postId") Long id){
-        applicationService.deleteById(id);
-
+        applicationService.deleteByPostIdAndUserName(id, request.getUsername());
         return "redirect:/";
     }
 
@@ -56,18 +55,11 @@ public class ApplicationApiController {
     @PutMapping("/api/app/update/{id}")
     public String UpdateApp(@RequestBody @Valid UpdateAppRequest request, @PathVariable Long postId){
         Application findApp = applicationService.findByUsernameAndPostId(request.getUsername(), postId);
-        updateApp(findApp, request);
+        applicationService.updateApp(findApp, request);
 
         return "redirect:/";
     }
 
-    private void updateApp(Application findApp, UpdateAppRequest request) {
-        findApp.setContent(request.getContent());
-    }
 
-    @Data
-    private class UpdateAppRequest {
-        String content;
-        String username;
-    }
+
 }

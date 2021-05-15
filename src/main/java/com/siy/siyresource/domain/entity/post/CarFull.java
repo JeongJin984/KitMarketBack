@@ -32,4 +32,8 @@ public class CarFull extends Post{
         this.setCategory("study");
         this.category = category;
     }
+
+    public static CarFull CreateCarFool() {
+        return new CarFull();
+    }
 }

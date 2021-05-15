@@ -34,7 +34,9 @@ public class PostDtoDetail {
 
     private String category;
 
+    // 참가중인사람
     private Set<ParticipantsDto> participants = new HashSet<>();
+    // 대기 중인사람
     private Set<ApplicationDto> applications = new HashSet<>();
 
     public Integer calDeadLine(LocalDateTime deadLine){

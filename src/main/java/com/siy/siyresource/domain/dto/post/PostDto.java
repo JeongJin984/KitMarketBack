@@ -85,7 +85,8 @@ public class PostDto {
         this.title = title;
         this.content = content;
 
-        this.createdAt = createdAt.toString();
+        this.createdAt = createdAt.toString() == null ? null : createdAt.toString();
+
         this.maxNum = maxNum;
         this.curNum = curNum;
 

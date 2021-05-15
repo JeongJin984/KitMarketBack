@@ -7,7 +7,7 @@ import com.siy.siyresource.domain.entity.QApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
-import static com.siy.siyresource.domain.entity.QApplication.*;
+import static com.siy.siyresource.domain.entity.QApplication.application;
 import static com.siy.siyresource.domain.entity.post.QPost.post;
 
 public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom{
@@ -24,7 +24,8 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom{
         Application application = queryFactory
                 .selectFrom(QApplication.application)
                 .where(usernameEq(username), postEq(postId))
-                .fetchOne();
+                .fetchFirst();
+
         return application;
     }
 

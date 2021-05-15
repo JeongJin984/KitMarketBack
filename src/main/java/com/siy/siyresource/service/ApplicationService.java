@@ -2,8 +2,12 @@ package com.siy.siyresource.service;
 
 
 
+import com.siy.siyresource.common.api.ApplicationApiController;
+import com.siy.siyresource.common.api.request.UpdateAppRequest;
 import com.siy.siyresource.domain.entity.Application;
+import com.siy.siyresource.domain.entity.post.Post;
 import com.siy.siyresource.repository.ApplicationRepositoy.ApplicationRepository;
+import com.siy.siyresource.repository.PostRepository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ApplicationService {
 
     private final ApplicationRepository applicationRepository;
+    private final PostRepository postRepository;
 
     public Application findByUsernameAndPostId(String username, Long postId){
         return applicationRepository.findByUserName(username, postId);
@@ -39,5 +44,16 @@ public class ApplicationService {
         applicationRepository.deleteById(id);
     }
 
+    @Transactional
+    public void updateApp(Application findApp, UpdateAppRequest request) {
+        findApp.setContent(request.getContent());
+    }
 
+    @Transactional
+    public void deleteByPostIdAndUserName(Long id, String username){
+        Application findApp = applicationRepository.findByUserName(username, id);
+        System.out.println("findApp = " + findApp);
+
+        applicationRepository.delete(findApp);
+    }
 }

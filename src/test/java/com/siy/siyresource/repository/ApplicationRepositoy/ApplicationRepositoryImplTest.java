@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,6 +92,13 @@ class ApplicationRepositoryImplTest {
     @Test
     public void delete(){
         postRepository.deleteById(10L);
+    }
+
+    @Test
+    public void select(){
+        PageRequest page = PageRequest.of(0, 10);
+        Page<PostDto> result = postRepository.findPostListWithPaging(page);
+        System.out.println("result = " + result);
     }
 
 }

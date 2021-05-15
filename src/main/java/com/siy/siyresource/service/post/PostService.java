@@ -1,5 +1,6 @@
 package com.siy.siyresource.service.post;
 
+import com.siy.siyresource.common.api.request.CreatePostRequest;
 import com.siy.siyresource.domain.condition.PostSearchCondition;
 import com.siy.siyresource.domain.dto.post.*;
 import com.siy.siyresource.domain.dto.post.Linear.PostLinearDto;
@@ -19,6 +20,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -157,8 +160,13 @@ public class PostService {
     public Post getPostEntity(PostSearchCondition condition) {
         Post findPost = postRepository.findPostById(condition);
         return findPost;
-
     }
+
+    public Contest getContestEntity(PostSearchCondition condition) {
+        Contest contest = postRepository.findContestById(condition);
+        return contest;
+    }
+
 
     private Set<ApplicationDto> getApplicationDtoList(Post findPost) {
         return findPost.getApplications()
@@ -197,5 +205,43 @@ public class PostService {
     @Transactional
     public void deleteById(Long id) {
         postRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void updatePost(Long id, CreatePostRequest request) {
+        Post post = postRepository.findById(id);
+        updatePostEntity(request, post);
+    }
+
+    private void updatePostEntity(CreatePostRequest request, Post post) {
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        LocalDateTime deadLine = LocalDateTime.parse(request.getDeadLine(), format);
+
+        post.setWriter(request.getWriter());
+        post.setTitle(request.getTitle());
+        post.setContent(request.getContent());
+        post.setDeadLine(deadLine);
+        post.setMaxNumber(request.getMaxNum());
+        post.setCurrentNumber(request.getCurNum());
+        post.setCategory(request.getCategory());
+    }
+
+
+
+    public void updateContest(Long id, CreatePostRequest request) {
+        Contest contest = postRepository.findById(id);
+
+        updatePostEntity(request, contest);
+    }
+
+    public void updateStudy(Long id, CreatePostRequest request) {
+        Study study = postRepository.findById(id);
+        updatePostEntity(request, study);
+    }
+
+
+    public void updatecarFool(Long id, CreatePostRequest request) {
+        CarFull carFool = postRepository.findById(id);
+        updatePostEntity(request, carFool);
     }
 }

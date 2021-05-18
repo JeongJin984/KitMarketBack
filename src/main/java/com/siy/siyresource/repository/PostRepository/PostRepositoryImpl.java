@@ -24,9 +24,9 @@ import java.util.List;
 
 import static com.siy.siyresource.domain.entity.QApplication.application;
 import static com.siy.siyresource.domain.entity.post.QStudy.study;
-import static com.siy.siyresource.domain.entity.post.QCarFull.carFull;
-import static com.siy.siyresource.domain.entity.post.QContest.contest;
 import static com.siy.siyresource.domain.entity.post.QPost.post;
+import static com.siy.siyresource.domain.entity.post.QCarPool.carPool;
+import static com.siy.siyresource.domain.entity.post.Contest.QContest.contest;
 import static com.siy.siyresource.domain.entity.accountPost.QAccountPost.accountPost;
 import static org.springframework.util.StringUtils.hasText;
 
@@ -60,7 +60,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     @Override
     public List<CarPool> findCarFullList() {
         List<CarPool> result = queryFactory
-                .selectFrom(carFull)
+                .selectFrom(carPool)
                 .fetch();
 
         return result;
@@ -290,18 +290,18 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     public Page<CarPoolDto> findCarFullListWithPaging(Pageable pageable) {
         List<CarPoolDto> content = queryFactory
                 .select(new QCarPoolDto(
-                        carFull.id.as("id"),
-                        carFull.writer,
-                        carFull.title,
-                        carFull.content,
-                        carFull.createdAt,
-                        carFull.maxNumber,
-                        carFull.currentNumber,
-                        carFull.deadLine,
-                        carFull.category
+                        carPool.id.as("id"),
+                        carPool.writer,
+                        carPool.title,
+                        carPool.content,
+                        carPool.createdAt,
+                        carPool.maxNumber,
+                        carPool.currentNumber,
+                        carPool.deadLine,
+                        carPool.category
                 ))
-                .from(carFull)
-                .orderBy(carFull.createdAt.desc())
+                .from(carPool)
+                .orderBy(carPool.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -352,7 +352,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
     private JPAQuery<CarPool> countCarPoolQuery() {
         JPAQuery<CarPool> countQuery = queryFactory
-                .selectFrom(carFull);
+                .selectFrom(carPool);
         return countQuery;
     }
 

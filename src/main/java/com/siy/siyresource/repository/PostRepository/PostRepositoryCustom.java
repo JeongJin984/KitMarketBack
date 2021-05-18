@@ -19,7 +19,7 @@ import java.util.List;
 
 public interface PostRepositoryCustom {
     List<Study> findStudyList();
-    List<CarPool> findCarFullList();
+    List<CarPool> findCarPoolList();
     List<Contest> findContestList();
     
     /*
@@ -44,7 +44,7 @@ public interface PostRepositoryCustom {
     * */
     Page<PostDto> findPostListWithPaging(Pageable pageable);
     Page<StudyDto> findStudyListWithPaging(Pageable pageable);
-    Page<CarPoolDto> findCarFullListWithPaging(Pageable pageable);
+    Page<CarPoolDto> findCarPoolListWithPaging(Pageable pageable);
     Page<ContestDto> findContestListWithPaging(Pageable pageable);
     Page<PostLinearDto> findPostLinearListWithPaging(Pageable pageable);
     Page<PostLinearDto> findPostListByUsername(PostSearchCondition condition, Pageable pageable);

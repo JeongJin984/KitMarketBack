@@ -74,7 +74,7 @@ public class PostService {
     public Page<CarPoolDto> findCarPoolList(int offset, int size) {
         PageRequest page = PageRequest.of(offset, size);
 
-        Page<CarPoolDto> results = postRepository.findCarFullListWithPaging(page);
+        Page<CarPoolDto> results = postRepository.findCarPoolListWithPaging(page);
         return results;
     }
 

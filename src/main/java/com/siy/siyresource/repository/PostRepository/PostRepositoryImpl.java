@@ -23,10 +23,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.siy.siyresource.domain.entity.QApplication.application;
-import static com.siy.siyresource.domain.entity.post.QStudy.study;
-import static com.siy.siyresource.domain.entity.post.QPost.post;
 import static com.siy.siyresource.domain.entity.post.QCarPool.carPool;
-import static com.siy.siyresource.domain.entity.post.Contest.QContest.contest;
+import static com.siy.siyresource.domain.entity.post.QStudy.study;
+import static com.siy.siyresource.domain.entity.post.QContest.contest;
+import static com.siy.siyresource.domain.entity.post.QPost.post;
 import static com.siy.siyresource.domain.entity.accountPost.QAccountPost.accountPost;
 import static org.springframework.util.StringUtils.hasText;
 
@@ -58,7 +58,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
      * 단순 CarPool 전체 조회
      */
     @Override
-    public List<CarPool> findCarFullList() {
+    public List<CarPool> findCarPoolList() {
         List<CarPool> result = queryFactory
                 .selectFrom(carPool)
                 .fetch();
@@ -287,7 +287,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
      * @return
      */
     @Override
-    public Page<CarPoolDto> findCarFullListWithPaging(Pageable pageable) {
+    public Page<CarPoolDto> findCarPoolListWithPaging(Pageable pageable) {
         List<CarPoolDto> content = queryFactory
                 .select(new QCarPoolDto(
                         carPool.id.as("id"),

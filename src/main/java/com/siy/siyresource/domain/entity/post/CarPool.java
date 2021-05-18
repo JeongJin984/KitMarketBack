@@ -1,29 +1,35 @@
 package com.siy.siyresource.domain.entity.post;
 
-import com.siy.siyresource.domain.entity.post.Post;
 import lombok.*;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
-@DiscriminatorValue("Contest")
+@DiscriminatorValue("CarPool")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Contest extends Post {
-    private String category;
+public class CarPool extends Post{
+
+    private String departure;
+
+    private String destination;
+
+    //출발 시간
+    private LocalDateTime departureTime;
+
+    //요금
+    private Long fare;
 
     @Builder
-    public Contest(String title, String content, String category) {
+    public CarPool(String title, String content) {
         super(title, content);
         this.setCategory("study");
-        this.category = category;
     }
     @Builder
-    public Contest(Post post, String category) {
+    public CarPool(Post post, String category) {
         super(post.getTitle(),
                 post.getContent(),
                 post.getWriter(),
@@ -31,10 +37,9 @@ public class Contest extends Post {
                 post.getMaxNumber(),
                 post.getDeadLine());
         this.setCategory("study");
-        this.category = category;
-    }
-    public static Contest CreateContest(){
-        return new Contest();
     }
 
+    public static CarPool CreateCarFool() {
+        return new CarPool();
+    }
 }

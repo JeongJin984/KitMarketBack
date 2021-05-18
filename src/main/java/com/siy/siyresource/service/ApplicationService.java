@@ -2,10 +2,8 @@ package com.siy.siyresource.service;
 
 
 
-import com.siy.siyresource.common.api.ApplicationApiController;
-import com.siy.siyresource.common.api.request.UpdateAppRequest;
+
 import com.siy.siyresource.domain.entity.Application;
-import com.siy.siyresource.domain.entity.post.Post;
 import com.siy.siyresource.repository.ApplicationRepositoy.ApplicationRepository;
 import com.siy.siyresource.repository.PostRepository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,8 +43,8 @@ public class ApplicationService {
     }
 
     @Transactional
-    public void updateApp(Application findApp, UpdateAppRequest request) {
-        findApp.setContent(request.getContent());
+    public void updateApp(Application findApp, String request) {
+        findApp.setContent(request);
     }
 
     @Transactional

@@ -1,21 +1,14 @@
 package com.siy.siyresource.domain.dto.post;
 
 import com.querydsl.core.annotations.QueryProjection;
-import com.siy.siyresource.domain.dto.account.SimpleAccountDto;
-import com.siy.siyresource.domain.dto.accountPost.AccountPostDto;
-import com.siy.siyresource.domain.entity.Application;
-import com.siy.siyresource.domain.entity.accountPost.AccountPost;
-import com.siy.siyresource.domain.entity.post.CarFull;
-import com.siy.siyresource.domain.entity.post.Contest;
+import com.siy.siyresource.domain.entity.post.CarPool;
+import com.siy.siyresource.domain.entity.post.Contest.Contest;
 import com.siy.siyresource.domain.entity.post.Post;
 import com.siy.siyresource.domain.entity.post.Study;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.tomcat.jni.Local;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.*;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -51,7 +44,7 @@ public class PostDto {
         if(post instanceof Study){
             this.category = "study";
         }
-        else if( post instanceof CarFull){
+        else if( post instanceof CarPool){
             this.category = "carFool";
         }
         else if (post instanceof Contest){

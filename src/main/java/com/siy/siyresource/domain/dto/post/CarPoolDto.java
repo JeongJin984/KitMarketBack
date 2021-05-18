@@ -13,23 +13,14 @@ import java.util.Set;
 
 @Data
 @NoArgsConstructor
-public class CarFullDto extends PostDto{
-    @QueryProjection
-    public CarFullDto(Long id, String title, String content) {
-        super(id,title,content);
-    }
+public class CarPoolDto extends PostDto{
 
     @QueryProjection
-    public CarFullDto(Long id, String account, String title, String content) {
-        super(id,account,title, content);
-    }
-
-    @QueryProjection
-    public CarFullDto(Long id, String writer, String title, String content, LocalDateTime createdAt,
+    public CarPoolDto(Long id, String writer, String title, String content, LocalDateTime createdAt,
                       Integer maxNum, Integer curNum, LocalDateTime deadLine, String category) {
         super(id, writer, title, content, createdAt, maxNum, curNum, deadLine, category);
     }
-    public CarFullDto(Post post, Set<String> list) { super(post, list); }
+
 
 
 }

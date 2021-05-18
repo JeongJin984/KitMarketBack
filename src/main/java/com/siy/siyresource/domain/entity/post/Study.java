@@ -4,9 +4,7 @@ import com.siy.siyresource.domain.entity.account.Account;
 import com.siy.siyresource.domain.entity.post.Post;
 import lombok.*;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -16,13 +14,18 @@ import java.time.LocalDate;
 @DiscriminatorValue("Study")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Study extends Post{
-    private String category;
+    // 과목
+    @Enumerated(EnumType.STRING)
+    private StudyCategory subject;
+
+    private String region;
+
+    private String time;
 
     @Builder
-    public Study(String title, String content, String category) {
+    public Study(String title, String content) {
         super(title, content);
         this.setCategory("study");
-        this.category = category;
     }
     @Builder
     public Study(Post post, String category) {
@@ -32,8 +35,6 @@ public class Study extends Post{
                 post.getCurrentNumber(),
                 post.getMaxNumber(),
                 post.getDeadLine());
-        this.setCategory("study");
-        this.category = category;
     }
 
     public static Study CreateStudy() {

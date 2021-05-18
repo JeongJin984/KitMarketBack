@@ -4,11 +4,11 @@ import com.siy.siyresource.common.api.request.CreatePostRequest;
 import com.siy.siyresource.domain.condition.PostSearchCondition;
 import com.siy.siyresource.domain.dto.post.*;
 import com.siy.siyresource.domain.dto.post.Linear.PostLinearDto;
-import com.siy.siyresource.domain.dto.post.detail.CarFoolDtoDetail;
+import com.siy.siyresource.domain.dto.post.detail.CarPoolDtoDetail;
 import com.siy.siyresource.domain.dto.post.detail.ContestDtoDetail;
 import com.siy.siyresource.domain.dto.post.detail.PostDtoDetail;
-import com.siy.siyresource.domain.entity.post.CarFull;
-import com.siy.siyresource.domain.entity.post.Contest;
+import com.siy.siyresource.domain.entity.post.CarPool;
+import com.siy.siyresource.domain.entity.post.Contest.Contest;
 import com.siy.siyresource.domain.entity.post.Post;
 import com.siy.siyresource.domain.entity.post.Study;
 import com.siy.siyresource.repository.AccountRepository.AccountRepository;
@@ -55,12 +55,12 @@ public class PostApiController {
     }
 
     /**
-     * carFull 전체 조회
+     * carPool 전체 조회
      */
-    @GetMapping(value = "/api/carFoolList")
-    public Result carFullList(@RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
+    @GetMapping(value = "/api/carPoolList")
+    public Result carPoolList(@RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
                               @RequestParam(value = "size", defaultValue = "8", required = false) int size) {
-        Page<CarFullDto> result = postService.findCarFulList(offset, size);
+        Page<CarPoolDto> result = postService.findCarPoolList(offset, size);
 
         return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.getContent());
     }
@@ -84,7 +84,6 @@ public class PostApiController {
     public Result findParticipating(@RequestParam String username,
                                     @RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
                                     @RequestParam(value = "size", defaultValue = "8", required = false) int size){
-
 
         Page<PostLinearDto> result = postService.findParticipatingList(username, offset, size);
 
@@ -147,12 +146,12 @@ public class PostApiController {
     /**
      * carFool 한개 조회
      */
-    @GetMapping(value = "/api/carFool")
+    @GetMapping(value = "/api/carPool")
     public PostDtoDetail carFoolOne(@RequestParam(value = "id") Long id) {
 
         PostSearchCondition condition = new PostSearchCondition(id, null, null);
 
-        CarFoolDtoDetail findPostDetail = postService.findCarFoolById(condition);
+        CarPoolDtoDetail findPostDetail = postService.findCarFoolById(condition);
 
         return findPostDetail;
     }
@@ -188,18 +187,18 @@ public class PostApiController {
     }
 
     /**
-     * CarFool 저장
+     * CarPool 저장
      */
-    @PostMapping(value = "/api/carfool")
+    @PostMapping(value = "/api/carPool")
     public String saveCarFool(@RequestBody @Valid CreatePostRequest request) {
-        CarFull post = CarFull.CreateCarFool();
+        CarPool post = CarPool.CreateCarFool();
         PostRequestToCarFoolEntity(post, request);
 
         postService.save(post);
         return "redirect:/";
     }
 
-    private void PostRequestToCarFoolEntity(CarFull post, CreatePostRequest request) {
+    private void PostRequestToCarFoolEntity(CarPool post, CreatePostRequest request) {
         PostRequestToPostEntity(post, request);
     }
 
@@ -208,6 +207,7 @@ public class PostApiController {
      */
     @PostMapping(value = "/api/study")
     public String saveStudy(@RequestBody @Valid CreatePostRequest request) {
+        System.out.println("request = " + request);
         Study post = Study.CreateStudy();
         PostRequestToStudyEntity(post, request);
 
@@ -259,9 +259,9 @@ public class PostApiController {
         return "redirect:/";
     }
     /**
-     *  carFool 수정
+     *  carPool 수정
      * */
-    @PutMapping(value = "/api/carFool/{id}")
+    @PutMapping(value = "/api/carPool/{id}")
     public String updateCarFool(@RequestBody @Valid CreatePostRequest request, @PathVariable("id")Long id){
         postService.updatecarFool(id, request);
 
@@ -350,6 +350,7 @@ class PostRequest{
     private String username;
     private String content;
 }
+
 @Data
 class MyRequest{
     private String username;
@@ -359,7 +360,6 @@ class MyRequest{
 class CanclePostRequest{
     private String username;
 }
-
 
 
 

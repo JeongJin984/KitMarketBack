@@ -11,6 +11,7 @@ import com.siy.siyresource.domain.entity.QApplication;
 import com.siy.siyresource.domain.entity.account.QAccount;
 import com.siy.siyresource.domain.entity.accountPost.QAccountPost;
 import com.siy.siyresource.domain.entity.post.*;
+import com.siy.siyresource.domain.entity.post.Contest.Contest;
 import com.siy.siyresource.repository.AccountRepository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,7 +19,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -55,11 +55,11 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     }
 
     /**
-     * 단순 CarFull 전체 조회
+     * 단순 CarPool 전체 조회
      */
     @Override
-    public List<CarFull> findCarFullList() {
-        List<CarFull> result = queryFactory
+    public List<CarPool> findCarFullList() {
+        List<CarPool> result = queryFactory
                 .selectFrom(carFull)
                 .fetch();
 
@@ -282,14 +282,14 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
 
     /**
-     * CarFull Paging List
+     * CarPool Paging List
      *
      * @return
      */
     @Override
-    public Page<CarFullDto> findCarFullListWithPaging(Pageable pageable) {
-        List<CarFullDto> content = queryFactory
-                .select(new QCarFullDto(
+    public Page<CarPoolDto> findCarFullListWithPaging(Pageable pageable) {
+        List<CarPoolDto> content = queryFactory
+                .select(new QCarPoolDto(
                         carFull.id.as("id"),
                         carFull.writer,
                         carFull.title,
@@ -305,7 +305,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
-        JPAQuery<CarFull> countQuery = countCarPoolQuery();
+        JPAQuery<CarPool> countQuery = countCarPoolQuery();
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
@@ -350,8 +350,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .selectFrom(post);
     }
 
-    private JPAQuery<CarFull> countCarPoolQuery() {
-        JPAQuery<CarFull> countQuery = queryFactory
+    private JPAQuery<CarPool> countCarPoolQuery() {
+        JPAQuery<CarPool> countQuery = queryFactory
                 .selectFrom(carFull);
         return countQuery;
     }

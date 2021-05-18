@@ -4,13 +4,13 @@ import com.siy.siyresource.common.api.request.CreatePostRequest;
 import com.siy.siyresource.domain.condition.PostSearchCondition;
 import com.siy.siyresource.domain.dto.post.*;
 import com.siy.siyresource.domain.dto.post.Linear.PostLinearDto;
-import com.siy.siyresource.domain.dto.post.detail.CarFoolDtoDetail;
+import com.siy.siyresource.domain.dto.post.detail.CarPoolDtoDetail;
 import com.siy.siyresource.domain.dto.post.detail.ContestDtoDetail;
 import com.siy.siyresource.domain.dto.post.detail.PostDtoDetail;
 import com.siy.siyresource.domain.dto.post.detail.StudyDtoDetail;
 import com.siy.siyresource.domain.entity.accountPost.AccountPost;
-import com.siy.siyresource.domain.entity.post.CarFull;
-import com.siy.siyresource.domain.entity.post.Contest;
+import com.siy.siyresource.domain.entity.post.CarPool;
+import com.siy.siyresource.domain.entity.post.Contest.Contest;
 import com.siy.siyresource.domain.entity.post.Post;
 import com.siy.siyresource.domain.entity.post.Study;
 import com.siy.siyresource.repository.PostRepository.PostRepository;
@@ -67,14 +67,14 @@ public class PostService {
     }
 
     /**
-     * CarFull 전체 조회
+     * CarPool 전체 조회
      *
      * @return
      */
-    public Page<CarFullDto> findCarFulList(int offset, int size) {
+    public Page<CarPoolDto> findCarPoolList(int offset, int size) {
         PageRequest page = PageRequest.of(offset, size);
 
-        Page<CarFullDto> results = postRepository.findCarFullListWithPaging(page);
+        Page<CarPoolDto> results = postRepository.findCarFullListWithPaging(page);
         return results;
     }
 
@@ -127,14 +127,14 @@ public class PostService {
         return postDtoDetail;
     }
 
-    public CarFoolDtoDetail findCarFoolById(PostSearchCondition condition) {
-        CarFull findPost = (CarFull) postRepository.findPostById(condition);
+    public CarPoolDtoDetail findCarFoolById(PostSearchCondition condition) {
+        CarPool findPost = (CarPool) postRepository.findPostById(condition);
 
         Set<ApplicationDto> applications = getApplicationDtoList(findPost);
 
         Set<ParticipantsDto> participants = getParticipantsList(findPost.getAccountPosts());
 
-        CarFoolDtoDetail postDtoDetail = new CarFoolDtoDetail(findPost, participants, applications);
+        CarPoolDtoDetail postDtoDetail = new CarPoolDtoDetail(findPost, participants, applications);
         return postDtoDetail;
     }
 
@@ -241,7 +241,7 @@ public class PostService {
 
 
     public void updatecarFool(Long id, CreatePostRequest request) {
-        CarFull carFool = postRepository.findById(id);
+        CarPool carFool = postRepository.findById(id);
         updatePostEntity(request, carFool);
     }
 }

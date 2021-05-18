@@ -3,7 +3,7 @@ package com.siy.siyresource.domain.dto.post.detail;
 import com.querydsl.core.annotations.QueryProjection;
 import com.siy.siyresource.domain.dto.post.ApplicationDto;
 import com.siy.siyresource.domain.dto.post.ParticipantsDto;
-import com.siy.siyresource.domain.entity.post.Study;
+import com.siy.siyresource.domain.entity.post.CarPool;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,13 +11,16 @@ import java.util.Set;
 
 @Data
 @NoArgsConstructor
-public class StudyDtoDetail extends PostDtoDetail{
-    private String study;
+public class CarPoolDtoDetail extends PostDtoDetail{
+    private String carFool;
 
     @QueryProjection
-    public StudyDtoDetail(Study study, Set<ParticipantsDto> participants, Set<ApplicationDto> applications){
-        super(study, participants, applications);
-        this.study = study.getCategory();
+    public CarPoolDtoDetail(CarPool carPool, Set<ParticipantsDto> participants, Set<ApplicationDto> applications){
+        super(carPool, participants, applications);
+        this.carFool = carPool.getCategory();
     }
+
+
+
 
 }

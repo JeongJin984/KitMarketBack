@@ -1,6 +1,5 @@
 package com.siy.siyresource.common.api;
 
-import com.siy.siyresource.common.api.request.UpdateAppRequest;
 import com.siy.siyresource.domain.condition.PostSearchCondition;
 import com.siy.siyresource.domain.entity.Application;
 import com.siy.siyresource.domain.entity.account.Account;
@@ -23,7 +22,7 @@ public class ApplicationApiController {
      * 함께하기
      */
     @PostMapping("/api/app/join")
-    public void JoinPost(@RequestBody @Valid PostRequest request, @RequestParam(value = "postId") Long id){
+    public void JoinPost(@RequestBody @Valid ApplicationRequest request, @RequestParam(value = "postId") Long id){
         System.out.println("JoinPost Application");
         System.out.println("request = " + request);
 
@@ -37,15 +36,13 @@ public class ApplicationApiController {
 
         Application application = new Application(request.getContent(), findAccount, findPost);
         Long save = applicationService.save(application);
-
-        System.out.println("save = " + save);
     }
 
     /**
      * 취소하기
      */
     @DeleteMapping("/api/app/cancle")
-    public String JoinPost(@RequestBody @Valid CanclePostRequest request, @RequestParam(value = "postId") Long id){
+    public String JoinPost(@RequestBody @Valid CancleAppRequest request, @RequestParam(value = "postId") Long id){
         applicationService.deleteByPostIdAndUserName(id, request.getUsername());
         return "redirect:/";
     }
@@ -54,13 +51,22 @@ public class ApplicationApiController {
      * 수정하기
      */
     @PutMapping("/api/app/update/{id}")
-    public String UpdateApp(@RequestBody @Valid UpdateAppRequest request, @PathVariable Long postId){
+    public String UpdateApp(@RequestBody @Valid ApplicationRequest request, @PathVariable Long postId){
         Application findApp = applicationService.findByUsernameAndPostId(request.getUsername(), postId);
-        applicationService.updateApp(findApp, request);
+        applicationService.updateApp(findApp, request.getContent());
 
         return "redirect:/";
     }
 
-
-
 }
+@Data
+class ApplicationRequest{
+    private String username;
+    private String content;
+}
+
+@Data
+class CancleAppRequest{
+    String username;
+}
+

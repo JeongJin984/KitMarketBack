@@ -1,6 +1,7 @@
 package com.siy.siyresource.common;
 
-import com.siy.siyresource.domain.entity.post.Contest;
+import com.siy.siyresource.domain.entity.post.Contest.Contest;
+import com.siy.siyresource.domain.entity.post.Contest.ContestCategory;
 import com.siy.siyresource.domain.entity.post.Post;
 import com.siy.siyresource.domain.entity.post.Study;
 import com.siy.siyresource.domain.entity.Application;
@@ -11,10 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -117,7 +116,7 @@ public class SimpleListener implements ApplicationListener<ApplicationStartedEve
 
         for(int i = 0; i<10; i++){
             Post post = new Post("Study" + i, "I'm Study" + i, accountUser.getUsername(), 1, 5, LocalDateTime.of(2022,1,2,14,05,02));
-            Contest contest = new Contest(post, "contest");
+            Contest contest = new Contest(post, ContestCategory.CHARACTER);
             Application application1 = new Application(accountUser.getUsername()+" 참여하고싶어요", accountUser, contest);
             Application application2 = new Application(accountManager.getUsername()+" 참여하고싶어요", accountManager, contest);
             Application application3 = new Application(accountAdmin.getUsername() + " 참여하고싶어요", accountAdmin, contest);

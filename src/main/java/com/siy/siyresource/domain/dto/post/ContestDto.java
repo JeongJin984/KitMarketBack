@@ -14,15 +14,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 public class ContestDto extends PostDto{
-    @QueryProjection
-    public ContestDto(Long id, String title, String content) {
-        super(id,title,content);
-    }
 
-    @QueryProjection
-    public ContestDto(Long id, String account, String title, String content) {
-        super(id, account, title, content);
-    }
 
     @QueryProjection
     public ContestDto(Long id, String writer, String title, String content, LocalDateTime createdAt,
@@ -30,8 +22,5 @@ public class ContestDto extends PostDto{
         super(id, writer, title, content, createdAt, maxNum, curNum, deadLine, category);
     }
 
-    public ContestDto(Post post, Set<String> list) {
-        super(post, list);
-    }
 
 }

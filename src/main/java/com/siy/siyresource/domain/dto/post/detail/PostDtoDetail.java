@@ -1,12 +1,8 @@
 package com.siy.siyresource.domain.dto.post.detail;
 
-import com.siy.siyresource.domain.dto.account.AccountDto;
 import com.siy.siyresource.domain.dto.post.ApplicationDto;
 import com.siy.siyresource.domain.dto.post.ParticipantsDto;
-import com.siy.siyresource.domain.entity.post.CarFull;
-import com.siy.siyresource.domain.entity.post.Contest;
 import com.siy.siyresource.domain.entity.post.Post;
-import com.siy.siyresource.domain.entity.post.Study;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

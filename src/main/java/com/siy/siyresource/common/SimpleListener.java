@@ -1,5 +1,6 @@
 package com.siy.siyresource.common;
 
+import com.siy.siyresource.domain.condition.AccountSearchCondition;
 import com.siy.siyresource.domain.entity.post.Contest.Contest;
 import com.siy.siyresource.domain.entity.post.Contest.ContestCategory;
 import com.siy.siyresource.domain.entity.post.Post;
@@ -7,11 +8,14 @@ import com.siy.siyresource.domain.entity.post.Study;
 import com.siy.siyresource.domain.entity.Application;
 import com.siy.siyresource.domain.entity.account.*;
 import com.siy.siyresource.domain.entity.accountPost.AccountPost;
+import com.siy.siyresource.repository.AccountRepository.AccountRepository;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -24,67 +28,26 @@ public class SimpleListener implements ApplicationListener<ApplicationStartedEve
     private PasswordEncoder passwordEncoder;
 
     @Autowired
+    private AccountRepository accountRepository;
+
+    @Autowired
     public SimpleListener(EntityManagerFactory entityManagerFactory, PasswordEncoder passwordEncoder) {
         this.entityManagerFactory = entityManagerFactory;
         this.passwordEncoder = passwordEncoder;
     }
 
-
     @Override
-    public void onApplicationEvent(ApplicationStartedEvent event) {
+    public void onApplicationEvent(ApplicationStartedEvent applicationStartedEvent) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
 
-        Role roleAdmin = new Role("ROLE_ADMIN");
-        Role roleManager = new Role("ROLE_MANAGER");
-        Role roleUser = new Role("ROLE_USER");
-
-        em.persist(roleAdmin);
-        em.persist(roleManager);
-        em.persist(roleUser);
-
-        RoleHierarchy roleHierarchyAdmin = new RoleHierarchy("ROLE_ADMIN");
-        RoleHierarchy roleHierarchyManager = new RoleHierarchy("ROLE_MANAGER", roleHierarchyAdmin);
-        RoleHierarchy roleHierarchyUser = new RoleHierarchy("ROLE_USER", roleHierarchyManager);
-
-        em.persist(roleHierarchyAdmin);
-        em.persist(roleHierarchyManager);
-        em.persist(roleHierarchyUser);
-
-        Account accountAdmin = new Account("admin",
-                passwordEncoder.encode("asdf"),
-                "1111@1111.1111",
-                30);
-
-        Account accountManager = new Account("manager",
-                passwordEncoder.encode("asdf"),
-                "2222@2222.2222",
-                20);
-
-        Account accountUser = new Account("user",
-                passwordEncoder.encode("asdf"),
-                "3333@3333.3333",
-                10);
-
-        em.persist(accountAdmin);
-        em.persist(accountManager);
-        em.persist(accountUser);
-
-        AccountRole accountRoleAdmin = new AccountRole();
-        accountRoleAdmin.setRole(roleAdmin);
-        accountRoleAdmin.setAccount(accountAdmin);
-
-        AccountRole accountRoleManager = new AccountRole();
-        accountRoleManager.setRole(roleManager);
-        accountRoleManager.setAccount(accountManager);
-
-        AccountRole accountRoleUser = new AccountRole();
-        accountRoleUser.setRole(roleUser);
-        accountRoleUser.setAccount(accountUser);
-
+        Account accountAdmin = accountRepository.findAccount(new AccountSearchCondition("admin"));
+        Account accountManager = accountRepository.findAccount(new AccountSearchCondition("manager"));
+        Account accountUser = accountRepository.findAccount(new AccountSearchCondition("user"));
 
         for(int i = 0; i<10; i++){
-            Post post = new Post("Study" + i, "I'm Study" + i, accountUser.getUsername(), 1, 5, LocalDateTime.of(2022,3,25,18,19,03));
+            Post post = new Post("Study" + i, "I'm Study" + i, accountUser.getUsername(), 1, 5,
+                    LocalDateTime.of(2022,3,25,18,19,03));
             Study study = new Study(post, "study");
 
             AccountPost accountPost = new AccountPost();
@@ -120,7 +83,9 @@ public class SimpleListener implements ApplicationListener<ApplicationStartedEve
             Application application1 = new Application(accountUser.getUsername()+" 참여하고싶어요", accountUser, contest);
             Application application2 = new Application(accountManager.getUsername()+" 참여하고싶어요", accountManager, contest);
             Application application3 = new Application(accountAdmin.getUsername() + " 참여하고싶어요", accountAdmin, contest);
+
             AccountPost accountPost = new AccountPost();
+
             accountPost.setAccount(accountManager);
             accountPost.setPost(contest);
             accountPost.setCode(AccountCode.WRITER);
@@ -142,11 +107,6 @@ public class SimpleListener implements ApplicationListener<ApplicationStartedEve
                 em.persist(accountPost2);
             }
         }
-
-        em.persist(accountRoleAdmin);
-        em.persist(accountRoleManager);
-        em.persist(accountRoleUser);
-
         em.getTransaction().commit();
     }
 }

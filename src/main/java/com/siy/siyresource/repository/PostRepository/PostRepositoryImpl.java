@@ -25,7 +25,7 @@ import java.util.List;
 import static com.siy.siyresource.domain.entity.QApplication.application;
 import static com.siy.siyresource.domain.entity.post.QCarPool.carPool;
 import static com.siy.siyresource.domain.entity.post.QStudy.study;
-import static com.siy.siyresource.domain.entity.post.QContest.contest;
+import static com.siy.siyresource.domain.entity.post.Contest.QContest.contest;
 import static com.siy.siyresource.domain.entity.post.QPost.post;
 import static com.siy.siyresource.domain.entity.accountPost.QAccountPost.accountPost;
 import static org.springframework.util.StringUtils.hasText;

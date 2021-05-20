@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
 @EnableJpaAuditing
-@EnableEurekaClient
+//@EnableEurekaClient
 public class SiyResourceApplication {
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication();

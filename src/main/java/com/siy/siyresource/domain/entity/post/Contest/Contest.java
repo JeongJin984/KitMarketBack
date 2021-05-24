@@ -11,6 +11,7 @@ import javax.persistence.*;
 @DiscriminatorValue("Contest")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Contest extends Post {
+
     @Enumerated(EnumType.STRING)
     private ContestCategory contestCategory; // 분야별 선택 [ REPORT,IDEA,DESIGN,CHARACTER,CULTURE,UCC, EXTERNAL_ACTIVITY]
 

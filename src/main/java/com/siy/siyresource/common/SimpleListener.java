@@ -21,12 +21,12 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
-//@Component
+@Component
 public class SimpleListener implements ApplicationListener<ApplicationStartedEvent> {
 
     private EntityManagerFactory entityManagerFactory;
     private PasswordEncoder passwordEncoder;
-
+    private static Long count = 0L;
     @Autowired
     private AccountRepository accountRepository;
 
@@ -38,6 +38,11 @@ public class SimpleListener implements ApplicationListener<ApplicationStartedEve
 
     @Override
     public void onApplicationEvent(ApplicationStartedEvent applicationStartedEvent) {
+        if(count != 0L){
+            return;
+        }
+        count = 1L;
+
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
 

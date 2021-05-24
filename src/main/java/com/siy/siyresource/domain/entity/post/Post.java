@@ -51,6 +51,9 @@ public class Post {
     @Column(name = "post_writer")
     private String writer;
 
+    @Enumerated(EnumType.STRING)
+    private PostStatus postStatus;
+
     @NotNull
     private Integer currentNumber;
 

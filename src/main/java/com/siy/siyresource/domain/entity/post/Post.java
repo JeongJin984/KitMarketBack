@@ -88,6 +88,7 @@ public class Post {
         this.maxNumber = maxNumber;
         this.currentNumber = currentNumber;
         this.deadLine = deadLine;
+        this.postStatus = PostStatus.POSTING;
     }
     public void increaseCurrentNumber(){
         currentNumber++;

@@ -315,6 +315,70 @@ public class PostApiController {
     }
 
 
+    /**
+     * 포스팅 중인 모든 포스트 리스트
+     */
+    @GetMapping("/api/post/postingList")
+    public Result findPostingList(@RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
+                                  @RequestParam(value = "size", defaultValue = "8", required = false) int size ){
+
+        Page<PostDto> result = postService.findPostingList(offset, size);
+        return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.getContent());
+    }
+
+    /**
+     * 종료된 모든 포스트 리스트
+     */
+    @GetMapping("/api/post/closeList")
+    public Result findClosedList(@RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
+                                  @RequestParam(value = "size", defaultValue = "8", required = false) int size ){
+
+        Page<PostDto> result = postService.findClosedList(offset, size);
+        return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.getContent());
+    }
+
+    /**
+     *  검색기능
+     * @param title
+     * @param username
+     */
+    @GetMapping("/api/post/search")
+    public Result  searchPostByKeyword( @RequestParam(value = "title",required = false) String title,
+                                        @RequestParam(value = "username", required = false) String username,
+                                        @RequestParam(value = "status",  required = true) String status,
+                                        @RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
+                                       @RequestParam(value = "size", defaultValue = "8", required = false) int size ){
+//
+//        System.out.println("title = " + title);
+//        System.out.println("username = " + username);
+
+        Page<PostDto> result = postService.findSearchList(title, username, status, offset, size);
+        return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.getContent());
+    }
+
+    /**
+     * 포스팅 마감하기
+     */
+    @GetMapping(value = "/api/post/operating")
+    public String operatingPost(@RequestParam(required = true) @Valid Long id) {
+        postService.operatingPost(id);
+
+        return "redirect:/";
+    }
+
+    /**
+     *  포스트 운영 종료하기
+     * */
+    @GetMapping(value = "/api/post/closed")
+    public String closedPost(@RequestParam(required = true) @Valid Long id){
+        postService.closedPost(id);
+
+        return "redirect:/";
+    }
+
+
+
+
 
 
     private Post PostRequestToPostEntity(Post post, CreatePostRequest request) {
@@ -353,11 +417,6 @@ class PostRequest{
 
 @Data
 class MyRequest{
-    private String username;
-}
-
-@Data
-class CanclePostRequest{
     private String username;
 }
 

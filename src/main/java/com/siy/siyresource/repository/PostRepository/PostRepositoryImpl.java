@@ -1,5 +1,6 @@
 package com.siy.siyresource.repository.PostRepository;
 
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -243,6 +244,141 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
 
+    /**
+     * 마감된 포스팅 보기
+     * */
+    @Override
+    public Page<PostDto> findPostingList(PageRequest pageable) {
+        List<PostDto> content = queryFactory
+                .select(new QPostDto(
+                        post.id.as("id"),
+                        post.writer,
+                        post.title,
+                        post.content,
+                        post.createdAt,
+                        post.maxNumber,
+                        post.currentNumber,
+                        post.deadLine,
+                        post.category
+                ))
+                .from(post)
+                .where(postingEqual())
+                .orderBy(post.createdAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+        JPAQuery<Post> countQuery = countPostingListQuery();
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
+    }
+
+    @Override
+    public Page<PostDto> findClosedList(PageRequest pageable) {
+        List<PostDto> content = queryFactory
+                .select(new QPostDto(
+                        post.id.as("id"),
+                        post.writer,
+                        post.title,
+                        post.content,
+                        post.createdAt,
+                        post.maxNumber,
+                        post.currentNumber,
+                        post.deadLine,
+                        post.category
+                ))
+                .from(post)
+                .where(closedEqual())
+                .orderBy(post.createdAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+        JPAQuery<Post> countQuery = countClosedListQuery();
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
+    }
+
+    @Override
+    public Page<PostDto> findSearchList(PostSearchCondition condition, PageRequest page) {
+        System.out.println("condition = " + condition);
+
+        List<PostDto> content = queryFactory
+                .select(new QPostDto(
+                        post.id.as("id"),
+                        post.writer,
+                        post.title,
+                        post.content,
+                        post.createdAt,
+                        post.maxNumber,
+                        post.currentNumber,
+                        post.deadLine,
+                        post.category
+                ))
+                .from(post)
+                .where(searchContains(condition).and(selectedStatus(condition)))
+                .orderBy(post.createdAt.desc())
+                .offset(page.getOffset())
+                .limit(page.getPageSize())
+                .fetch();
+        JPAQuery<Post> countQuery = countSearchListQuery(condition);
+        return PageableExecutionUtils.getPage(content, page, countQuery::fetchCount);
+    }
+
+    private JPAQuery<Post> countSearchListQuery(PostSearchCondition condition) {
+        return queryFactory
+                .selectFrom(post)
+                .where(searchContains(condition), selectedStatus(condition));
+    }
+
+    private BooleanExpression selectedStatus(PostSearchCondition condition) {
+        if(condition.getStatus().equals("POSTING")){
+            System.out.println("posting");
+            return postingEqual();
+        }
+        else if (condition.getStatus().equals("CLOSED")){
+            System.out.println("closed");
+            return closedEqual();
+        }
+        else
+            return null;
+    }
+
+    private BooleanExpression searchContains(PostSearchCondition condition) {
+        BooleanExpression title = hasText(condition.getTitle()) ? post.title.contains(condition.getTitle()) : null;
+        BooleanExpression username = hasText(condition.getUsername()) ? post.writer.contains(condition.getUsername()) : null;
+
+        System.out.println("title = " + title);
+        System.out.println("username = " + username);
+
+        if(title != null){
+            return title;
+        }
+        else if (username != null){
+            return username;
+        }
+        else
+            return null;
+    }
+
+
+
+
+
+
+    private JPAQuery<Post> countClosedListQuery() {
+        return queryFactory
+                .selectFrom(post)
+                .where(closedEqual());
+    }
+
+    private BooleanExpression closedEqual() {
+        return post.postStatus.eq(PostStatus.CLOSE);
+
+    }
+
+    private JPAQuery<Post> countPostingListQuery() {
+        return queryFactory
+                .selectFrom(post)
+                .where(postingEqual());
+    }
+
     private JPAQuery<Post> countPostByApplicationUserNameQuery(String username) {
         JPAQuery<Post> result = queryFactory
                 .selectFrom(post)
@@ -386,6 +522,10 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
     private BooleanExpression postWriterEqual(String username) {
         return hasText(username) ? post.writer.eq(username) :null;
+    }
+
+    private BooleanExpression postingEqual() {
+        return post.postStatus.eq(PostStatus.POSTING);
     }
 
     private BooleanExpression accountPostUserNameEq(String username) {

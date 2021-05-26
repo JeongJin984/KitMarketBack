@@ -44,11 +44,60 @@ public class SimpleListener implements ApplicationListener<ApplicationStartedEve
         count = 1L;
 
         EntityManager em = entityManagerFactory.createEntityManager();
-        em.getTransaction().begin();
+        EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
 
-        Account accountAdmin = accountRepository.findAccount(new AccountSearchCondition("admin"));
-        Account accountManager = accountRepository.findAccount(new AccountSearchCondition("manager"));
-        Account accountUser = accountRepository.findAccount(new AccountSearchCondition("user"));
+
+        Role roleAdmin = new Role("ROLE_ADMIN");
+        Role roleManager = new Role("ROLE_MANAGER");
+        Role roleUser = new Role("ROLE_USER");
+
+        em.persist(roleAdmin);
+        em.persist(roleManager);
+        em.persist(roleUser);
+
+        RoleHierarchy roleHierarchyAdmin = new RoleHierarchy("ROLE_ADMIN");
+        RoleHierarchy roleHierarchyManager = new RoleHierarchy("ROLE_MANAGER", roleHierarchyAdmin);
+        RoleHierarchy roleHierarchyUser = new RoleHierarchy("ROLE_USER", roleHierarchyManager);
+
+        em.persist(roleHierarchyAdmin);
+        em.persist(roleHierarchyManager);
+        em.persist(roleHierarchyUser);
+
+        Account accountAdmin = new Account("admin",
+                passwordEncoder.encode("asdf"),
+                "1111@1111.1111",
+                30);
+
+        Account accountManager = new Account("manager",
+                passwordEncoder.encode("asdf"),
+                "2222@2222.2222",
+                20);
+
+        Account accountUser = new Account("user",
+                passwordEncoder.encode("asdf"),
+                "3333@3333.3333",
+                10);
+
+        em.persist(accountAdmin);
+        em.persist(accountManager);
+        em.persist(accountUser);
+
+        AccountRole accountRoleAdmin = new AccountRole();
+        accountRoleAdmin.setRole(roleAdmin);
+        accountRoleAdmin.setAccount(accountAdmin);
+
+        AccountRole accountRoleManager = new AccountRole();
+        accountRoleManager.setRole(roleManager);
+        accountRoleManager.setAccount(accountManager);
+
+        AccountRole accountRoleUser = new AccountRole();
+        accountRoleUser.setRole(roleUser);
+        accountRoleUser.setAccount(accountUser);
+
+        em.persist(accountRoleAdmin);
+        em.persist(accountRoleManager);
+        em.persist(accountRoleUser);
 
         for(int i = 0; i<10; i++){
             Post post = new Post("Study" + i, "I'm Study" + i, accountUser.getUsername(), 1, 5,

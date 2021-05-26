@@ -33,6 +33,7 @@ public interface PostRepositoryCustom {
      **/
     Post findPostById(PostSearchCondition condition);
     Contest findContestById(PostSearchCondition condition);
+
     /*
     * WithApplication 함수
     * */
@@ -49,6 +50,8 @@ public interface PostRepositoryCustom {
     Page<PostLinearDto> findPostLinearListWithPaging(Pageable pageable);
     Page<PostLinearDto> findPostListByUsername(PostSearchCondition condition, Pageable pageable);
     Page<PostLinearDto> findPostListByApplicationUserName(PostSearchCondition condition, PageRequest pageable);
-
+    Page<PostDto> findPostingList(PageRequest pageable);
+    Page<PostDto> findClosedList(PageRequest pageable);
+    Page<PostDto> findSearchList(PostSearchCondition condition, PageRequest page);
 
 }

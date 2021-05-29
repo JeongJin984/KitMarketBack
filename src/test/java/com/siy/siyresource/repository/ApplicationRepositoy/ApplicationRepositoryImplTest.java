@@ -4,10 +4,8 @@ import com.siy.siyresource.common.api.PostApiController;
 import com.siy.siyresource.domain.condition.PostSearchCondition;
 import com.siy.siyresource.domain.dto.post.Linear.PostLinearDto;
 import com.siy.siyresource.domain.dto.post.PostDto;
-import com.siy.siyresource.domain.dto.post.detail.PostDtoDetail;
 import com.siy.siyresource.domain.entity.Application;
 import com.siy.siyresource.domain.entity.post.Post;
-import com.siy.siyresource.domain.entity.post.Study;
 import com.siy.siyresource.repository.PostRepository.PostRepository;
 import com.siy.siyresource.service.ApplicationService;
 import com.siy.siyresource.service.post.PostService;
@@ -21,7 +19,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.time.LocalDateTime;
 
 @SpringBootTest
 @Commit

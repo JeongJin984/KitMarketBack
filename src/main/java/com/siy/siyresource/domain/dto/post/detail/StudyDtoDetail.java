@@ -3,7 +3,7 @@ package com.siy.siyresource.domain.dto.post.detail;
 import com.querydsl.core.annotations.QueryProjection;
 import com.siy.siyresource.domain.dto.post.ApplicationDto;
 import com.siy.siyresource.domain.dto.post.ParticipantsDto;
-import com.siy.siyresource.domain.entity.post.Study;
+import com.siy.siyresource.domain.entity.post.Study.Study;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

@@ -1,20 +1,16 @@
 package com.siy.siyresource.common;
 
-import com.siy.siyresource.domain.condition.AccountSearchCondition;
+import com.siy.siyresource.domain.entity.Participant;
 import com.siy.siyresource.domain.entity.post.Contest.Contest;
 import com.siy.siyresource.domain.entity.post.Contest.ContestCategory;
 import com.siy.siyresource.domain.entity.post.Post;
-import com.siy.siyresource.domain.entity.post.Study;
+import com.siy.siyresource.domain.entity.post.PostStatus;
+import com.siy.siyresource.domain.entity.post.Study.Study;
 import com.siy.siyresource.domain.entity.Application;
-import com.siy.siyresource.domain.entity.account.*;
-import com.siy.siyresource.domain.entity.accountPost.AccountPost;
-import com.siy.siyresource.repository.AccountRepository.AccountRepository;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -25,141 +21,70 @@ import java.time.LocalDateTime;
 public class SimpleListener implements ApplicationListener<ApplicationStartedEvent> {
 
     private EntityManagerFactory entityManagerFactory;
-    private PasswordEncoder passwordEncoder;
     private static Long count = 0L;
-    @Autowired
-    private AccountRepository accountRepository;
 
     @Autowired
-    public SimpleListener(EntityManagerFactory entityManagerFactory, PasswordEncoder passwordEncoder) {
+    public SimpleListener(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public void onApplicationEvent(ApplicationStartedEvent applicationStartedEvent) {
-        if(count != 0L){
+        if (count != 0L) {
             return;
         }
         count = 1L;
+
+        System.out.println("count = " + count);
 
         EntityManager em = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
 
 
-        Role roleAdmin = new Role("ROLE_ADMIN");
-        Role roleManager = new Role("ROLE_MANAGER");
-        Role roleUser = new Role("ROLE_USER");
-
-        em.persist(roleAdmin);
-        em.persist(roleManager);
-        em.persist(roleUser);
-
-        RoleHierarchy roleHierarchyAdmin = new RoleHierarchy("ROLE_ADMIN");
-        RoleHierarchy roleHierarchyManager = new RoleHierarchy("ROLE_MANAGER", roleHierarchyAdmin);
-        RoleHierarchy roleHierarchyUser = new RoleHierarchy("ROLE_USER", roleHierarchyManager);
-
-        em.persist(roleHierarchyAdmin);
-        em.persist(roleHierarchyManager);
-        em.persist(roleHierarchyUser);
-
-        Account accountAdmin = new Account("admin",
-                passwordEncoder.encode("asdf"),
-                "1111@1111.1111",
-                30);
-
-        Account accountManager = new Account("manager",
-                passwordEncoder.encode("asdf"),
-                "2222@2222.2222",
-                20);
-
-        Account accountUser = new Account("user",
-                passwordEncoder.encode("asdf"),
-                "3333@3333.3333",
-                10);
-
-        em.persist(accountAdmin);
-        em.persist(accountManager);
-        em.persist(accountUser);
-
-        AccountRole accountRoleAdmin = new AccountRole();
-        accountRoleAdmin.setRole(roleAdmin);
-        accountRoleAdmin.setAccount(accountAdmin);
-
-        AccountRole accountRoleManager = new AccountRole();
-        accountRoleManager.setRole(roleManager);
-        accountRoleManager.setAccount(accountManager);
-
-        AccountRole accountRoleUser = new AccountRole();
-        accountRoleUser.setRole(roleUser);
-        accountRoleUser.setAccount(accountUser);
-
-        em.persist(accountRoleAdmin);
-        em.persist(accountRoleManager);
-        em.persist(accountRoleUser);
-
-        for(int i = 0; i<10; i++){
-            Post post = new Post("Study" + i, "I'm Study" + i, accountUser.getUsername(), 1, 5,
-                    LocalDateTime.of(2022,3,25,18,19,03));
+        for (int i = 0; i < 10; i++) {
+            Post post = new Post("Study" + i, "I'm Study" + i, "admin", 2, 5,
+                    LocalDateTime.of(2022, 3, 25, 18, 19, 03), PostStatus.POSTING);
             Study study = new Study(post, "study");
 
-            AccountPost accountPost = new AccountPost();
-            accountPost.setAccount(accountUser);
-            accountPost.setPost(study);
-            accountPost.setCode(AccountCode.WRITER);
-            accountPost.setUsername(accountUser.getUsername());
 
-            Application application1 = new Application(accountUser.getUsername()+" 참여하고싶어요", accountUser, study);
-            Application application2 = new Application(accountManager.getUsername()+" 참여하고싶어요", accountManager, study);
-            Application application3 = new Application(accountAdmin.getUsername() + " 참여하고싶어요", accountAdmin, study);
+            Application application1 = new Application("user", study.getTitle()+" 참여하고싶어요", study);
+            Application application2 = new Application("admin", study.getTitle()+" 참여하고싶어요", study);
+
+            Participant participant1 = new Participant("user", "user@google.com", 15L, study);
+            Participant participant2 = new Participant("user2", "user@google.com", 15L, study);
+
 
             em.persist(study);
             em.persist(application1);
             em.persist(application2);
-            em.persist(application3);
-            em.persist(accountPost);
 
-            for(int j = 0; j<5; j++) {
-                AccountPost accountPost2 = new AccountPost();
-                accountPost2.setAccount(accountManager);
-                accountPost2.setPost(study);
-                accountPost2.setCode(AccountCode.PARTICIPANT);
-                accountPost2.setUsername(accountManager.getUsername());
+            em.persist(participant1);
+            em.persist(participant2);
 
-                em.persist(accountPost2);
-            }
         }
 
-        for(int i = 0; i<10; i++){
-            Post post = new Post("Study" + i, "I'm Study" + i, accountUser.getUsername(), 1, 5, LocalDateTime.of(2022,1,2,14,05,02));
+        for (int i = 0; i < 10; i++) {
+            Post post = new Post("Contest" + i, "I'm Study" + i, "admin", 2, 5,
+                    LocalDateTime.of(2022, 3, 25, 18, 19, 03), PostStatus.POSTING);
             Contest contest = new Contest(post, ContestCategory.CHARACTER);
-            Application application1 = new Application(accountUser.getUsername()+" 참여하고싶어요", accountUser, contest);
-            Application application2 = new Application(accountManager.getUsername()+" 참여하고싶어요", accountManager, contest);
-            Application application3 = new Application(accountAdmin.getUsername() + " 참여하고싶어요", accountAdmin, contest);
 
-            AccountPost accountPost = new AccountPost();
 
-            accountPost.setAccount(accountManager);
-            accountPost.setPost(contest);
-            accountPost.setCode(AccountCode.WRITER);
-            accountPost.setUsername(accountUser.getUsername());
+            Application application1 = new Application("user", contest.getTitle()+" 참여하고싶어요", contest);
+            Application application2 = new Application("admin", contest.getTitle()+" 참여하고싶어요", contest);
+
+            Participant participant1 = new Participant("user", "user@google.com", 15L, contest);
+            Participant participant2 = new Participant("user2", "user@google.com", 15L, contest);
+
 
             em.persist(contest);
             em.persist(application1);
             em.persist(application2);
-            em.persist(application3);
-            em.persist(accountPost);
 
-            for(int j = 0; j<5; j++) {
-                AccountPost accountPost2 = new AccountPost();
-                accountPost2.setAccount(accountUser);
-                accountPost2.setPost(contest);
-                accountPost2.setCode(AccountCode.PARTICIPANT);
-                accountPost2.setUsername(accountUser.getUsername());
+            em.persist(participant1);
+            em.persist(participant2);
 
-                em.persist(accountPost2);
-            }
+
         }
         em.getTransaction().commit();
     }

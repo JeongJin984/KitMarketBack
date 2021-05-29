@@ -1,51 +1,47 @@
 package com.siy.siyresource.domain.entity;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.siy.siyresource.domain.entity.post.Post;
-import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
-import java.time.LocalDateTime;
-
-import static javax.persistence.FetchType.*;
-
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-@ToString(of = {"content"})
-@Table(name = "APPLICATION")
+@Table(name = "PARTICIPANT")
 @EntityListeners(AuditingEntityListener.class)
-public class Application {
-
+// 참가자 목록
+public class Participant {      //
     @Id
     @GeneratedValue
-    @Column(name = "application_id")
+    @Column(name = "participant_id")
     private Long id;
 
-    private String content;
 
-    @CreatedDate
-    private LocalDateTime createdAt; //생성 시간
+    private String username;
+    private String email;
+    private Long age;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "post_id")
     @JsonIgnore
     private Post post;
 
-    private String username;
 
-    public Application(String username, String content, Post post) {
-        this.content = content;
-        this.post = post;
+    public Participant(String username, String email, Long age, Post post) {
         this.username = username;
-        post.getApplications().add(this);
+        this.email = email;
+        this.age = age;
+        this.post = post;
+        post.getParticipants().add(this);
     }
-
 
 }

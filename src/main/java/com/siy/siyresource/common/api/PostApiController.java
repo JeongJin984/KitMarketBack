@@ -10,8 +10,7 @@ import com.siy.siyresource.domain.dto.post.detail.PostDtoDetail;
 import com.siy.siyresource.domain.entity.post.CarPool;
 import com.siy.siyresource.domain.entity.post.Contest.Contest;
 import com.siy.siyresource.domain.entity.post.Post;
-import com.siy.siyresource.domain.entity.post.Study;
-import com.siy.siyresource.repository.AccountRepository.AccountRepository;
+import com.siy.siyresource.domain.entity.post.Study.Study;
 import com.siy.siyresource.service.ApplicationService;
 import com.siy.siyresource.service.post.PostService;
 import lombok.AllArgsConstructor;
@@ -29,8 +28,6 @@ import java.time.format.DateTimeFormatter;
 public class PostApiController {
     private final PostService postService;
     private final ApplicationService applicationService;
-    private final AccountRepository accountRepository;
-
     /**
      * Post 전체 조회
      */
@@ -175,7 +172,7 @@ public class PostApiController {
     @PostMapping(value = "/api/contest")
     public String saveContest(@RequestBody @Valid CreatePostRequest request) {
         System.out.println("request = " + request);
-        Contest post = Contest.CreateContest();
+        Contest post = new Contest();
         PostRequestToContestEntity(post, request);
 
         postService.save(post);
@@ -191,7 +188,7 @@ public class PostApiController {
      */
     @PostMapping(value = "/api/carPool")
     public String saveCarFool(@RequestBody @Valid CreatePostRequest request) {
-        CarPool post = CarPool.CreateCarFool();
+        CarPool post = new CarPool();
         PostRequestToCarFoolEntity(post, request);
 
         postService.save(post);
@@ -208,7 +205,7 @@ public class PostApiController {
     @PostMapping(value = "/api/study")
     public String saveStudy(@RequestBody @Valid CreatePostRequest request) {
         System.out.println("request = " + request);
-        Study post = Study.CreateStudy();
+        Study post = new Study();
         PostRequestToStudyEntity(post, request);
 
         postService.save(post);
@@ -222,8 +219,8 @@ public class PostApiController {
     /**
      * Post 삭제
      */
-    @DeleteMapping(value = "/api/post/{id}")
-    public String delete(@PathVariable("id") Long id){
+    @DeleteMapping(value = "/api/post")
+    public String delete(@RequestParam("id") Long id){
         postService.deleteById(id);
 
         return "redirect:/";
@@ -232,7 +229,7 @@ public class PostApiController {
     /**
      * Post 수정
      */
-    @PutMapping(value = "/api/post/{id}")
+    @PutMapping(value = "/api/post")
     public String updatePost(@RequestBody @Valid CreatePostRequest request, @PathVariable("id")Long id){
         postService.updatePost(id, request);
 
@@ -242,8 +239,8 @@ public class PostApiController {
     /**
      *  Contest 수정
      * */
-    @PutMapping(value = "/api/contest/{id}")
-    public String updateContest(@RequestBody @Valid CreatePostRequest request, @PathVariable("id")Long id){
+    @PutMapping(value = "/api/contest")
+    public String updateContest(@RequestBody @Valid CreatePostRequest request, @RequestParam("id")Long id){
         postService.updateContest(id, request);
 
         return "redirect:/";
@@ -252,8 +249,8 @@ public class PostApiController {
     /**
      *  Study 수정
      * */
-    @PutMapping(value = "/api/study/{id}")
-    public String updateStudy(@RequestBody @Valid CreatePostRequest request, @PathVariable("id")Long id){
+    @PutMapping(value = "/api/study")
+    public String updateStudy(@RequestBody @Valid CreatePostRequest request, @RequestParam("id")Long id){
         postService.updateStudy(id, request);
 
         return "redirect:/";
@@ -261,8 +258,8 @@ public class PostApiController {
     /**
      *  carPool 수정
      * */
-    @PutMapping(value = "/api/carPool/{id}")
-    public String updateCarFool(@RequestBody @Valid CreatePostRequest request, @PathVariable("id")Long id){
+    @PutMapping(value = "/api/carPool")
+    public String updateCarFool(@RequestBody @Valid CreatePostRequest request, @RequestParam("id")Long id){
         postService.updatecarFool(id, request);
 
         return "redirect:/";
@@ -329,7 +326,7 @@ public class PostApiController {
     /**
      * 종료된 모든 포스트 리스트
      */
-    @GetMapping("/api/post/closeList")
+    @GetMapping("/api/post/closedList")
     public Result findClosedList(@RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
                                   @RequestParam(value = "size", defaultValue = "8", required = false) int size ){
 
@@ -375,9 +372,6 @@ public class PostApiController {
 
         return "redirect:/";
     }
-
-
-
 
 
 

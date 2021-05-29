@@ -1,15 +1,18 @@
 package com.siy.siyresource.domain.entity.post.Contest;
 
 import com.siy.siyresource.domain.entity.post.Post;
+import com.siy.siyresource.domain.entity.post.PostStatus;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
 @DiscriminatorValue("Contest")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class Contest extends Post {
 
     @Enumerated(EnumType.STRING)
@@ -36,12 +39,18 @@ public class Contest extends Post {
                 post.getWriter(),
                 post.getCurrentNumber(),
                 post.getMaxNumber(),
-                post.getDeadLine());
+                post.getDeadLine(),
+                post.getPostStatus()
+        );
         this.setCategory("study");
         this.contestCategory = contestCategory;
     }
-    public static Contest CreateContest(){
-        return new Contest();
-    }
 
+    public Contest(String title, String content, @NotNull String writer, @NotNull Integer currentNumber, @NotNull Integer maxNumber, @NotNull LocalDateTime deadLine, PostStatus status, ContestCategory contestCategory, String hostOrganization, Qualification qualification, String homepage) {
+        super(title, content, writer, currentNumber, maxNumber, deadLine, status);
+        this.contestCategory = contestCategory;
+        this.hostOrganization = hostOrganization;
+        this.qualification = qualification;
+        this.homepage = homepage;
+    }
 }

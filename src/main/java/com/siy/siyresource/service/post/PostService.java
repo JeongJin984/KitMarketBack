@@ -8,12 +8,12 @@ import com.siy.siyresource.domain.dto.post.detail.CarPoolDtoDetail;
 import com.siy.siyresource.domain.dto.post.detail.ContestDtoDetail;
 import com.siy.siyresource.domain.dto.post.detail.PostDtoDetail;
 import com.siy.siyresource.domain.dto.post.detail.StudyDtoDetail;
-import com.siy.siyresource.domain.entity.accountPost.AccountPost;
+import com.siy.siyresource.domain.entity.Participant;
 import com.siy.siyresource.domain.entity.post.CarPool;
 import com.siy.siyresource.domain.entity.post.Contest.Contest;
 import com.siy.siyresource.domain.entity.post.Post;
 import com.siy.siyresource.domain.entity.post.PostStatus;
-import com.siy.siyresource.domain.entity.post.Study;
+import com.siy.siyresource.domain.entity.post.Study.Study;
 import com.siy.siyresource.repository.PostRepository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -98,7 +98,7 @@ public class PostService {
 
         Set<ApplicationDto> applications = getApplicationDtoList(findPost);
 
-        Set<ParticipantsDto> participants = getParticipantsList(findPost.getAccountPosts());
+        Set<ParticipantsDto> participants = getParticipantsList(findPost.getParticipants());
 
         PostDtoDetail postDtoDetail = new PostDtoDetail(findPost, participants, applications);
         return postDtoDetail;
@@ -110,7 +110,7 @@ public class PostService {
 
         Set<ApplicationDto> applications = getApplicationDtoList(findPost);
 
-        Set<ParticipantsDto> participants = getParticipantsList(findPost.getAccountPosts());
+        Set<ParticipantsDto> participants = getParticipantsList(findPost.getParticipants());
 
         StudyDtoDetail postDtoDetail = new StudyDtoDetail(findPost, participants, applications);
         return postDtoDetail;
@@ -122,7 +122,7 @@ public class PostService {
 
         Set<ApplicationDto> applications = getApplicationDtoList(findPost);
 
-        Set<ParticipantsDto> participants = getParticipantsList(findPost.getAccountPosts());
+        Set<ParticipantsDto> participants = getParticipantsList(findPost.getParticipants());
 
         ContestDtoDetail postDtoDetail = new ContestDtoDetail(findPost, participants, applications);
         return postDtoDetail;
@@ -133,7 +133,7 @@ public class PostService {
 
         Set<ApplicationDto> applications = getApplicationDtoList(findPost);
 
-        Set<ParticipantsDto> participants = getParticipantsList(findPost.getAccountPosts());
+        Set<ParticipantsDto> participants = getParticipantsList(findPost.getParticipants());
 
         CarPoolDtoDetail postDtoDetail = new CarPoolDtoDetail(findPost, participants, applications);
         return postDtoDetail;
@@ -176,11 +176,12 @@ public class PostService {
                 .collect(Collectors.toSet());
     }
 
-    private Set<ParticipantsDto> getParticipantsList(Set<AccountPost> accountPosts) {
-        return accountPosts
-                .stream()
-                .map(a -> new ParticipantsDto(a.getAccount().getUsername(), a.getAccount().getEmail(), a.getAccount().getAge(), a.getCode()))
-                .collect(Collectors.toSet());
+    private Set<ParticipantsDto> getParticipantsList(Set<Participant> accountPosts) {
+//        return accountPosts
+//                .stream()
+//                .map(a -> new ParticipantsDto(a.getUsername(), a.getEmail(), a.getAge().intValue())
+//                .collect(Collectors.toSet());
+        return null;
     }
 
     public Page<PostLinearDto> findPostListByUsername(PostSearchCondition condition, int offset, int size) {

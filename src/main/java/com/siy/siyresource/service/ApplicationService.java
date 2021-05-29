@@ -1,8 +1,4 @@
 package com.siy.siyresource.service;
-
-
-
-
 import com.siy.siyresource.domain.entity.Application;
 import com.siy.siyresource.repository.ApplicationRepositoy.ApplicationRepository;
 import com.siy.siyresource.repository.PostRepository.PostRepository;
@@ -29,7 +25,6 @@ public class ApplicationService {
 
         return save.getId();
     }
-
 
 
     @Transactional

@@ -105,7 +105,7 @@ public class Post {
      */
     @BatchSize(size = 100)
     @OneToMany(mappedBy = "post", fetch = LAZY, cascade = ALL)
-    private Set<String> participants = new HashSet<>();
+    private Set<Participant> participants = new HashSet<>();
 
     /**
      * Application 연결

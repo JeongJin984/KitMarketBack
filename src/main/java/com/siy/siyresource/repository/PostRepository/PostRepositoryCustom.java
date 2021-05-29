@@ -7,7 +7,7 @@ import com.siy.siyresource.domain.dto.post.Linear.PostLinearDto;
 import com.siy.siyresource.domain.entity.post.CarPool;
 import com.siy.siyresource.domain.entity.post.Contest.Contest;
 import com.siy.siyresource.domain.entity.post.Post;
-import com.siy.siyresource.domain.entity.post.Study;
+import com.siy.siyresource.domain.entity.post.Study.Study;
 import com.siy.siyresource.domain.dto.post.ContestDto;
 import com.siy.siyresource.domain.dto.post.PostDto;
 import com.siy.siyresource.domain.dto.post.StudyDto;
@@ -33,6 +33,7 @@ public interface PostRepositoryCustom {
      **/
     Post findPostById(PostSearchCondition condition);
     Contest findContestById(PostSearchCondition condition);
+
     /*
     * WithApplication 함수
     * */
@@ -49,6 +50,8 @@ public interface PostRepositoryCustom {
     Page<PostLinearDto> findPostLinearListWithPaging(Pageable pageable);
     Page<PostLinearDto> findPostListByUsername(PostSearchCondition condition, Pageable pageable);
     Page<PostLinearDto> findPostListByApplicationUserName(PostSearchCondition condition, PageRequest pageable);
-
+    Page<PostDto> findPostingList(PageRequest pageable);
+    Page<PostDto> findClosedList(PageRequest pageable);
+    Page<PostDto> findSearchList(PostSearchCondition condition, PageRequest page);
 
 }

@@ -2,7 +2,7 @@ package com.siy.siyresource.domain.entity.post;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.siy.siyresource.domain.entity.Application;
-import com.siy.siyresource.domain.entity.accountPost.AccountPost;
+import com.siy.siyresource.domain.entity.Participant;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 import org.springframework.data.annotation.CreatedDate;
@@ -51,8 +51,6 @@ public class Post {
     @Column(name = "post_writer")
     private String writer;
 
-    @Enumerated(EnumType.STRING)
-    private PostStatus postStatus;
 
     @NotNull
     private Integer currentNumber;
@@ -69,7 +67,14 @@ public class Post {
     @NotNull
     private LocalDateTime deadLine;
 
+    @Enumerated(EnumType.STRING)
+    private PostStatus postStatus;
+
     private String category;
+
+
+    @Enumerated(EnumType.STRING)
+    private Gender qualifyGender;   //[MALE, FEMALE, NONE]
 
     public Post(String title, String content) {
         this.title = title;
@@ -81,24 +86,26 @@ public class Post {
                 @NotNull String writer,
                 @NotNull Integer currentNumber,
                 @NotNull Integer maxNumber,
-                @NotNull LocalDateTime deadLine) {
+                @NotNull LocalDateTime deadLine,
+                PostStatus status
+    )
+    {
         this.title = title;
         this.content = content;
         this.writer = writer;
         this.maxNumber = maxNumber;
         this.currentNumber = currentNumber;
         this.deadLine = deadLine;
-    }
-    public void increaseCurrentNumber(){
-        currentNumber++;
+        this.postStatus = status;
+
     }
 
     /**
      * 참가중인 사람들
      */
+    @BatchSize(size = 100)
     @OneToMany(mappedBy = "post", fetch = LAZY, cascade = ALL)
-    @JsonIgnore
-    private Set<AccountPost> accountPosts = new HashSet<>();
+    private Set<Participant> participants = new HashSet<>();
 
     /**
      * Application 연결

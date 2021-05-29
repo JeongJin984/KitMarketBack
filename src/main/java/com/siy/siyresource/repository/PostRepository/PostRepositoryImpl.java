@@ -8,11 +8,9 @@ import com.siy.siyresource.domain.dto.post.*;
 import com.siy.siyresource.domain.dto.post.Linear.PostLinearDto;
 import com.siy.siyresource.domain.dto.post.Linear.QPostLinearDto;
 import com.siy.siyresource.domain.entity.QApplication;
-import com.siy.siyresource.domain.entity.account.QAccount;
-import com.siy.siyresource.domain.entity.accountPost.QAccountPost;
 import com.siy.siyresource.domain.entity.post.*;
 import com.siy.siyresource.domain.entity.post.Contest.Contest;
-import com.siy.siyresource.repository.AccountRepository.AccountRepository;
+import com.siy.siyresource.domain.entity.post.Study.Study;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,25 +21,24 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.siy.siyresource.domain.entity.QApplication.application;
+import static com.siy.siyresource.domain.entity.QParticipant.participant;
 import static com.siy.siyresource.domain.entity.post.QCarPool.carPool;
 import static com.siy.siyresource.domain.entity.post.QStudy.study;
 import static com.siy.siyresource.domain.entity.post.Contest.QContest.contest;
 import static com.siy.siyresource.domain.entity.post.QPost.post;
-import static com.siy.siyresource.domain.entity.accountPost.QAccountPost.accountPost;
 import static org.springframework.util.StringUtils.hasText;
 
 @Repository
 public class PostRepositoryImpl implements PostRepositoryCustom {
 
     JPAQueryFactory queryFactory;
-    AccountRepository accountRepository;
 
     @Autowired
-    public PostRepositoryImpl(JPAQueryFactory queryFactory, AccountRepository accountRepository) {
+    public PostRepositoryImpl(JPAQueryFactory queryFactory  ) {
         this.queryFactory = queryFactory;
-        this.accountRepository = accountRepository;
     }
 
+    /**
     /**
      * 단순 study 전체 조회
      */
@@ -94,34 +91,11 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         return post;
     }
 
-    /**
-     * 내가 참여하고 있는 post 전체 검색
-     */
-    @Override
-    public Page<PostLinearDto> findParticipatingPost(PostSearchCondition condition, Pageable pageable) {
-        QAccountPost accountPost = new QAccountPost("accountPost");
-        QAccount account = new QAccount("account");
 
-        List<PostLinearDto> content = queryFactory
-                .select(new QPostLinearDto(
-                        post.id,
-                        post.category,
-                        post.title,
-                        post.writer,
-                        post.createdAt
-                ))
-                .distinct()
-                .from(post)
-                .join(post.accountPosts, accountPost)
-                .where(accountPostUserNameEq(condition.getParticipantName()))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
 
-        JPAQuery<Post> countQuery = countPostJoinAccountPostQuery(condition.getParticipantName(), accountPost);
 
-        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
-    }
+
+
 
     /**
      * 단순 post 1개 검색
@@ -230,6 +204,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                         post.writer,
                         post.createdAt
                 ))
+                .distinct()
                 .from(post,application)
                 .join(post.applications, application)
                 .where(
@@ -249,6 +224,176 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .join(post.applications, application)
                 .where(applicationPostUserNameEq(username));
         return result;
+    }
+
+
+
+    /**
+     * 내가 참여하고 있는 post 전체 검색
+     */
+    @Override
+    public Page<PostLinearDto> findParticipatingPost(PostSearchCondition condition, Pageable pageable) {
+        List<PostLinearDto> content = queryFactory
+                .select(new QPostLinearDto(
+                        post.id,
+                        post.category,
+                        post.title,
+                        post.writer,
+                        post.createdAt
+                ))
+                .distinct()
+                .from(post, participant)
+                .join(post.participants, participant)
+                .where(
+                        PartipantUsernameEq(condition.getParticipantName())
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Post> countQuery = countPostJoinParticipantQuery(condition.getParticipantName());
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
+    }
+
+    private JPAQuery<Post> countPostJoinParticipantQuery(String username) {
+        JPAQuery<Post> result = queryFactory
+                .selectFrom(post)
+                .join(post.participants, participant)
+                .where(PartipantUsernameEq(username));
+        return result;
+    }
+
+    /**
+     *  모집중인 포스팅 보
+     */
+    @Override
+    public Page<PostDto> findPostingList(PageRequest pageable) {
+        List<PostDto> content = queryFactory
+                .select(new QPostDto(
+                        post.id.as("id"),
+                        post.writer,
+                        post.title,
+                        post.content,
+                        post.createdAt,
+                        post.maxNumber,
+                        post.currentNumber,
+                        post.deadLine,
+                        post.category
+                ))
+                .from(post)
+                .where(Posting())
+                .orderBy(post.createdAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+        JPAQuery<Post> countQuery = countPostingListQuery();
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
+    }
+
+    private JPAQuery<Post> countPostingListQuery() {
+        return queryFactory
+                .selectFrom(post)
+                .where(Posting());
+    }
+
+
+    /**
+     * 마감된 포스팅 보기
+     * */
+    @Override
+    public Page<PostDto> findClosedList(PageRequest pageable) {
+        List<PostDto> content = queryFactory
+                .select(new QPostDto(
+                        post.id.as("id"),
+                        post.writer,
+                        post.title,
+                        post.content,
+                        post.createdAt,
+                        post.maxNumber,
+                        post.currentNumber,
+                        post.deadLine,
+                        post.category
+                ))
+                .from(post)
+                .where(Closed())
+                .orderBy(post.createdAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+        JPAQuery<Post> countQuery = countClosedListQuery();
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
+    }
+
+
+    private JPAQuery<Post> countClosedListQuery() {
+        return queryFactory
+                .selectFrom(post)
+                .where(Closed());
+    }
+
+
+
+    @Override
+    public Page<PostDto> findSearchList(PostSearchCondition condition, PageRequest page) {
+        System.out.println("condition = " + condition);
+
+        List<PostDto> content = queryFactory
+                .select(new QPostDto(
+                        post.id.as("id"),
+                        post.writer,
+                        post.title,
+                        post.content,
+                        post.createdAt,
+                        post.maxNumber,
+                        post.currentNumber,
+                        post.deadLine,
+                        post.category
+                ))
+                .from(post)
+                .where(searchContains(condition).and(selectedStatus(condition)))
+                .orderBy(post.createdAt.desc())
+                .offset(page.getOffset())
+                .limit(page.getPageSize())
+                .fetch();
+        JPAQuery<Post> countQuery = countSearchListQuery(condition);
+        return PageableExecutionUtils.getPage(content, page, countQuery::fetchCount);
+    }
+
+    private JPAQuery<Post> countSearchListQuery(PostSearchCondition condition) {
+        return queryFactory
+                .selectFrom(post)
+                .where(searchContains(condition), selectedStatus(condition));
+    }
+
+    private BooleanExpression selectedStatus(PostSearchCondition condition) {
+        if(condition.getStatus().equals("POSTING")){
+            System.out.println("posting");
+            return Posting();
+        }
+        else if (condition.getStatus().equals("CLOSED")){
+            System.out.println("closed");
+            return Closed();
+        }
+        else
+            return null;
+    }
+
+    private BooleanExpression searchContains(PostSearchCondition condition) {
+        BooleanExpression title = hasText(condition.getTitle()) ? post.title.contains(condition.getTitle()) : null;
+        BooleanExpression username = hasText(condition.getUsername()) ? post.writer.contains(condition.getUsername()) : null;
+
+        System.out.println("title = " + title);
+        System.out.println("username = " + username);
+
+        if(title != null){
+            return title;
+        }
+        else if (username != null){
+            return username;
+        }
+        else
+            return null;
     }
 
 
@@ -372,13 +517,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
     }
 
-    private JPAQuery<Post> countPostJoinAccountPostQuery(String username, QAccountPost accountPost) {
-        return queryFactory
-                .select(post)
-                .from(post)
-                .join(post.accountPosts, accountPost).fetchJoin()
-                .where(accountPostUserNameEq(username));
-    }
+
 
     private BooleanExpression postIdEqual(Long id) {
         return id != null ? post.id.eq(id) : null;
@@ -388,12 +527,23 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         return hasText(username) ? post.writer.eq(username) :null;
     }
 
-    private BooleanExpression accountPostUserNameEq(String username) {
-        return hasText(username) ? accountPost.username.eq(username) : null;
-    }
-
     private BooleanExpression applicationPostUserNameEq(String username) {
         return hasText(username) ? application.username.eq(username):null;
+    }
+
+    private BooleanExpression PartipantUsernameEq(String username) {
+        return hasText(username) ? participant.username.eq(username):null;
+    }
+
+    private BooleanExpression Operating() {
+        return post.postStatus.eq(PostStatus.OPERATING);
+    }
+    private BooleanExpression Posting() {
+        return post.postStatus.eq(PostStatus.POSTING);
+    }
+    private BooleanExpression Closed() {
+        return post.postStatus.eq(PostStatus.CLOSE);
+
     }
 
 

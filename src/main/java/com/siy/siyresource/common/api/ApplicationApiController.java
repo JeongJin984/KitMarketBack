@@ -2,9 +2,8 @@ package com.siy.siyresource.common.api;
 
 import com.siy.siyresource.domain.condition.PostSearchCondition;
 import com.siy.siyresource.domain.entity.Application;
-import com.siy.siyresource.domain.entity.account.Account;
+import com.siy.siyresource.domain.entity.Participant;
 import com.siy.siyresource.domain.entity.post.Post;
-import com.siy.siyresource.repository.AccountRepository.AccountRepository;
 import com.siy.siyresource.service.ApplicationService;
 import com.siy.siyresource.service.post.PostService;
 import lombok.Data;
@@ -17,7 +16,6 @@ import javax.validation.Valid;
 public class ApplicationApiController {
     private final ApplicationService applicationService;
     private final PostService postService;
-    private final AccountRepository accountRepository;
     /**
      * 함께하기
      */
@@ -31,10 +29,9 @@ public class ApplicationApiController {
         Post findPost = postService.getPostEntity(condition);
         System.out.println("findPost = " + findPost);
 
-        Account findAccount = accountRepository.findByUsername(request.getUsername());
 
 
-        Application application = new Application(request.getContent(), findAccount, findPost);
+        Application application = new Application(request.getContent(), request.getUsername(), findPost);
         Long save = applicationService.save(application);
     }
 

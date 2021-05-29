@@ -4,7 +4,7 @@ import com.querydsl.core.annotations.QueryProjection;
 import com.siy.siyresource.domain.entity.post.CarPool;
 import com.siy.siyresource.domain.entity.post.Contest.Contest;
 import com.siy.siyresource.domain.entity.post.Post;
-import com.siy.siyresource.domain.entity.post.Study;
+import com.siy.siyresource.domain.entity.post.Study.Study;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

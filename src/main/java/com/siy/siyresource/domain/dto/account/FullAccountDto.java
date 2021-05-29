@@ -3,7 +3,9 @@ package com.siy.siyresource.domain.dto.account;
 import com.querydsl.core.annotations.QueryProjection;
 import com.siy.siyresource.domain.dto.accountPost.AccountPostDto;
 import com.siy.siyresource.domain.dto.post.PostDto;
+import com.siy.siyresource.domain.dto.post.postResponse.PostResponse;
 import com.siy.siyresource.domain.entity.post.Post;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,18 +13,15 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class FullAccountDto {
-    private String username;
-    private String email;
-    private int age;
+    String username;
+    String email;
+    Integer age;
+    String Major;
 
-    private List<PostDto> createdPost;
-    private List<PostDto> participatingPost;
 
-    @QueryProjection
-    public FullAccountDto(String username, String email, int age) {
-        this.username = username;
-        this.email = email;
-        this.age = age;
-    }
+    PostResponse createdPost;
+    PostResponse participated;
+    PostResponse waiting;
 }

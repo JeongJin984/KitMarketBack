@@ -17,7 +17,10 @@ import com.siy.siyresource.service.post.PostService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,6 +29,7 @@ import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class PostApiController {
     private final PostService postService;
     private final ApplicationService applicationService;
@@ -274,12 +278,13 @@ public class PostApiController {
      * */
     @GetMapping("/api/post/my")
     public Result findPostMyMakeByUsername(@RequestParam(value = "username") @Valid String request,
-                                           @RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
-                                           @RequestParam(value = "size", defaultValue = "8", required = false) int size) {
-        System.out.println("내가 만든 모임 리스트");
+                                                           @RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
+                                                           @RequestParam(value = "size", defaultValue = "8", required = false) int size) {
+
         PostSearchCondition condition = new PostSearchCondition(null, request, null);
 
         Page<PostLinearDto> result = postService.findPostListByUsername(condition, offset, size);
+
         return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.getContent());
     }
 
@@ -310,8 +315,8 @@ public class PostApiController {
         PostSearchCondition condition = new PostSearchCondition(null, null, request);
         Page<PostLinearDto> result = postService.findPostListByParticipants(condition, offset, size);
 
-
-        return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.getContent());
+        Result result1 = new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.getContent());
+        return result1;
     }
 
 
@@ -332,7 +337,6 @@ public class PostApiController {
 
         return post;
     }
-
 }
 
 @Data
@@ -343,7 +347,6 @@ class Result<T> {
     private int maxPage;
     private T data;
 }
-
 
 @Data
 class PostRequest{

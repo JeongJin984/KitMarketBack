@@ -17,14 +17,9 @@ public class StudyDto extends PostDto {
     private String time;
 
     @QueryProjection
-    public StudyDto(Long id, String writer, String title, String content, LocalDateTime createdAt,
-                    Integer maxNum, Integer curNum, LocalDateTime deadLine, String category) {
-        super(id, writer, title, content, createdAt, maxNum, curNum, deadLine, category);
-    }
-
-    @QueryProjection
-    public StudyDto(Long id, String writer, String title, String content, LocalDateTime createdAt, Integer maxNum, Integer curNum, LocalDateTime deadLine, String category, StudyCategory subject, String region, String time) {
-        super(id, writer, title, content, createdAt, maxNum, curNum, deadLine, category);
+    public StudyDto(Long id, String writer, String title, String content, LocalDateTime dueDate, LocalDateTime createdAt, Integer maxNum,
+                    Integer curNum, String status, String category, StudyCategory subject, String region, String time) {
+        super(id, writer, title, content, dueDate, createdAt, maxNum, curNum, category, status);
         this.subject = subject;
         this.region = region;
         this.time = time;

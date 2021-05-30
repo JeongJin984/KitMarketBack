@@ -1,13 +1,13 @@
 package com.siy.siyresource.common.api;
 
+import com.siy.siyresource.common.api.request.CreateCarPoolRequest;
 import com.siy.siyresource.common.api.request.CreatePostRequest;
+import com.siy.siyresource.common.api.request.CreateStudyRequest;
 import com.siy.siyresource.domain.condition.PostSearchCondition;
+import com.siy.siyresource.domain.dto.detail.*;
 import com.siy.siyresource.domain.dto.post.*;
-import com.siy.siyresource.domain.dto.post.Linear.PostLinearDto;
-import com.siy.siyresource.domain.dto.post.detail.CarPoolDtoDetail;
-import com.siy.siyresource.domain.dto.post.detail.ContestDtoDetail;
-import com.siy.siyresource.domain.dto.post.detail.PostDtoDetail;
-import com.siy.siyresource.domain.entity.post.CarPool;
+import com.siy.siyresource.domain.dto.Linear.PostLinearDto;
+import com.siy.siyresource.domain.entity.post.CarPool.CarPool;
 import com.siy.siyresource.domain.entity.post.Contest.Contest;
 import com.siy.siyresource.domain.entity.post.Post;
 import com.siy.siyresource.domain.entity.post.Study.Study;
@@ -32,9 +32,10 @@ public class PostApiController {
      * Post 전체 조회
      */
     @GetMapping(value = "/api/postList")
-    public Result postList(@RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
+    public Result postList(@RequestParam(value = "status", defaultValue = "POSTING", required = false)String status,
+                           @RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
                            @RequestParam(value = "size", defaultValue = "8", required = false) int size) {
-        Page<PostDto> result = postService.findPostList(offset, size);
+        Page<PostDto> result = postService.findPostList(status, offset, size);
 
 
         return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.getContent());
@@ -44,9 +45,10 @@ public class PostApiController {
      * Study 전체 조회
      */
     @GetMapping(value = "/api/studyList")
-    public Result studyList(@RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
+    public Result studyList(@RequestParam(value = "status", defaultValue = "POSTING", required = false)String status,
+            @RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
                             @RequestParam(value = "size", defaultValue = "8", required = false) int size) {
-        Page<StudyDto> result = postService.findStudyList(offset, size);
+        Page<PostDto> result = postService.findStudyList(status, offset, size);
 
         return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.getContent());
     }
@@ -55,9 +57,11 @@ public class PostApiController {
      * carPool 전체 조회
      */
     @GetMapping(value = "/api/carPoolList")
-    public Result carPoolList(@RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
+    public Result carPoolList(
+            @RequestParam(value = "status", defaultValue = "POSTING", required = false)String status,
+            @RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
                               @RequestParam(value = "size", defaultValue = "8", required = false) int size) {
-        Page<CarPoolDto> result = postService.findCarPoolList(offset, size);
+        Page<PostDto> result = postService.findCarPoolList(status, offset, size);
 
         return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.getContent());
     }
@@ -66,9 +70,11 @@ public class PostApiController {
      * Contest 전체 조회
      */
     @GetMapping(value = "/api/contestList")
-    public Result ContestList(@RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
+    public Result ContestList(
+            @RequestParam(value = "status", defaultValue = "POSTING", required = false)String status,
+            @RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
                               @RequestParam(value = "size", defaultValue = "8", required = false) int size) {
-        Page<ContestDto> result = postService.findContestList(offset, size);
+        Page<PostDto> result = postService.findContestList(status, offset, size);
 
         return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.get());
     }
@@ -81,8 +87,10 @@ public class PostApiController {
     public Result findParticipating(@RequestParam String username,
                                     @RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
                                     @RequestParam(value = "size", defaultValue = "8", required = false) int size){
+        System.out.println("username = " + username);
 
         Page<PostLinearDto> result = postService.findParticipatingList(username, offset, size);
+
 
         return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.get());
     }
@@ -119,10 +127,10 @@ public class PostApiController {
      * study 한개 조회
      */
     @GetMapping(value = "/api/study")
-    public PostDtoDetail StudyOne(@RequestParam(value = "id") Long id) {
+    public StudyDtoDetail StudyOne(@RequestParam(value = "id") Long id) {
         PostSearchCondition condition = new PostSearchCondition(id, null, null);
 
-        PostDtoDetail findPostDetail = postService.findStudyById(condition);
+        StudyDtoDetail findPostDetail = postService.findStudyById(condition);
 
         return findPostDetail;
     }
@@ -152,6 +160,18 @@ public class PostApiController {
 
         return findPostDetail;
     }
+    /**
+     * miniProject 한개 조회
+     */
+    @GetMapping(value = "/api/MiniProject")
+    public PostDtoDetail miniProjectOne(@RequestParam(value = "id") Long id) {
+
+        PostSearchCondition condition = new PostSearchCondition(id, null, null);
+
+        MiniProjectDtoDetail findPostDetail = postService.findMiniProjectById(condition);
+
+        return findPostDetail;
+    }
 
     /**
      * Post 저장
@@ -164,6 +184,46 @@ public class PostApiController {
 
         postService.save(post);
         return "redirect:/";
+    }
+
+
+    /**
+     * CarPool 저장
+     */
+    @PostMapping(value = "/api/carPool")
+    public String saveCarFool(@RequestBody @Valid CreateCarPoolRequest request) {
+        CarPool post = new CarPool();
+        PostRequestToCarFoolEntity(post, request);
+
+        postService.save(post);
+        return "redirect:/";
+    }
+
+    private void PostRequestToCarFoolEntity(CarPool post, CreateCarPoolRequest request) {
+        PostRequestToPostEntity(post, request);
+        post.setFare(request.getFare());
+        post.setDeparture(request.getDeparture());
+        post.setDestination(request.getDestination());
+    }
+
+
+    /**
+     * Study 저장
+     */
+    @PostMapping(value = "/api/study")
+    public String saveStudy(@RequestBody @Valid CreateStudyRequest request) {
+        System.out.println("request = " + request);
+        Study post = new Study();
+        PostRequestToStudyEntity(post, request);
+
+        postService.save(post);
+        return "redirect:/";
+    }
+    private void PostRequestToStudyEntity(Study post, CreateStudyRequest request) {
+        PostRequestToPostEntity(post, request);
+        post.setSubject(post.calSubject(request.getSubject()));
+        post.setRegion(request.getRegion());
+        post.setDuration(request.getDuration());
     }
 
     /**
@@ -183,38 +243,10 @@ public class PostApiController {
         PostRequestToPostEntity(contest, request);
     }
 
-    /**
-     * CarPool 저장
-     */
-    @PostMapping(value = "/api/carPool")
-    public String saveCarFool(@RequestBody @Valid CreatePostRequest request) {
-        CarPool post = new CarPool();
-        PostRequestToCarFoolEntity(post, request);
 
-        postService.save(post);
-        return "redirect:/";
-    }
 
-    private void PostRequestToCarFoolEntity(CarPool post, CreatePostRequest request) {
-        PostRequestToPostEntity(post, request);
-    }
 
-    /**
-     * Study 저장
-     */
-    @PostMapping(value = "/api/study")
-    public String saveStudy(@RequestBody @Valid CreatePostRequest request) {
-        System.out.println("request = " + request);
-        Study post = new Study();
-        PostRequestToStudyEntity(post, request);
 
-        postService.save(post);
-        return "redirect:/";
-    }
-
-    private void PostRequestToStudyEntity(Study post, CreatePostRequest request) {
-        PostRequestToPostEntity(post, request);
-    }
 
     /**
      * Post 삭제
@@ -289,7 +321,7 @@ public class PostApiController {
                                                 @RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
                                                 @RequestParam(value = "size", defaultValue = "8", required = false) int size) {
         System.out.println("내가 신청한 모임 리스트");
-        
+
         PostSearchCondition condition = new PostSearchCondition(null, request, null);
 
         Page<PostLinearDto> result = postService.findPostListByApplicationUserName(condition, offset, size);
@@ -312,27 +344,7 @@ public class PostApiController {
     }
 
 
-    /**
-     * 포스팅 중인 모든 포스트 리스트
-     */
-    @GetMapping("/api/post/postingList")
-    public Result findPostingList(@RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
-                                  @RequestParam(value = "size", defaultValue = "8", required = false) int size ){
 
-        Page<PostDto> result = postService.findPostingList(offset, size);
-        return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.getContent());
-    }
-
-    /**
-     * 종료된 모든 포스트 리스트
-     */
-    @GetMapping("/api/post/closedList")
-    public Result findClosedList(@RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
-                                  @RequestParam(value = "size", defaultValue = "8", required = false) int size ){
-
-        Page<PostDto> result = postService.findClosedList(offset, size);
-        return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.getContent());
-    }
 
     /**
      *  검색기능
@@ -382,7 +394,7 @@ public class PostApiController {
         post.setWriter(request.getWriter());
         post.setTitle(request.getTitle());
         post.setContent(request.getContent());
-        post.setDeadLine(deadLine);
+        post.setDueDate(deadLine);
         post.setMaxNumber(request.getMaxNum());
         post.setCurrentNumber(request.getCurNum());
         post.setCategory(request.getCategory());

@@ -5,10 +5,11 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.siy.siyresource.domain.condition.PostSearchCondition;
 import com.siy.siyresource.domain.dto.post.*;
-import com.siy.siyresource.domain.dto.post.Linear.PostLinearDto;
-import com.siy.siyresource.domain.dto.post.Linear.QPostLinearDto;
+import com.siy.siyresource.domain.dto.Linear.PostLinearDto;
+import com.siy.siyresource.domain.dto.Linear.QPostLinearDto;
 import com.siy.siyresource.domain.entity.QApplication;
 import com.siy.siyresource.domain.entity.post.*;
+import com.siy.siyresource.domain.entity.post.CarPool.CarPool;
 import com.siy.siyresource.domain.entity.post.Contest.Contest;
 import com.siy.siyresource.domain.entity.post.Study.Study;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.siy.siyresource.domain.entity.QApplication.application;
-import static com.siy.siyresource.domain.entity.QParticipant.participant;
-import static com.siy.siyresource.domain.entity.post.QCarPool.carPool;
-import static com.siy.siyresource.domain.entity.post.QStudy.study;
+import static com.siy.siyresource.domain.entity.post.CarPool.QCarPool.carPool;
 import static com.siy.siyresource.domain.entity.post.Contest.QContest.contest;
 import static com.siy.siyresource.domain.entity.post.QPost.post;
+import static com.siy.siyresource.domain.entity.post.Study.QStudy.*;
 import static org.springframework.util.StringUtils.hasText;
 
 @Repository
@@ -92,11 +92,6 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     }
 
 
-
-
-
-
-
     /**
      * 단순 post 1개 검색
      */
@@ -120,34 +115,6 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .fetchOne();
     }
 
-    /**
-     * Paging post 전체 조회
-     */
-    @Override
-    public Page<PostDto> findPostListWithPaging(Pageable pageable) {
-        List<PostDto> content = queryFactory
-                .select(new QPostDto(
-                        post.id.as("id"),
-                        post.writer,
-                        post.title,
-                        post.content,
-                        post.createdAt,
-                        post.maxNumber,
-                        post.currentNumber,
-                        post.deadLine,
-                        post.category
-                ))
-                .from(post)
-                .orderBy(post.createdAt.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-        System.out.println("content = " + content);
-
-        JPAQuery<Post> countQuery = countPostQuery();
-
-        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
-    }
 
     /**
      * Paging, Linear 방식 Post 전체 조회
@@ -233,6 +200,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
      */
     @Override
     public Page<PostLinearDto> findParticipatingPost(PostSearchCondition condition, Pageable pageable) {
+        System.out.println("condition.getParticipantName() = " + condition.getParticipantName());
         List<PostLinearDto> content = queryFactory
                 .select(new QPostLinearDto(
                         post.id,
@@ -241,9 +209,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                         post.writer,
                         post.createdAt
                 ))
-                .distinct()
-                .from(post, participant)
-                .join(post.participants, participant)
+                .from(post)
                 .where(
                         PartipantUsernameEq(condition.getParticipantName())
                 )
@@ -259,77 +225,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     private JPAQuery<Post> countPostJoinParticipantQuery(String username) {
         JPAQuery<Post> result = queryFactory
                 .selectFrom(post)
-                .join(post.participants, participant)
                 .where(PartipantUsernameEq(username));
         return result;
-    }
-
-    /**
-     *  모집중인 포스팅 보
-     */
-    @Override
-    public Page<PostDto> findPostingList(PageRequest pageable) {
-        List<PostDto> content = queryFactory
-                .select(new QPostDto(
-                        post.id.as("id"),
-                        post.writer,
-                        post.title,
-                        post.content,
-                        post.createdAt,
-                        post.maxNumber,
-                        post.currentNumber,
-                        post.deadLine,
-                        post.category
-                ))
-                .from(post)
-                .where(Posting())
-                .orderBy(post.createdAt.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-        JPAQuery<Post> countQuery = countPostingListQuery();
-        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
-    }
-
-    private JPAQuery<Post> countPostingListQuery() {
-        return queryFactory
-                .selectFrom(post)
-                .where(Posting());
-    }
-
-
-    /**
-     * 마감된 포스팅 보기
-     * */
-    @Override
-    public Page<PostDto> findClosedList(PageRequest pageable) {
-        List<PostDto> content = queryFactory
-                .select(new QPostDto(
-                        post.id.as("id"),
-                        post.writer,
-                        post.title,
-                        post.content,
-                        post.createdAt,
-                        post.maxNumber,
-                        post.currentNumber,
-                        post.deadLine,
-                        post.category
-                ))
-                .from(post)
-                .where(Closed())
-                .orderBy(post.createdAt.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-        JPAQuery<Post> countQuery = countClosedListQuery();
-        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
-    }
-
-
-    private JPAQuery<Post> countClosedListQuery() {
-        return queryFactory
-                .selectFrom(post)
-                .where(Closed());
     }
 
 
@@ -340,18 +237,19 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
         List<PostDto> content = queryFactory
                 .select(new QPostDto(
-                        post.id.as("id"),
+                        post.id,
                         post.writer,
                         post.title,
                         post.content,
+                        post.dueDate,
                         post.createdAt,
                         post.maxNumber,
                         post.currentNumber,
-                        post.deadLine,
-                        post.category
+                        post.category,
+                        post.postStatus.stringValue()
                 ))
                 .from(post)
-                .where(searchContains(condition).and(selectedStatus(condition)))
+                .where(searchContains(condition).and(selectedStatus(condition.getStatus())))
                 .orderBy(post.createdAt.desc())
                 .offset(page.getOffset())
                 .limit(page.getPageSize())
@@ -363,37 +261,42 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     private JPAQuery<Post> countSearchListQuery(PostSearchCondition condition) {
         return queryFactory
                 .selectFrom(post)
-                .where(searchContains(condition), selectedStatus(condition));
+                .where(searchContains(condition), selectedStatus(condition.getStatus()));
     }
 
-    private BooleanExpression selectedStatus(PostSearchCondition condition) {
-        if(condition.getStatus().equals("POSTING")){
-            System.out.println("posting");
-            return Posting();
-        }
-        else if (condition.getStatus().equals("CLOSED")){
-            System.out.println("closed");
-            return Closed();
-        }
-        else
-            return null;
+
+    /**
+     *  모집중인 게시물 보기
+     */
+    @Override
+    public Page<PostDto> findPostListWithPaging(String status, PageRequest pageable) {
+        List<PostDto> content = queryFactory
+                .select(new QPostDto(
+                        post.id,
+                        post.writer,
+                        post.title,
+                        post.content,
+                        post.dueDate,
+                        post.createdAt,
+                        post.maxNumber,
+                        post.currentNumber,
+                        post.category,
+                        post.postStatus.stringValue()
+                ))
+                .from(post)
+                .where(selectedStatus(status))
+                .orderBy(post.createdAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+        JPAQuery<Post> countQuery = countPostingListQuery(status);
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
 
-    private BooleanExpression searchContains(PostSearchCondition condition) {
-        BooleanExpression title = hasText(condition.getTitle()) ? post.title.contains(condition.getTitle()) : null;
-        BooleanExpression username = hasText(condition.getUsername()) ? post.writer.contains(condition.getUsername()) : null;
-
-        System.out.println("title = " + title);
-        System.out.println("username = " + username);
-
-        if(title != null){
-            return title;
-        }
-        else if (username != null){
-            return username;
-        }
-        else
-            return null;
+    private JPAQuery<Post> countPostingListQuery(String status) {
+        return queryFactory
+                .selectFrom(post)
+                .where(selectedStatus(status));
     }
 
 
@@ -401,26 +304,28 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
      * Study Paging List
      */
     @Override
-    public Page<StudyDto> findStudyListWithPaging(Pageable pageable) {
-        List<StudyDto> content = queryFactory
-                .select(new QStudyDto(
-                        study.id.as("id"),
+    public Page<PostDto> findStudyListWithPaging(String status, Pageable pageable) {
+        List<PostDto> content = queryFactory
+                .select(new QPostDto(
+                        study.id,
                         study.writer,
                         study.title,
                         study.content,
+                        study.dueDate,
                         study.createdAt,
                         study.maxNumber,
                         study.currentNumber,
-                        study.deadLine,
-                        study.category
+                        study.category,
+                        study.postStatus.stringValue()
                 ))
                 .from(study)
+                .where(selectedStatus(status))
                 .orderBy(study.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Study> countQuery = countStudyQuery();
+        JPAQuery<Study> countQuery = countStudyQuery(status);
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
@@ -432,25 +337,28 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
      * @return
      */
     @Override
-    public Page<CarPoolDto> findCarPoolListWithPaging(Pageable pageable) {
-        List<CarPoolDto> content = queryFactory
-                .select(new QCarPoolDto(
-                        carPool.id.as("id"),
+    public Page<PostDto> findCarPoolListWithPaging(String status, Pageable pageable) {
+        List<PostDto> content = queryFactory
+                .select(new QPostDto(
+                        carPool.id,
                         carPool.writer,
                         carPool.title,
                         carPool.content,
+                        carPool.dueDate,
                         carPool.createdAt,
                         carPool.maxNumber,
                         carPool.currentNumber,
-                        carPool.deadLine,
-                        carPool.category
+                        carPool.category,
+                        carPool.postStatus.stringValue()
                 ))
                 .from(carPool)
+                .where(selectedStatus(status))
                 .orderBy(carPool.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
-        JPAQuery<CarPool> countQuery = countCarPoolQuery();
+
+        JPAQuery<CarPool> countQuery = countCarPoolQuery(status);
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
@@ -460,33 +368,36 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
      * Contest Paging List
      */
     @Override
-    public Page<ContestDto> findContestListWithPaging(Pageable pageable) {
-        List<ContestDto> content = queryFactory
-                .select(new QContestDto(
-                        contest.id.as("id"),
+    public Page<PostDto> findContestListWithPaging(String status, Pageable pageable) {
+        List<PostDto> content = queryFactory
+                .select(new QPostDto(
+                        contest.id,
                         contest.writer,
                         contest.title,
                         contest.content,
+                        contest.dueDate,
                         contest.createdAt,
                         contest.maxNumber,
                         contest.currentNumber,
-                        contest.deadLine,
-                        contest.category
+                        contest.category,
+                        contest.postStatus.stringValue()
                 ))
                 .from(contest)
+                .where(selectedStatus(status))
                 .orderBy(contest.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Contest> countQuery = countContestQuery();
+        JPAQuery<Contest> countQuery = countContestQuery(status);
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
 
-    private JPAQuery<Contest> countContestQuery() {
+    private JPAQuery<Contest> countContestQuery(String status) {
         JPAQuery<Contest> countQuery = queryFactory
-                .selectFrom(contest);
+                .selectFrom(contest)
+                .where(selectedStatus(status));
         return countQuery;
     }
 
@@ -495,15 +406,18 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .selectFrom(post);
     }
 
-    private JPAQuery<CarPool> countCarPoolQuery() {
+    private JPAQuery<CarPool> countCarPoolQuery(String status) {
         JPAQuery<CarPool> countQuery = queryFactory
-                .selectFrom(carPool);
+                .selectFrom(carPool)
+                .where(selectedStatus(status));
         return countQuery;
     }
 
-    private JPAQuery<Study> countStudyQuery() {
+    private JPAQuery<Study> countStudyQuery(String status) {
         JPAQuery<Study> countQuery = queryFactory
-                .selectFrom(study);
+                .selectFrom(study)
+                .where(selectedStatus(status));
+
         return countQuery;
     }
 
@@ -532,19 +446,37 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     }
 
     private BooleanExpression PartipantUsernameEq(String username) {
-        return hasText(username) ? participant.username.eq(username):null;
+        return hasText(username) ? post.participants.contains(username):null;
     }
 
-    private BooleanExpression Operating() {
-        return post.postStatus.eq(PostStatus.OPERATING);
+    private BooleanExpression selectedStatus(String status) {
+        if(status.equals("POSTING"))
+            return post.postStatus.eq(PostStatus.POSTING);
+        else if(status.equals("CLOSED"))
+            return post.postStatus.eq(PostStatus.CLOSE);
+        else if(status.equals("OPERATING"))
+            return post.postStatus.eq(PostStatus.OPERATING);
+        else
+            return null;
     }
-    private BooleanExpression Posting() {
-        return post.postStatus.eq(PostStatus.POSTING);
-    }
-    private BooleanExpression Closed() {
-        return post.postStatus.eq(PostStatus.CLOSE);
 
+    private BooleanExpression searchContains(PostSearchCondition condition) {
+        BooleanExpression title = hasText(condition.getTitle()) ? post.title.contains(condition.getTitle()) : null;
+        BooleanExpression username = hasText(condition.getUsername()) ? post.writer.contains(condition.getUsername()) : null;
+
+        System.out.println("title = " + title);
+        System.out.println("username = " + username);
+
+        if(title != null){
+            return title;
+        }
+        else if (username != null){
+            return username;
+        }
+        else
+            return null;
     }
+
 
 
 

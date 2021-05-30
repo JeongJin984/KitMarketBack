@@ -1,4 +1,4 @@
-package com.siy.siyresource.domain.dto.post;
+package com.siy.siyresource.domain.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.AllArgsConstructor;

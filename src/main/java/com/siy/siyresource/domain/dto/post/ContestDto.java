@@ -30,14 +30,9 @@ public class ContestDto extends PostDto{
     private String homepage;    //주최 관련 홈페이지
 
     @QueryProjection
-    public ContestDto(Long id, String writer, String title, String content, LocalDateTime createdAt,
-                      Integer maxNum, Integer curNum, LocalDateTime deadLine, String category) {
-        super(id, writer, title, content, createdAt, maxNum, curNum, deadLine, category);
-    }
-
-    @QueryProjection
-    public ContestDto(Long id, String writer, String title, String content, LocalDateTime createdAt, Integer maxNum, Integer curNum, LocalDateTime deadLine, String category, ContestCategory contestCategory, String hostOrganization, Qualification qualification, String homepage) {
-        super(id, writer, title, content, createdAt, maxNum, curNum, deadLine, category);
+    public ContestDto(Long id, String writer, String title, String content,
+                      LocalDateTime dueDate, LocalDateTime createdAt, Integer maxNum, Integer curNum, String category, String status, ContestCategory contestCategory, String hostOrganization, Qualification qualification, String homepage) {
+        super(id, writer, title, content, dueDate, createdAt, maxNum, curNum, category,status);
         this.contestCategory = contestCategory;
         this.hostOrganization = hostOrganization;
         this.qualification = qualification;

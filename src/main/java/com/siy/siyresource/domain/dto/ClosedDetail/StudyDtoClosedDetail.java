@@ -1,28 +1,27 @@
-package com.siy.siyresource.domain.dto.PostingDetail;
+package com.siy.siyresource.domain.dto.ClosedDetail;
 
 import com.querydsl.core.annotations.QueryProjection;
 import com.siy.siyresource.domain.entity.post.Study.Study;
 import com.siy.siyresource.domain.entity.post.Study.StudyCategory;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-public class StudyDtoPostingDetail extends PostDtoPostingDetail {
+public class StudyDtoClosedDetail extends  PostDtoClosedDetail{
     private StudyCategory subject;
-
     private String region;
-
     private String duration;
 
     @QueryProjection
-    public StudyDtoPostingDetail(Study study, Set<ApplicationDto> applications){
-        super(study, applications);
+    public StudyDtoClosedDetail(Study study, Set<ParticipantsDetail> participants){
+        super(study, participants);
         this.subject = study.getSubject();
         this.region = study.getRegion();
         this.duration = study.getDuration();
     }
-
 }

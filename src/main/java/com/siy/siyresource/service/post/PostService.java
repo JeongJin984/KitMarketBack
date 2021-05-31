@@ -1,11 +1,9 @@
 package com.siy.siyresource.service.post;
 
-import com.siy.siyresource.common.api.request.CreateCarPoolRequest;
-import com.siy.siyresource.common.api.request.CreateContestRequest;
-import com.siy.siyresource.common.api.request.CreatePostRequest;
-import com.siy.siyresource.common.api.request.CreateStudyRequest;
+import com.siy.siyresource.common.api.request.*;
 import com.siy.siyresource.domain.condition.PostSearchCondition;
-import com.siy.siyresource.domain.dto.ApplicationDto;
+import com.siy.siyresource.domain.dto.ClosedDetail.ParticipantsDetail;
+import com.siy.siyresource.domain.dto.PostingDetail.ApplicationDto;
 import com.siy.siyresource.domain.dto.ParticipantsDto;
 import com.siy.siyresource.domain.dto.PostingDetail.*;
 import com.siy.siyresource.domain.dto.post.*;
@@ -178,6 +176,22 @@ public class PostService {
         postRepository.save(study);
     }
 
+    /**
+     * 미니 프로젝트 저장
+     * @param request
+     */
+    public void studyMiniProject(CreateMiniProjectRequest request) {
+        MiniProject miniProject = new MiniProject();
+        PostRequestToMiniProject(miniProject ,request);
+
+        postRepository.save(miniProject);
+    }
+
+    private void PostRequestToMiniProject(MiniProject miniProject, CreateMiniProjectRequest request) {
+        PostRequestToPostEntity(miniProject, request);
+        miniProject.setDuration(request.getDuration());
+        miniProject.setSubject(request.getSubject());
+    }
 
 
     /**
@@ -272,6 +286,18 @@ public class PostService {
         PostRequestToCarFoolEntity(carPool, request);
     }
 
+    /**
+     * miniProject 수정하기
+     * @param id
+     * @param request
+     */
+    public void updateMiniProject(Long id, CreateMiniProjectRequest request) {
+        PostSearchCondition condition = new PostSearchCondition(id, null, null);
+        MiniProject miniProject = (MiniProject)postRepository.findPostById(condition);
+        PostRequestToMiniProject(miniProject, request);
+
+    }
+
 
     /**
      * 22. 검색 기능
@@ -335,11 +361,8 @@ public class PostService {
                 .collect(Collectors.toSet());
     }
 
-    private Set<ParticipantsDto> getParticipantsList(Post findPost) {
-        return findPost.getParticipants()
-                .stream()
-                .map(a -> new ParticipantsDto(a.getUsername()))
-                .collect(Collectors.toSet());
+    private Set<ParticipantsDetail> getParticipantsList(Post findPost) {
+        return null;
     }
 
 
@@ -347,7 +370,6 @@ public class PostService {
         MiniProject findPost = (MiniProject)postRepository.findPostById(condition);
         Set<ApplicationDto> applications = getApplicationDtoList(findPost);
 
-        //Set<ParticipantsDto> participants = getParticipantsList(findPost.getParticipants());
         MiniProjectDtoPostingDetail miniProjectDtoDetail = new MiniProjectDtoPostingDetail(findPost, applications);
         return miniProjectDtoDetail;
     }
@@ -417,13 +439,6 @@ public class PostService {
 
         return post;
     }
-
-
-
-
-
-
-
 
 
 

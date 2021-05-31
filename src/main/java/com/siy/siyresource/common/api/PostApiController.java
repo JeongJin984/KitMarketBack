@@ -1,9 +1,6 @@
 package com.siy.siyresource.common.api;
 
-import com.siy.siyresource.common.api.request.CreateCarPoolRequest;
-import com.siy.siyresource.common.api.request.CreateContestRequest;
-import com.siy.siyresource.common.api.request.CreatePostRequest;
-import com.siy.siyresource.common.api.request.CreateStudyRequest;
+import com.siy.siyresource.common.api.request.*;
 import com.siy.siyresource.domain.condition.PostSearchCondition;
 import com.siy.siyresource.domain.dto.PostingDetail.*;
 import com.siy.siyresource.domain.dto.post.*;
@@ -126,7 +123,20 @@ public class PostApiController {
     }
 
     /**
-     * 9. Post 저장 o
+     * 9. miniProject 한개 조회
+     */
+    @GetMapping(value = "/api/miniProject")
+    public PostDtoPostingDetail miniProjectOne(@RequestParam(value = "id") Long id) {
+
+        PostSearchCondition condition = new PostSearchCondition(id, null, null);
+
+        MiniProjectDtoPostingDetail findPostDetail = postService.findMiniProjectById(condition);
+
+        return findPostDetail;
+    }
+
+    /**
+     * 10. Post 저장 o
      */
     @PostMapping(value = "/api/post")
     public String savePost(@RequestBody @Valid CreatePostRequest request) {
@@ -136,7 +146,7 @@ public class PostApiController {
     }
 
     /**
-     * 10. Contest 저장 0
+     * 11. Contest 저장 0
      */
     @PostMapping(value = "/api/contest")
     public String saveContest(@RequestBody @Valid CreateContestRequest request) {
@@ -148,7 +158,7 @@ public class PostApiController {
 
 
     /**
-     * 11. CarPool 저장 0
+     * 12. CarPool 저장 0
      */
     @PostMapping(value = "/api/carPool")
     public String saveCarFool(@RequestBody @Valid CreateCarPoolRequest request) {
@@ -158,12 +168,22 @@ public class PostApiController {
     }
 
     /**
-     * 12. Study 저장 0
+     * 13. Study 저장 0
      */
     @PostMapping(value = "/api/study")
     public String saveStudy(@RequestBody @Valid CreateStudyRequest request) {
         System.out.println("request = " + request);
         postService.studySave(request);
+        return "redirect:/";
+    }
+
+    /**
+     * 14. MiniProject 저장
+     */
+    @PostMapping(value = "/api/miniProject")
+    public String saveStudy(@RequestBody @Valid CreateMiniProjectRequest request) {
+        System.out.println("request = " + request);
+        postService.studyMiniProject(request);
         return "redirect:/";
     }
 
@@ -260,6 +280,15 @@ public class PostApiController {
 
         return "redirect:/";
     }
+    /**
+     * MiniProject 수정
+     */
+    @PutMapping(value = "/api/miniProject")
+    public String updateCarFool(@RequestBody @Valid CreateMiniProjectRequest request, @RequestParam("id")Long id){
+        postService.updateMiniProject(id, request);
+
+        return "redirect:/";
+    }
 
 
     /**
@@ -289,22 +318,10 @@ public class PostApiController {
 
         return "redirect:/";
     }
-
-
-
-
     /**
-     * miniProject 한개 조회
+     * 참석자 보기
      */
-    @GetMapping(value = "/api/MiniProject")
-    public PostDtoPostingDetail miniProjectOne(@RequestParam(value = "id") Long id) {
 
-        PostSearchCondition condition = new PostSearchCondition(id, null, null);
-
-        MiniProjectDtoPostingDetail findPostDetail = postService.findMiniProjectById(condition);
-
-        return findPostDetail;
-    }
 
 
 }

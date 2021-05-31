@@ -1,4 +1,4 @@
-package com.siy.siyresource.domain.dto.PostingDetail;
+package com.siy.siyresource.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

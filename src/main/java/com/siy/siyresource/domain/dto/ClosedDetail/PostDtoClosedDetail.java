@@ -1,4 +1,4 @@
-package com.siy.siyresource.domain.dto.PostingDetail;
+package com.siy.siyresource.domain.dto.ClosedDetail;
 
 import com.siy.siyresource.domain.entity.post.Post;
 import lombok.Getter;
@@ -15,7 +15,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PostDtoPostingDetail {
+public class PostDtoClosedDetail {
     private Long id;
     private String writer;
     private String title;
@@ -29,7 +29,7 @@ public class PostDtoPostingDetail {
     private String status;
 
     // 대기 중인사람
-    private Set<ApplicationDto> applications = new HashSet<>();
+    private Set<ParticipantsDetail> participants = new HashSet<>();
 
     public String calDeadLine(LocalDateTime deadLine){
         LocalDate currentDay = LocalDate.now();
@@ -39,7 +39,7 @@ public class PostDtoPostingDetail {
         return String.valueOf(between);
     }
 
-    public PostDtoPostingDetail(Post post, Set<ApplicationDto> applications) {
+    public PostDtoClosedDetail(Post post, Set<ParticipantsDetail> participants) {
         this.id = post.getId();
         this.writer = post.getWriter();
         this.title = post.getTitle();
@@ -52,6 +52,6 @@ public class PostDtoPostingDetail {
         this.category = post.getCategory();
         this.status = post.getPostStatus().toString();
 
-        this.applications = applications;
+        this.participants = participants;
     }
 }

@@ -21,7 +21,7 @@ public class PostDto {
     private String title;
     private String content;
     private String deadLine;
-    private Long dueDate;
+    private String dueDate;
     private String createdAt;
     private Integer maxNum;
     private Integer curNum;
@@ -30,12 +30,12 @@ public class PostDto {
 
 
 
-    public Long calDeadLine(LocalDateTime deadLine){
+    public String calDeadLine(LocalDateTime deadLine){
         LocalDateTime currentDay = LocalDateTime.now();
 
         long between = DAYS.between(currentDay, deadLine);
 
-        return between;
+        return String.valueOf(between);
     }
 
 

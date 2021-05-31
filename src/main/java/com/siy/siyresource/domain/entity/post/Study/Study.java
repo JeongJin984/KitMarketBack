@@ -37,8 +37,8 @@ public class Study extends Post{
 
     public Study(@NotNull String writer, @NotNull String title, String content, @NotNull Integer maxNumber, Integer currentNumber,
                  @NotNull LocalDateTime dueDate, String category,
-                 PostStatus postStatus, Gender qualifyGender, StudyCategory subject, String region, String time) {
-        super(writer, title, content, maxNumber, currentNumber, dueDate, category, postStatus, qualifyGender);
+                 PostStatus postStatus, StudyCategory subject, String region, String time) {
+        super(writer, title, content, maxNumber, currentNumber, dueDate, category, postStatus);
         this.subject = subject;
         this.region = region;
         this.duration = time;

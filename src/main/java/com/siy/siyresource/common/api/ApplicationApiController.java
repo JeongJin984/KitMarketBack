@@ -18,7 +18,7 @@ public class ApplicationApiController {
     private final PostService postService;
 
     /**
-     * 1. 함께하기
+     * 1. 함께하기 0
      */
     @PostMapping("/api/app/join")
     @Transactional
@@ -34,16 +34,16 @@ public class ApplicationApiController {
     }
 
     /**
-     * 2. 취소하기
+     * 2. 취소하기 0
      */
     @DeleteMapping("/api/app/cancle")
-    public String CancleApp(@RequestBody @Valid CancleAppRequest request, @RequestParam(value = "postId") Long id){
+    public String cancleApp(@RequestBody @Valid CancleAppRequest request, @RequestParam(value = "postId") Long id){
         applicationService.deleteByPostIdAndUserName(id, request.getUsername());
         return "redirect:/";
     }
 
     /**
-     * 3. 수정하기
+     * 3. 수정하기 0
      */
     @PutMapping("/api/app/update")
     public String UpdateApp(@RequestBody @Valid ApplicationRequest request, @PathVariable Long postId){
@@ -54,7 +54,7 @@ public class ApplicationApiController {
     }
 
     /**
-     * 4. 수락하기
+     * 4. 수락하기 0
      */
     @PostMapping("/api/app/permit")
     public String PermitApp(@RequestBody @Valid PermitRequest req){

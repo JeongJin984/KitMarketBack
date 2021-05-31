@@ -456,8 +456,6 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
             return post.postStatus.eq(PostStatus.POSTING);
         else if(status.equals("CLOSED"))
             return post.postStatus.eq(PostStatus.CLOSE);
-        else if(status.equals("OPERATING"))
-            return post.postStatus.eq(PostStatus.OPERATING);
         else
             return null;
     }
@@ -467,28 +465,24 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
             return study.postStatus.eq(PostStatus.POSTING);
         else if(status.equals("CLOSED"))
             return study.postStatus.eq(PostStatus.CLOSE);
-        else if(status.equals("OPERATING"))
-            return study.postStatus.eq(PostStatus.OPERATING);
         else
             return null;
-    }private BooleanExpression selectedStatusByCarPool(String status) {
+    }
+    private BooleanExpression selectedStatusByCarPool(String status) {
         System.out.println("status = " + status);
         if(status.equals("POSTING"))
             return carPool.postStatus.eq(PostStatus.POSTING);
         else if(status.equals("CLOSED"))
             return carPool.postStatus.eq(PostStatus.CLOSE);
-        else if(status.equals("OPERATING"))
-            return carPool.postStatus.eq(PostStatus.OPERATING);
         else
             return null;
-    }private BooleanExpression selectedStatusByContest(String status) {
+    }
+    private BooleanExpression selectedStatusByContest(String status) {
         System.out.println("status = " + status);
         if(status.equals("POSTING"))
             return contest.postStatus.eq(PostStatus.POSTING);
         else if(status.equals("CLOSED"))
             return contest.postStatus.eq(PostStatus.CLOSE);
-        else if(status.equals("OPERATING"))
-            return contest.postStatus.eq(PostStatus.OPERATING);
         else
             return null;
     }

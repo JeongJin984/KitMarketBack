@@ -48,7 +48,7 @@ public class SimpleListener implements ApplicationListener<ApplicationStartedEve
 
         for (int i = 0; i < 10; i++) {
             Study study = new Study("user", "Study_Title" + i, "본문 입니다.", 5, 3, LocalDateTime.of(2022, 3, 25, 18, 19, 03),
-                    "Study", PostStatus.POSTING, Gender.NONE, StudyCategory.NCS, "daegu", "3");
+                    "Study", PostStatus.POSTING, StudyCategory.NCS, "daegu", "3");
 
 
             Application application1 = new Application("user", study.getTitle()+" 참여하고싶어요", study);
@@ -67,8 +67,8 @@ public class SimpleListener implements ApplicationListener<ApplicationStartedEve
         }
 
         for (int i = 0; i < 10; i++) {
-            Contest contest = new Contest("user", "Study_Title" + i, "본문 입니다.", 5, 3, LocalDateTime.of(2022, 3, 25, 18, 19, 03),
-                    "Study", PostStatus.POSTING, Gender.NONE, ContestCategory.DESIGN, "대구시 주최", Qualification.HIGHSCHOOL, "www.Daegu.co.kr" );
+            Contest contest = new Contest("user", "Contest_title" + i, "본문 입니다.", 5, 3, LocalDateTime.of(2022, 3, 25, 18, 19, 03),
+                    "Study", PostStatus.POSTING, ContestCategory.DESIGN, "대구시 주최", Qualification.HIGHSCHOOL, "www.Daegu.co.kr" );
 
 
             Application application1 = new Application("user", contest.getTitle()+" 참여하고싶어요", contest);
@@ -88,7 +88,7 @@ public class SimpleListener implements ApplicationListener<ApplicationStartedEve
         }
 
         for (int i = 0; i < 10; i++) {
-            CarPool carPool = new CarPool("user", "Study_Title" + i, "본문 입니다.", 5, 3, LocalDateTime.of(2020, 3, 25, 18, 19, 03),
+            CarPool carPool = new CarPool("user", "CarPool_Title" + i, "본문 입니다.", 5, 3, LocalDateTime.of(2020, 3, 25, 18, 19, 03),
                     "Study", PostStatus.CLOSE, Gender.NONE, "금오공대", "구미역",
                     LocalDateTime.of(2021, 5, 25, 18, 19, 03), 0L);
 

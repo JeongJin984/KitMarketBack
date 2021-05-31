@@ -123,8 +123,9 @@ public class PostService {
 
         Set<ApplicationDto> applications = getApplicationDtoList(findPost);
 
-
         ContestDtoPostingDetail postDtoDetail = new ContestDtoPostingDetail(findPost, applications);
+
+
         return postDtoDetail;
     }
 
@@ -239,9 +240,10 @@ public class PostService {
      */
     @Transactional
     public void updateContest(Long id, CreateContestRequest request) {
-        Contest contest = (Contest)postRepository.findById(id);
+        PostSearchCondition condition = new PostSearchCondition(id, null, null);
+        Contest contest = (Contest)postRepository.findPostById(condition);
 
-        PostRequestToContestEntity(contest, request);
+        PostRequestToContestEntity((Contest) contest, request);
     }
 
     /**
@@ -251,7 +253,9 @@ public class PostService {
      */
     @Transactional
     public void updateStudy(Long id, CreateStudyRequest request) {
-        Study study = postRepository.findById(id);
+        PostSearchCondition condition = new PostSearchCondition(id, null, null);
+        Study study = (Study)postRepository.findPostById(condition);
+
         PostRequestToStudyEntity(study, request);
     }
 
@@ -263,8 +267,9 @@ public class PostService {
      */
     @Transactional
     public void updateCarFool(Long id, CreateCarPoolRequest request) {
-        CarPool carFool = postRepository.findById(id);
-        PostRequestToCarFoolEntity(carFool, request);
+        PostSearchCondition condition = new PostSearchCondition(id, null, null);
+        CarPool carPool = (CarPool)postRepository.findPostById(condition);
+        PostRequestToCarFoolEntity(carPool, request);
     }
 
 
@@ -285,21 +290,10 @@ public class PostService {
     }
 
 
-    /**
-     * 23. 포스팅 마감하기
-     * @param id
-     */
-    @Transactional
-    public void operatingPost(Long id) {
-        PostSearchCondition condition = new PostSearchCondition(id, null, null);
-        Post findPost = postRepository.findPostById(condition);
-
-        findPost.setPostStatus(PostStatus.OPERATING);
-    }
 
 
     /**
-     * 24. 포스트 운영 종료하기
+     * 23. 포스트 운영 종료하기
      * @param id
      */
     @Transactional
@@ -378,11 +372,18 @@ public class PostService {
     private void PostRequestToCarFoolEntity(CarPool post, CreateCarPoolRequest request) {
         PostRequestToPostEntity(post, request);
 
+        LocalDateTime departTime = getLocalDateTime(request.getDepartTime());
+
         post.setCategory("CarPool");
+
+        post.setQualifyGender(post.stringToGender(request.getGender()));
         post.setFare(request.getFare());
         post.setDeparture(request.getDeparture());
         post.setDestination(request.getDestination());
+        post.setDepartTime(departTime);
     }
+
+
 
     private void PostRequestToContestEntity(Contest contest,  CreateContestRequest request) {
         PostRequestToPostEntity(contest, request);
@@ -394,10 +395,14 @@ public class PostService {
         contest.setHomepage(request.getHomepage());
     }
 
+    private LocalDateTime getLocalDateTime(String departTime2) {
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        return LocalDateTime.parse(departTime2, format);
+    }
+
     private Post PostRequestToPostEntity(Post post, CreatePostRequest request) {
         System.out.println("request.getDeadLine() = " + request.getDeadLine());
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-        LocalDateTime deadLine = LocalDateTime.parse(request.getDeadLine(), format);
+        LocalDateTime deadLine = getLocalDateTime(request.getDeadLine());
 
         post.setWriter(request.getWriter());
         post.setTitle(request.getTitle());

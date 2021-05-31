@@ -19,22 +19,37 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class CarPool extends Post {
 
+    @Enumerated(EnumType.STRING)
+    private Gender qualifyGender;   //[MALE, FEMALE, NONE]
+
     private String departure;
 
     private String destination;
 
     //출발 시간
-    private LocalDateTime departureTime;
+    private LocalDateTime departTime;
 
     //요금
     private Long fare;
 
+    public Gender stringToGender(String gender){
+        if(gender.equals("MALE"))
+            return Gender.MALE;
+        else if(gender.equals("FEMALE"))
+            return Gender.FEMALE;
+        else if(gender.equals("NONE"))
+            return Gender.NONE;
+        else
+            return null;
+    }
+
     public CarPool(@NotNull String writer, @NotNull String title, String content, @NotNull Integer maxNumber, Integer currentNumber, @NotNull LocalDateTime dueDate, String category,
-                   PostStatus postStatus, Gender qualifyGender, String departure, String destination, LocalDateTime departureTime, Long fare) {
-        super(writer, title, content, maxNumber, currentNumber, dueDate, category, postStatus, qualifyGender);
+                   PostStatus postStatus, Gender qualifyGender, String departure, String destination, LocalDateTime departTime, Long fare) {
+        super(writer, title, content, maxNumber, currentNumber, dueDate, category, postStatus);
+        this.qualifyGender = qualifyGender;
         this.departure = departure;
         this.destination = destination;
-        this.departureTime = departureTime;
+        this.departTime = departTime;
         this.fare = fare;
         this.setCategory("CarPool");
     }

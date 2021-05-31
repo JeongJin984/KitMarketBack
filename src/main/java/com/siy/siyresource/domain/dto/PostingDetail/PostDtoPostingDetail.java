@@ -22,7 +22,7 @@ public class PostDtoPostingDetail {
     private String writer;
     private String title;
     private String content;
-    private Long dueDate;
+    private String dueDate;
     private String deadLine;
     private String createdAt;
     private Integer maxNum;
@@ -33,12 +33,12 @@ public class PostDtoPostingDetail {
     // 대기 중인사람
     private Set<ApplicationDto> applications = new HashSet<>();
 
-    public Long calDeadLine(LocalDateTime deadLine){
+    public String calDeadLine(LocalDateTime deadLine){
         LocalDate currentDay = LocalDate.now();
 
         long between = DAYS.between(currentDay, deadLine);
 
-        return between;
+        return String.valueOf(between);
     }
 
     public PostDtoPostingDetail(Post post, Set<ApplicationDto> applications) {

@@ -58,8 +58,8 @@ public class Contest extends Post {
     }
 
 
-    public Contest(@NotNull String writer, @NotNull String title, String content, @NotNull Integer maxNumber, Integer currentNumber, @NotNull LocalDateTime dueDate, String category, PostStatus postStatus, Gender qualifyGender, ContestCategory contestCategory, String hostOrganization, Qualification qualification, String homepage) {
-        super(writer, title, content, maxNumber, currentNumber, dueDate, category, postStatus, qualifyGender);
+    public Contest(@NotNull String writer, @NotNull String title, String content, @NotNull Integer maxNumber, Integer currentNumber, @NotNull LocalDateTime dueDate, String category, PostStatus postStatus, ContestCategory contestCategory, String hostOrganization, Qualification qualification, String homepage) {
+        super(writer, title, content, maxNumber, currentNumber, dueDate, category, postStatus);
         this.contestCategory = contestCategory;
         this.hostOrganization = hostOrganization;
         this.qualification = qualification;

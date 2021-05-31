@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embedded;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
@@ -16,19 +17,20 @@ public class CarPoolDtoPostingDetail extends PostDtoPostingDetail {
     private String fare;
     private String departure;
     private String destination;
+
     @Embedded
     private DepartTime departTime;
+
 
     @QueryProjection
     public CarPoolDtoPostingDetail(CarPool carPool, Set<ApplicationDto> applications){
         super(carPool, applications);
+        System.out.println("carPool.getDepartTime() = " + carPool.getDepartTime());
+
         this.fare = carPool.getFare().toString();
         this.departure = carPool.getDeparture();
         this.destination = carPool.getDestination();
-
+        this.departTime = DepartTime.LocalDateTimeToDepartTime(carPool.getDepartTime());
     }
-
-
-
 
 }

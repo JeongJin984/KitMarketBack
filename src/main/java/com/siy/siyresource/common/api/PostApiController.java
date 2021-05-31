@@ -24,7 +24,7 @@ public class PostApiController {
     private final PostService postService;
     private final ApplicationService applicationService;
     /**
-     * 1. Post 전체 조회
+     * 1. Post 전체 조회 o
      */
     @GetMapping(value = "/api/postList")
     public Result postList(@RequestParam(value = "status", defaultValue = "POSTING", required = false)String status,
@@ -37,7 +37,7 @@ public class PostApiController {
     }
 
     /**
-     * 2. Study 전체 조회
+     * 2. Study 전체 조회 o
      */
     @GetMapping(value = "/api/studyList")
     public Result studyList(@RequestParam(value = "status", defaultValue = "POSTING", required = false)String status,
@@ -49,7 +49,7 @@ public class PostApiController {
     }
 
     /**
-     * 3. carPool 전체 조회
+     * 3. carPool 전체 조회 o
      */
     @GetMapping(value = "/api/carPoolList")
     public Result carPoolList(
@@ -62,7 +62,7 @@ public class PostApiController {
     }
 
     /**
-     * 4. Contest 전체 조회
+     * 4. Contest 전체 조회 0
      */
     @GetMapping(value = "/api/contestList")
     public Result ContestList(
@@ -75,7 +75,7 @@ public class PostApiController {
     }
 
     /**
-     * 5. post 한개 조회
+     * 5. post 한개 조회 o
      */
     @GetMapping(value = "/api/post")
     public PostDtoPostingDetail PostOne(@RequestParam(value = "id") Long id) {
@@ -88,7 +88,7 @@ public class PostApiController {
     }
 
     /**
-     * 6. study 한개 조회
+     * 6. study 한개 조회 o
      */
     @GetMapping(value = "/api/study")
     public StudyDtoPostingDetail StudyOne(@RequestParam(value = "id") Long id) {
@@ -100,7 +100,7 @@ public class PostApiController {
     }
 
     /**
-     * 7.carFool 한개 조회
+     * 7.carFool 한개 조회 o
      */
     @GetMapping(value = "/api/carPool")
     public PostDtoPostingDetail carFoolOne(@RequestParam(value = "id") Long id) {
@@ -113,7 +113,7 @@ public class PostApiController {
     }
 
     /**
-     * 8. contest 한개 조회
+     * 8. contest 한개 조회 o
      */
     @GetMapping(value = "/api/contest")
     public PostDtoPostingDetail contestOne(@RequestParam(value = "id") Long id) {
@@ -126,7 +126,7 @@ public class PostApiController {
     }
 
     /**
-     * 9. Post 저장
+     * 9. Post 저장 o
      */
     @PostMapping(value = "/api/post")
     public String savePost(@RequestBody @Valid CreatePostRequest request) {
@@ -136,7 +136,7 @@ public class PostApiController {
     }
 
     /**
-     * 10. Contest 저장
+     * 10. Contest 저장 0
      */
     @PostMapping(value = "/api/contest")
     public String saveContest(@RequestBody @Valid CreateContestRequest request) {
@@ -147,9 +147,8 @@ public class PostApiController {
     }
 
 
-
     /**
-     * 11. CarPool 저장
+     * 11. CarPool 저장 0
      */
     @PostMapping(value = "/api/carPool")
     public String saveCarFool(@RequestBody @Valid CreateCarPoolRequest request) {
@@ -159,7 +158,7 @@ public class PostApiController {
     }
 
     /**
-     * 12. Study 저장
+     * 12. Study 저장 0
      */
     @PostMapping(value = "/api/study")
     public String saveStudy(@RequestBody @Valid CreateStudyRequest request) {
@@ -170,7 +169,7 @@ public class PostApiController {
 
 
     /**
-     * 13. 내가 만든 모임 리스트
+     * 13. 내가 만든 모임 리스트 0
      * */
     @GetMapping("/api/post/my")
     public Result findPostMyMakeByUsername(@RequestParam(value = "username") @Valid String request,
@@ -184,7 +183,7 @@ public class PostApiController {
     }
 
     /**
-     * 15. 내가 참여중인 post 보기
+     * 15. 내가 참여중인 post 보기 0
      */
     @GetMapping(value = "/api/post/participant")
     public Result findParticipating(@RequestParam String username,
@@ -198,7 +197,7 @@ public class PostApiController {
 
 
     /**
-     * 16 . 내가 신청한 모임 리스트
+     * 16 . 내가 신청한 모임 리스트 0
      * */
     @GetMapping("/api/post/application")
     public Result findPostApplicatingByUsername(@RequestParam(value = "username") @Valid String request,
@@ -213,7 +212,7 @@ public class PostApiController {
     }
 
     /**
-     * 17. 포스트 삭제
+     * 17. 포스트 삭제 0
      */
     @DeleteMapping(value = "/api/post")
     public String delete(@RequestParam("id") Long id){
@@ -224,7 +223,7 @@ public class PostApiController {
 
 
     /**
-     * 18. Post 수정
+     * 18. Post 수정 0
      */
     @PutMapping(value = "/api/post")
     public String updatePost(@RequestBody @Valid CreatePostRequest request, @PathVariable("id")Long id){
@@ -234,7 +233,7 @@ public class PostApiController {
     }
 
     /**
-     *  19. Contest 수정
+     *  19. Contest 수정 0
      * */
     @PutMapping(value = "/api/contest")
     public String updateContest(@RequestBody @Valid CreateContestRequest request, @RequestParam("id")Long id){
@@ -244,7 +243,7 @@ public class PostApiController {
     }
 
     /**
-     *  20. Study 수정
+     *  20. Study 수정 0
      * */
     @PutMapping(value = "/api/study")
     public String updateStudy(@RequestBody @Valid CreateStudyRequest request, @RequestParam("id")Long id){
@@ -253,7 +252,7 @@ public class PostApiController {
         return "redirect:/";
     }
     /**
-     *  21. carPool 수정
+     *  21. carPool 수정 0
      * */
     @PutMapping(value = "/api/carPool")
     public String updateCarFool(@RequestBody @Valid CreateCarPoolRequest request, @RequestParam("id")Long id){
@@ -264,14 +263,14 @@ public class PostApiController {
 
 
     /**
-     *  22. 검색기능
+     *  22. 검색기능 0
      * @param title
      * @param username
      */
     @GetMapping("/api/post/search")
     public Result  searchPostByKeyword( @RequestParam(value = "title",required = false) String title,
                                         @RequestParam(value = "username", required = false) String username,
-                                        @RequestParam(value = "status",  required = true) String status,
+                                        @RequestParam(value = "status",  required = false, defaultValue = "POSTING") String status,
                                         @RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
                                         @RequestParam(value = "size", defaultValue = "8", required = false) int size ){
 
@@ -279,18 +278,10 @@ public class PostApiController {
         return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.getContent());
     }
 
-    /**
-     * 23. 포스팅 마감하기
-     */
-    @GetMapping(value = "/api/post/operating")
-    public String operatingPost(@RequestParam(required = true) @Valid Long id) {
-        postService.operatingPost(id);
 
-        return "redirect:/";
-    }
 
     /**
-     *  24. 포스트 운영 종료하기
+     *  23. 포스트 운영 마감하기 0
      * */
     @GetMapping(value = "/api/post/closed")
     public String closedPost(@RequestParam(required = true) @Valid Long id){

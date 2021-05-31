@@ -61,8 +61,7 @@ public class Post {
     @Enumerated(EnumType.STRING)
     private PostStatus postStatus;
 
-    @Enumerated(EnumType.STRING)
-    private Gender qualifyGender;   //[MALE, FEMALE, NONE]
+
 
     /**
      * 참가중인 사람들
@@ -85,8 +84,8 @@ public class Post {
 
     public Post(@NotNull String writer, @NotNull String title, String content,
                 @NotNull Integer maxNumber, Integer currentNumber,
-                @NotNull LocalDateTime dueDate, String category, PostStatus postStatus,
-                Gender qualifyGender) {
+                @NotNull LocalDateTime dueDate, String category, PostStatus postStatus
+                ) {
         this.writer = writer;
         this.title = title;
         this.content = content;
@@ -95,6 +94,5 @@ public class Post {
         this.dueDate = dueDate;
         this.category = category;
         this.postStatus = postStatus;
-        this.qualifyGender = qualifyGender;
     }
 }

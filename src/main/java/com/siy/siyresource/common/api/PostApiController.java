@@ -2,6 +2,7 @@ package com.siy.siyresource.common.api;
 
 import com.siy.siyresource.common.api.request.CreatePostRequest;
 import com.siy.siyresource.domain.condition.PostSearchCondition;
+import com.siy.siyresource.domain.dto.account.UserDto;
 import com.siy.siyresource.domain.dto.post.*;
 import com.siy.siyresource.domain.dto.post.Linear.PostLinearDto;
 import com.siy.siyresource.domain.dto.post.detail.CarPoolDtoDetail;
@@ -11,8 +12,11 @@ import com.siy.siyresource.domain.entity.post.CarPool;
 import com.siy.siyresource.domain.entity.post.Contest.Contest;
 import com.siy.siyresource.domain.entity.post.Post;
 import com.siy.siyresource.domain.entity.post.Study.Study;
+import com.siy.siyresource.feign.AccountServiceClient;
 import com.siy.siyresource.service.ApplicationService;
+import com.siy.siyresource.service.account.AccountService;
 import com.siy.siyresource.service.post.PostService;
+import io.micrometer.core.annotation.Timed;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +35,15 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 public class PostApiController {
     private final PostService postService;
+    private final AccountService accountService;
     private final ApplicationService applicationService;
+
+    @GetMapping("hello/hi")
+    @Timed(value = "post.hi", longTask = true)
+    public UserDto getProfile() {
+        return accountService.getUser("user");
+    }
+
     /**
      * Post 전체 조회
      */

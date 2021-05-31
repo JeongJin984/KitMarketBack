@@ -1,7 +1,7 @@
 logging:
   level:
     org.hibernate.type.descriptor.sql: trace
-    com.example.jwt.feign: DEBUG
+    com.siy.siyresource.feign: DEBUG
 
 spring:
   application:

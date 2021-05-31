@@ -216,7 +216,7 @@ public class PostService {
     }
 
     @Transactional
-    private void updatePostEntity(CreatePostRequest request, Post post) {
+    public void updatePostEntity(CreatePostRequest request, Post post) {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         LocalDateTime deadLine = LocalDateTime.parse(request.getDeadLine(), format);
 

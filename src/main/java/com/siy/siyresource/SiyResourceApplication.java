@@ -18,7 +18,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class SiyResourceApplication {
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication();
-        //app.addListeners(new SimpleListener());
+        app.addListeners(new SimpleListener());
         app.run(SiyResourceApplication.class, args);
     }
 

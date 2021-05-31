@@ -1,8 +1,8 @@
-package com.siy.siyresource.domain.dto.post.detail;
+package com.siy.siyresource.domain.dto.detail;
 
 import com.querydsl.core.annotations.QueryProjection;
-import com.siy.siyresource.domain.dto.post.ApplicationDto;
-import com.siy.siyresource.domain.dto.post.ParticipantsDto;
+import com.siy.siyresource.domain.dto.ApplicationDto;
+import com.siy.siyresource.domain.dto.ParticipantsDto;
 import com.siy.siyresource.domain.entity.post.Contest.Contest;
 import com.siy.siyresource.domain.entity.post.Contest.ContestCategory;
 import com.siy.siyresource.domain.entity.post.Contest.Qualification;
@@ -14,7 +14,7 @@ import java.util.Set;
 
 @Data
 public class ContestDtoDetail extends PostDtoDetail{
-    private ContestCategory contestCategory; // 분야별 선택 [ REPORT,IDEA,DESIGN,CHARACTER,CULTURE,UCC, EXTERNAL_ACTIVITY]
+    private ContestCategory destination; // 분야별 선택 [ REPORT,IDEA,DESIGN,CHARACTER,CULTURE,UCC, EXTERNAL_ACTIVITY]
     private String hostOrganization;    // 주최기간
     @Enumerated(EnumType.STRING)
     private Qualification qualification;   //자격 [HIGHSCHOOL, COLLEGE, NONE]
@@ -25,8 +25,7 @@ public class ContestDtoDetail extends PostDtoDetail{
     @QueryProjection
     public ContestDtoDetail(Contest contest, Set<ParticipantsDto> participants, Set<ApplicationDto> applications){
         super(contest, participants, applications);
-
-        setContestCategory(contest.getContestCategory());
+        setDestination(contest.getContestCategory());
         setHostOrganization(contest.getHostOrganization());
         setQualification(contest.getQualification());
         setHomepage(contest.getHomepage());

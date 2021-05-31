@@ -1,7 +1,7 @@
-package com.siy.siyresource.domain.dto.post.detail;
+package com.siy.siyresource.domain.dto.detail;
 
-import com.siy.siyresource.domain.dto.post.ApplicationDto;
-import com.siy.siyresource.domain.dto.post.ParticipantsDto;
+import com.siy.siyresource.domain.dto.ApplicationDto;
+import com.siy.siyresource.domain.dto.ParticipantsDto;
 import com.siy.siyresource.domain.entity.post.Post;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,25 +22,25 @@ public class PostDtoDetail {
     private String writer;
     private String title;
     private String content;
-    private Integer deadLine;
-
+    private String deadLine;
+    private Long dueDate;
     private String createdAt;
     private Integer maxNum;
     private Integer curNum;
-
     private String category;
+    private String status;
 
     // 참가중인사람
     private Set<ParticipantsDto> participants = new HashSet<>();
     // 대기 중인사람
     private Set<ApplicationDto> applications = new HashSet<>();
 
-    public Integer calDeadLine(LocalDateTime deadLine){
+    public Long calDeadLine(LocalDateTime deadLine){
         LocalDate currentDay = LocalDate.now();
 
         long between = DAYS.between(currentDay, deadLine);
 
-        return (int)between;
+        return between;
     }
 
     public PostDtoDetail(Post post, Set<ParticipantsDto> participants, Set<ApplicationDto> applications) {
@@ -48,11 +48,13 @@ public class PostDtoDetail {
         this.writer = post.getWriter();
         this.title = post.getTitle();
         this.content = post.getContent();
-        this.deadLine = calDeadLine(post.getDeadLine());
+        this.deadLine = post.getDueDate().toString();
+        this.dueDate = calDeadLine(post.getDueDate());
         this.createdAt = post.getCreatedAt().toString();
         this.maxNum = post.getMaxNumber();
         this.curNum = post.getCurrentNumber();
         this.category = post.getCategory();
+        this.status = post.getPostStatus().toString();
 
         this.participants = participants;
         this.applications = applications;

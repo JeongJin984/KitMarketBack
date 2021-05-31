@@ -1,5 +1,6 @@
 package com.siy.siyresource.repository.ApplicationRepositoy;
 
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.siy.siyresource.domain.entity.Application;
@@ -29,6 +30,16 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom{
         return application;
     }
 
+    @Override
+    public Application findByAppId(Long Id) {
+        return queryFactory.selectFrom(application)
+                .where(idEq(Id))
+                .fetchOne();
+    }
+
+    private BooleanExpression idEq(Long id) {
+        return id != null ? application.id.eq(id) : null;
+    }
 
 
     private BooleanExpression usernameEq(String username) {

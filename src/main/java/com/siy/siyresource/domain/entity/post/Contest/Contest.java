@@ -1,7 +1,10 @@
 package com.siy.siyresource.domain.entity.post.Contest;
 
+import com.siy.siyresource.domain.entity.post.Gender;
 import com.siy.siyresource.domain.entity.post.Post;
 import com.siy.siyresource.domain.entity.post.PostStatus;
+import com.siy.siyresource.domain.entity.post.Study.Study;
+import com.siy.siyresource.domain.entity.post.Study.StudyCategory;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,32 +28,15 @@ public class Contest extends Post {
 
     private String homepage;    //주최 관련 홈페이지
 
-    @Builder
-    public Contest(String title, String content, ContestCategory contestCategory) {
-        super(title, content);
-        this.setCategory("study");
-        this.contestCategory = contestCategory;
-    }
 
-    @Builder
-    public Contest(Post post, ContestCategory category) {
-        super(post.getTitle(),
-                post.getContent(),
-                post.getWriter(),
-                post.getCurrentNumber(),
-                post.getMaxNumber(),
-                post.getDeadLine(),
-                post.getPostStatus()
-        );
-        this.setCategory("study");
-        this.contestCategory = contestCategory;
-    }
-
-    public Contest(String title, String content, @NotNull String writer, @NotNull Integer currentNumber, @NotNull Integer maxNumber, @NotNull LocalDateTime deadLine, PostStatus status, ContestCategory contestCategory, String hostOrganization, Qualification qualification, String homepage) {
-        super(title, content, writer, currentNumber, maxNumber, deadLine, status);
+    public Contest(@NotNull String writer, @NotNull String title, String content, @NotNull Integer maxNumber, Integer currentNumber, @NotNull LocalDateTime dueDate, String category, PostStatus postStatus, Gender qualifyGender, ContestCategory contestCategory, String hostOrganization, Qualification qualification, String homepage) {
+        super(writer, title, content, maxNumber, currentNumber, dueDate, category, postStatus, qualifyGender);
         this.contestCategory = contestCategory;
         this.hostOrganization = hostOrganization;
         this.qualification = qualification;
         this.homepage = homepage;
+        this.setCategory("Contest");
     }
+
+
 }

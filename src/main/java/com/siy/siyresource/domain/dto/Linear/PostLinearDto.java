@@ -1,4 +1,4 @@
-package com.siy.siyresource.domain.dto.post.Linear;
+package com.siy.siyresource.domain.dto.Linear;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;

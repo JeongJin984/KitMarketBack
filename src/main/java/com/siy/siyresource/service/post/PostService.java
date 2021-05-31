@@ -2,15 +2,14 @@ package com.siy.siyresource.service.post;
 
 import com.siy.siyresource.common.api.request.CreatePostRequest;
 import com.siy.siyresource.domain.condition.PostSearchCondition;
+import com.siy.siyresource.domain.dto.ApplicationDto;
+import com.siy.siyresource.domain.dto.ParticipantsDto;
+import com.siy.siyresource.domain.dto.detail.*;
 import com.siy.siyresource.domain.dto.post.*;
-import com.siy.siyresource.domain.dto.post.Linear.PostLinearDto;
-import com.siy.siyresource.domain.dto.post.detail.CarPoolDtoDetail;
-import com.siy.siyresource.domain.dto.post.detail.ContestDtoDetail;
-import com.siy.siyresource.domain.dto.post.detail.PostDtoDetail;
-import com.siy.siyresource.domain.dto.post.detail.StudyDtoDetail;
-import com.siy.siyresource.domain.entity.Participant;
-import com.siy.siyresource.domain.entity.post.CarPool;
+import com.siy.siyresource.domain.dto.Linear.PostLinearDto;
+import com.siy.siyresource.domain.entity.post.CarPool.CarPool;
 import com.siy.siyresource.domain.entity.post.Contest.Contest;
+import com.siy.siyresource.domain.entity.post.MiniProject;
 import com.siy.siyresource.domain.entity.post.Post;
 import com.siy.siyresource.domain.entity.post.PostStatus;
 import com.siy.siyresource.domain.entity.post.Study.Study;
@@ -47,10 +46,10 @@ public class PostService {
      *
      * @return
      */
-    public Page<PostDto> findPostList(int offset, int size) {
+    public Page<PostDto> findPostList(String status, int offset, int size) {
         PageRequest page = PageRequest.of(offset, size);
 
-        Page<PostDto> results = postRepository.findPostListWithPaging(page);
+        Page<PostDto> results = postRepository.findPostListWithPaging(status, page);
 
         return results;
     }
@@ -60,10 +59,10 @@ public class PostService {
      *
      * @return
      */
-    public Page<StudyDto> findStudyList(int offset, int size) {
+    public Page<PostDto> findStudyList(String status, int offset, int size) {
         PageRequest page = PageRequest.of(offset, size);
 
-        Page<StudyDto> results = postRepository.findStudyListWithPaging(page);
+        Page<PostDto> results = postRepository.findStudyListWithPaging(status, page);
         return results;
     }
 
@@ -72,10 +71,10 @@ public class PostService {
      *
      * @return
      */
-    public Page<CarPoolDto> findCarPoolList(int offset, int size) {
+    public Page<PostDto> findCarPoolList(String status, int offset, int size) {
         PageRequest page = PageRequest.of(offset, size);
 
-        Page<CarPoolDto> results = postRepository.findCarPoolListWithPaging(page);
+        Page<PostDto> results = postRepository.findCarPoolListWithPaging(status, page);
         return results;
     }
 
@@ -84,13 +83,15 @@ public class PostService {
      *
      * @return
      */
-    public Page<ContestDto> findContestList(int offset, int size) {
+    public Page<PostDto> findContestList(String status, int offset, int size) {
         PageRequest page = PageRequest.of(offset, size);
 
-        Page<ContestDto> results = postRepository.findContestListWithPaging(page);
+        Page<PostDto> results = postRepository.findContestListWithPaging(status, page);
 
         return results;
     }
+
+
 
     public PostDtoDetail findPostById(PostSearchCondition condition) {
         Post findPost = postRepository.findPostById(condition);
@@ -98,21 +99,21 @@ public class PostService {
 
         Set<ApplicationDto> applications = getApplicationDtoList(findPost);
 
-        Set<ParticipantsDto> participants = getParticipantsList(findPost.getParticipants());
+        //Set<ParticipantsDto> participants = getParticipantsList(findPost.getParticipants());
 
-        PostDtoDetail postDtoDetail = new PostDtoDetail(findPost, participants, applications);
+        PostDtoDetail postDtoDetail = new PostDtoDetail(findPost, null, applications);
         return postDtoDetail;
     }
 
 
-    public PostDtoDetail findStudyById(PostSearchCondition condition) {
-        Study findPost = (Study) postRepository.findPostById(condition);
+    public StudyDtoDetail findStudyById(PostSearchCondition condition) {
+        Study findPost = (Study)postRepository.findPostById(condition);
 
         Set<ApplicationDto> applications = getApplicationDtoList(findPost);
 
-        Set<ParticipantsDto> participants = getParticipantsList(findPost.getParticipants());
+        //Set<ParticipantsDto> participants = getParticipantsList(findPost.getParticipants());
 
-        StudyDtoDetail postDtoDetail = new StudyDtoDetail(findPost, participants, applications);
+        StudyDtoDetail postDtoDetail = new StudyDtoDetail(findPost, null, applications);
         return postDtoDetail;
     }
 
@@ -122,9 +123,9 @@ public class PostService {
 
         Set<ApplicationDto> applications = getApplicationDtoList(findPost);
 
-        Set<ParticipantsDto> participants = getParticipantsList(findPost.getParticipants());
+        //Set<ParticipantsDto> participants = getParticipantsList(findPost.getParticipants());
 
-        ContestDtoDetail postDtoDetail = new ContestDtoDetail(findPost, participants, applications);
+        ContestDtoDetail postDtoDetail = new ContestDtoDetail(findPost, null, applications);
         return postDtoDetail;
     }
 
@@ -133,11 +134,23 @@ public class PostService {
 
         Set<ApplicationDto> applications = getApplicationDtoList(findPost);
 
-        Set<ParticipantsDto> participants = getParticipantsList(findPost.getParticipants());
+        //Set<ParticipantsDto> participants = getParticipantsList(findPost.getParticipants());
 
-        CarPoolDtoDetail postDtoDetail = new CarPoolDtoDetail(findPost, participants, applications);
+        CarPoolDtoDetail postDtoDetail = new CarPoolDtoDetail(findPost, null, applications);
         return postDtoDetail;
     }
+
+    public MiniProjectDtoDetail findMiniProjectById(PostSearchCondition condition) {
+        MiniProject findPost = (MiniProject)postRepository.findPostById(condition);
+        Set<ApplicationDto> applications = getApplicationDtoList(findPost);
+
+        //Set<ParticipantsDto> participants = getParticipantsList(findPost.getParticipants());
+        MiniProjectDtoDetail miniProjectDtoDetail = new MiniProjectDtoDetail(findPost, null, applications);
+        return miniProjectDtoDetail;
+    }
+
+
+
 
     public Page<PostLinearDto> findPostLinearList(int offset, int size) {
         PageRequest page = PageRequest.of(offset, size);
@@ -158,6 +171,7 @@ public class PostService {
 
     }
 
+
     public Post getPostEntity(PostSearchCondition condition) {
         Post findPost = postRepository.findPostById(condition);
         return findPost;
@@ -176,7 +190,7 @@ public class PostService {
                 .collect(Collectors.toSet());
     }
 
-    private Set<ParticipantsDto> getParticipantsList(Set<Participant> accountPosts) {
+    private Set<ParticipantsDto> getParticipantsList(String participants) {
 //        return accountPosts
 //                .stream()
 //                .map(a -> new ParticipantsDto(a.getUsername(), a.getEmail(), a.getAge().intValue())
@@ -223,7 +237,7 @@ public class PostService {
         post.setWriter(request.getWriter());
         post.setTitle(request.getTitle());
         post.setContent(request.getContent());
-        post.setDeadLine(deadLine);
+        post.setDueDate(deadLine);
         post.setMaxNumber(request.getMaxNum());
         post.setCurrentNumber(request.getCurNum());
         post.setCategory(request.getCategory());
@@ -248,19 +262,6 @@ public class PostService {
         updatePostEntity(request, carFool);
     }
 
-    public Page<PostDto> findPostingList(int offset, int size) {
-        PageRequest page = PageRequest.of(offset, size);
-        Page<PostDto> result = postRepository.findPostingList(page);
-
-        return result;
-    }
-
-    public Page<PostDto> findClosedList(int offset, int size) {
-        PageRequest page = PageRequest.of(offset, size);
-        Page<PostDto> result = postRepository.findClosedList(page);
-
-        return result;
-    }
 
     public Page<PostDto> findSearchList(String title, String username, String status, int offset, int size) {
         PageRequest page = PageRequest.of(offset, size);
@@ -285,4 +286,6 @@ public class PostService {
 
         findPost.setPostStatus(PostStatus.CLOSE);
     }
+
+
 }

@@ -21,7 +21,7 @@ public class CarPoolDto extends PostDto{
     private String destination;
 
     //출발 시간
-    private LocalDateTime departureTime;
+    private LocalDateTime departTime;
 
     //요금
     private Long fare;
@@ -30,17 +30,12 @@ public class CarPoolDto extends PostDto{
     private Gender qualifyGender;   //[MALE, FEMALE, NONE]
 
     @QueryProjection
-    public CarPoolDto(Long id, String writer, String title, String content, LocalDateTime createdAt,
-                      Integer maxNum, Integer curNum, LocalDateTime deadLine, String category) {
-        super(id, writer, title, content, createdAt, maxNum, curNum, deadLine, category);
-    }
-
-    @QueryProjection
-    public CarPoolDto(Long id, String writer, String title, String content, LocalDateTime createdAt, Integer maxNum, Integer curNum, LocalDateTime deadLine, String category, String departure, String destination, LocalDateTime departureTime, Long fare, Gender qualifyGender) {
-        super(id, writer, title, content, createdAt, maxNum, curNum, deadLine, category);
+    public CarPoolDto(Long id, String writer, String title, String content, LocalDateTime dueDate, LocalDateTime createdAt, Integer maxNum,
+                      Integer curNum, String category, String status, String departure, String destination, LocalDateTime departTime, Long fare, Gender qualifyGender) {
+        super(id, writer, title, content, dueDate, createdAt, maxNum, curNum, category, status);
         this.departure = departure;
         this.destination = destination;
-        this.departureTime = departureTime;
+        this.departTime = departTime;
         this.fare = fare;
         this.qualifyGender = qualifyGender;
     }

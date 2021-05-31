@@ -12,17 +12,17 @@ import java.time.LocalDateTime;
 public class ApplicationDto {
     private Long id;
 
-    private String content;
-
-    private LocalDateTime chatDate; //채팅 시간
-
     private String username;
+    private String content;
+    private String chatDate; //채팅 시간
+
+
 
     @QueryProjection
     public ApplicationDto(Long id, String content, LocalDateTime chatDate, String username) {
         this.id = id;
         this.content = content;
-        this.chatDate = chatDate == null ? null: chatDate;
+        this.chatDate = chatDate.toString();
         this.username = username;
     }
 }

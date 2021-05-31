@@ -1,4 +1,4 @@
-package com.siy.siyresource.domain.dto.detail;
+package com.siy.siyresource.domain.dto.PostingDetail;
 
 import com.querydsl.core.annotations.QueryProjection;
 import com.siy.siyresource.domain.dto.ApplicationDto;
@@ -13,7 +13,7 @@ import javax.persistence.Enumerated;
 import java.util.Set;
 
 @Data
-public class ContestDtoDetail extends PostDtoDetail{
+public class ContestDtoPostingDetail extends PostDtoPostingDetail {
     private ContestCategory destination; // 분야별 선택 [ REPORT,IDEA,DESIGN,CHARACTER,CULTURE,UCC, EXTERNAL_ACTIVITY]
     private String hostOrganization;    // 주최기간
     @Enumerated(EnumType.STRING)
@@ -23,8 +23,8 @@ public class ContestDtoDetail extends PostDtoDetail{
 
 
     @QueryProjection
-    public ContestDtoDetail(Contest contest, Set<ParticipantsDto> participants, Set<ApplicationDto> applications){
-        super(contest, participants, applications);
+    public ContestDtoPostingDetail(Contest contest, Set<ApplicationDto> applications){
+        super(contest, applications);
         setDestination(contest.getContestCategory());
         setHostOrganization(contest.getHostOrganization());
         setQualification(contest.getQualification());

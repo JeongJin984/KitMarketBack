@@ -32,8 +32,6 @@ public interface PostRepositoryCustom {
      * 기본 엔티티 검색
      **/
     Post findPostById(PostSearchCondition condition);
-    Contest findContestById(PostSearchCondition condition);
-
 
     /*
     * Paging 함수

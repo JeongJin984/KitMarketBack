@@ -24,7 +24,7 @@ public class Study extends Post{
 
     private String duration;
 
-    public StudyCategory calSubject(String subject){
+    public StudyCategory stringToSubject(String subject){
         if(subject.equals("ENGLISH"))
             return StudyCategory.ENGLISH;
         else if(subject.equals("NCS"))
@@ -35,7 +35,9 @@ public class Study extends Post{
     }
 
 
-    public Study(@NotNull String writer, @NotNull String title, String content, @NotNull Integer maxNumber, Integer currentNumber, @NotNull LocalDateTime dueDate, String category, PostStatus postStatus, Gender qualifyGender, StudyCategory subject, String region, String time) {
+    public Study(@NotNull String writer, @NotNull String title, String content, @NotNull Integer maxNumber, Integer currentNumber,
+                 @NotNull LocalDateTime dueDate, String category,
+                 PostStatus postStatus, Gender qualifyGender, StudyCategory subject, String region, String time) {
         super(writer, title, content, maxNumber, currentNumber, dueDate, category, postStatus, qualifyGender);
         this.subject = subject;
         this.region = region;

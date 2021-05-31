@@ -1,4 +1,4 @@
-package com.siy.siyresource.domain.dto.detail;
+package com.siy.siyresource.domain.dto.PostingDetail;
 
 import com.siy.siyresource.domain.dto.ApplicationDto;
 import com.siy.siyresource.domain.dto.ParticipantsDto;
@@ -17,21 +17,19 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PostDtoDetail {
+public class PostDtoPostingDetail {
     private Long id;
     private String writer;
     private String title;
     private String content;
-    private String deadLine;
     private Long dueDate;
+    private String deadLine;
     private String createdAt;
     private Integer maxNum;
     private Integer curNum;
     private String category;
     private String status;
 
-    // 참가중인사람
-    private Set<ParticipantsDto> participants = new HashSet<>();
     // 대기 중인사람
     private Set<ApplicationDto> applications = new HashSet<>();
 
@@ -43,20 +41,19 @@ public class PostDtoDetail {
         return between;
     }
 
-    public PostDtoDetail(Post post, Set<ParticipantsDto> participants, Set<ApplicationDto> applications) {
+    public PostDtoPostingDetail(Post post, Set<ApplicationDto> applications) {
         this.id = post.getId();
         this.writer = post.getWriter();
         this.title = post.getTitle();
         this.content = post.getContent();
-        this.deadLine = post.getDueDate().toString();
         this.dueDate = calDeadLine(post.getDueDate());
+        this.deadLine = post.getDueDate().toString();
         this.createdAt = post.getCreatedAt().toString();
         this.maxNum = post.getMaxNumber();
         this.curNum = post.getCurrentNumber();
         this.category = post.getCategory();
         this.status = post.getPostStatus().toString();
 
-        this.participants = participants;
         this.applications = applications;
     }
 }

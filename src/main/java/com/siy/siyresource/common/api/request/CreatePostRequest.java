@@ -8,7 +8,6 @@ public class CreatePostRequest{
     private String title;
     private String content;
     private String deadLine;
-    private String createdAt;
     private Integer maxNum;
     private Integer curNum;
     private String category;

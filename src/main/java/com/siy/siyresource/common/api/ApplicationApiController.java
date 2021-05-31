@@ -18,7 +18,7 @@ public class ApplicationApiController {
     private final PostService postService;
 
     /**
-     * 함께하기
+     * 1. 함께하기
      */
     @PostMapping("/api/app/join")
     @Transactional
@@ -26,7 +26,6 @@ public class ApplicationApiController {
         System.out.println("JoinPost Application");
         System.out.println("request = " + request);
 
-        // protected로 바꾸기
         PostSearchCondition condition = new PostSearchCondition(id, null, null);
         Post findPost = postService.getPostEntity(condition);
 
@@ -35,16 +34,16 @@ public class ApplicationApiController {
     }
 
     /**
-     * 취소하기
+     * 2. 취소하기
      */
     @DeleteMapping("/api/app/cancle")
-    public String JoinPost(@RequestBody @Valid CancleAppRequest request, @RequestParam(value = "postId") Long id){
+    public String CancleApp(@RequestBody @Valid CancleAppRequest request, @RequestParam(value = "postId") Long id){
         applicationService.deleteByPostIdAndUserName(id, request.getUsername());
         return "redirect:/";
     }
 
     /**
-     * 수정하기
+     * 3. 수정하기
      */
     @PutMapping("/api/app/update")
     public String UpdateApp(@RequestBody @Valid ApplicationRequest request, @PathVariable Long postId){
@@ -55,7 +54,7 @@ public class ApplicationApiController {
     }
 
     /**
-     * 수락하기
+     * 4. 수락하기
      */
     @PostMapping("/api/app/permit")
     public String PermitApp(@RequestBody @Valid PermitRequest req){
@@ -73,7 +72,7 @@ class ApplicationRequest{
 
 @Data
 class PermitRequest{
-    private Long appId;
+    private Long[] appId;
     private String hostName;
 }
 

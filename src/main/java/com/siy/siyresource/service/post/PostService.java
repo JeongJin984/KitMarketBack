@@ -1,10 +1,13 @@
 package com.siy.siyresource.service.post;
 
+import com.siy.siyresource.common.api.request.CreateCarPoolRequest;
+import com.siy.siyresource.common.api.request.CreateContestRequest;
 import com.siy.siyresource.common.api.request.CreatePostRequest;
+import com.siy.siyresource.common.api.request.CreateStudyRequest;
 import com.siy.siyresource.domain.condition.PostSearchCondition;
 import com.siy.siyresource.domain.dto.ApplicationDto;
 import com.siy.siyresource.domain.dto.ParticipantsDto;
-import com.siy.siyresource.domain.dto.detail.*;
+import com.siy.siyresource.domain.dto.PostingDetail.*;
 import com.siy.siyresource.domain.dto.post.*;
 import com.siy.siyresource.domain.dto.Linear.PostLinearDto;
 import com.siy.siyresource.domain.entity.post.CarPool.CarPool;
@@ -32,19 +35,8 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    /*
-     * 포스트 저장
-     * */
-    @Transactional
-    public Long save(Post post) {
-        Post save = postRepository.save(post);
-        return save.getId();
-    }
-
     /**
-     * 포스트 전체 조회
-     *
-     * @return
+     * 1. post 전체 조회
      */
     public Page<PostDto> findPostList(String status, int offset, int size) {
         PageRequest page = PageRequest.of(offset, size);
@@ -55,9 +47,7 @@ public class PostService {
     }
 
     /**
-     * Study 전체 조회
-     *
-     * @return
+     * 2. Study 전체 조회
      */
     public Page<PostDto> findStudyList(String status, int offset, int size) {
         PageRequest page = PageRequest.of(offset, size);
@@ -67,9 +57,7 @@ public class PostService {
     }
 
     /**
-     * CarPool 전체 조회
-     *
-     * @return
+     * 3. CarPool 전체 조회
      */
     public Page<PostDto> findCarPoolList(String status, int offset, int size) {
         PageRequest page = PageRequest.of(offset, size);
@@ -79,9 +67,7 @@ public class PostService {
     }
 
     /**
-     * Contest 전체 조회
-     *
-     * @return
+     * 4. Contest 전체 조회
      */
     public Page<PostDto> findContestList(String status, int offset, int size) {
         PageRequest page = PageRequest.of(offset, size);
@@ -91,62 +77,237 @@ public class PostService {
         return results;
     }
 
-
-
-    public PostDtoDetail findPostById(PostSearchCondition condition) {
+    /**
+     * 5. Post 한개 조회
+     */
+    public PostDtoPostingDetail findPostById(PostSearchCondition condition) {
         Post findPost = postRepository.findPostById(condition);
-
 
         Set<ApplicationDto> applications = getApplicationDtoList(findPost);
 
-        //Set<ParticipantsDto> participants = getParticipantsList(findPost.getParticipants());
-
-        PostDtoDetail postDtoDetail = new PostDtoDetail(findPost, null, applications);
-        return postDtoDetail;
+        PostDtoPostingDetail postDtoPostingDetail = new PostDtoPostingDetail(findPost, applications);
+        return postDtoPostingDetail;
     }
 
 
-    public StudyDtoDetail findStudyById(PostSearchCondition condition) {
+
+    /**
+     * 6. Study 한개 조회
+     */
+    public StudyDtoPostingDetail findStudyById(PostSearchCondition condition) {
         Study findPost = (Study)postRepository.findPostById(condition);
 
         Set<ApplicationDto> applications = getApplicationDtoList(findPost);
 
-        //Set<ParticipantsDto> participants = getParticipantsList(findPost.getParticipants());
-
-        StudyDtoDetail postDtoDetail = new StudyDtoDetail(findPost, null, applications);
+        StudyDtoPostingDetail postDtoDetail = new StudyDtoPostingDetail(findPost,  applications);
         return postDtoDetail;
     }
 
-
-    public ContestDtoDetail findContestById(PostSearchCondition condition) {
-        Contest findPost = (Contest) postRepository.findPostById(condition);
-
-        Set<ApplicationDto> applications = getApplicationDtoList(findPost);
-
-        //Set<ParticipantsDto> participants = getParticipantsList(findPost.getParticipants());
-
-        ContestDtoDetail postDtoDetail = new ContestDtoDetail(findPost, null, applications);
-        return postDtoDetail;
-    }
-
-    public CarPoolDtoDetail findCarFoolById(PostSearchCondition condition) {
+    /**
+     * 7.carFool 한개 조회
+     */
+    public CarPoolDtoPostingDetail findCarFoolById(PostSearchCondition condition) {
         CarPool findPost = (CarPool) postRepository.findPostById(condition);
 
         Set<ApplicationDto> applications = getApplicationDtoList(findPost);
 
-        //Set<ParticipantsDto> participants = getParticipantsList(findPost.getParticipants());
-
-        CarPoolDtoDetail postDtoDetail = new CarPoolDtoDetail(findPost, null, applications);
+        CarPoolDtoPostingDetail postDtoDetail = new CarPoolDtoPostingDetail(findPost, applications);
         return postDtoDetail;
     }
 
-    public MiniProjectDtoDetail findMiniProjectById(PostSearchCondition condition) {
-        MiniProject findPost = (MiniProject)postRepository.findPostById(condition);
+    /**
+     * 8. contest 한개 조회
+     */
+    public ContestDtoPostingDetail findContestById(PostSearchCondition condition) {
+        Contest findPost = (Contest)postRepository.findPostById(condition);
+
         Set<ApplicationDto> applications = getApplicationDtoList(findPost);
 
-        //Set<ParticipantsDto> participants = getParticipantsList(findPost.getParticipants());
-        MiniProjectDtoDetail miniProjectDtoDetail = new MiniProjectDtoDetail(findPost, null, applications);
-        return miniProjectDtoDetail;
+
+        ContestDtoPostingDetail postDtoDetail = new ContestDtoPostingDetail(findPost, applications);
+        return postDtoDetail;
+    }
+
+
+    /**
+     * 9. post 저장
+     */
+    @Transactional
+    public Long postSave(CreatePostRequest request) {
+        Post post = new Post();
+        PostRequestToPostEntity(post, request);
+
+        postRepository.save(post);
+        return post.getId();
+    }
+
+    /**
+     * 10. contest 저장
+     * @param request
+     */
+    @Transactional
+    public void contestSave(CreateContestRequest request) {
+        Contest post = new Contest();
+        PostRequestToContestEntity(post, request);
+
+        postRepository.save(post);
+    }
+
+    /**
+     * 11. carPool 저장
+     * @param request
+     */
+    @Transactional
+    public void carPoolSave(CreateCarPoolRequest request) {
+        CarPool post = new CarPool();
+        PostRequestToCarFoolEntity(post, request);
+
+        postRepository.save(post);
+    }
+
+    /**
+     * 12. study 저장
+     * @param request
+     */
+    @Transactional
+    public void studySave(CreateStudyRequest request) {
+        Study study = new Study();
+        PostRequestToStudyEntity(study, request);
+
+        postRepository.save(study);
+    }
+
+
+
+    /**
+     * 14. 내가만든 모임
+     * */
+    public Page<PostLinearDto> findPostListByUsername(PostSearchCondition condition, int offset, int size) {
+        PageRequest page = PageRequest.of(offset, size);
+        Page<PostLinearDto> result = postRepository.findPostListByUsername(condition, page);
+        return result;
+    }
+
+    /**
+     * 15. 내가 참여하고 있는 모임
+     * */
+    public Page<PostLinearDto> findParticipatingList(String username, int offset, int size) {
+        PageRequest page = PageRequest.of(offset, size);
+        PostSearchCondition condition = new PostSearchCondition(null, null, username);
+
+        Page<PostLinearDto> result = postRepository.findParticipatingPost(condition, page);
+
+        return result;
+
+    }
+
+    /**
+     * 16. 내가 신청 대기중인 모임현황
+     * */
+    public Page<PostLinearDto> findPostListByApplicationUserName(PostSearchCondition condition, int offset, int size) {
+        PageRequest page = PageRequest.of(offset, size);
+        Page<PostLinearDto> result = postRepository.findPostListByApplicationUserName(condition, page);
+
+        return result;
+    }
+
+    /**
+     * 17. 게시글 삭제하기
+     * */
+    @Transactional
+    public void deleteById(Long id) {
+        postRepository.deleteById(id);
+    }
+
+
+    /**
+     * 18. post 수정하기
+     * @param id
+     * @param request
+     */
+    @Transactional
+    public void updatePost(Long id, CreatePostRequest request) {
+        Post post = postRepository.findById(id);
+
+        PostRequestToPostEntity(post, request);
+    }
+
+    /**
+     * 19. contest 수정하기
+     * @param id
+     * @param request
+     */
+    @Transactional
+    public void updateContest(Long id, CreateContestRequest request) {
+        Contest contest = (Contest)postRepository.findById(id);
+
+        PostRequestToContestEntity(contest, request);
+    }
+
+    /**
+     * 20. Study 수정하기
+     * @param id
+     * @param request
+     */
+    @Transactional
+    public void updateStudy(Long id, CreateStudyRequest request) {
+        Study study = postRepository.findById(id);
+        PostRequestToStudyEntity(study, request);
+    }
+
+
+    /**
+     * 21. CarPool 수정하기
+     * @param id
+     * @param request
+     */
+    @Transactional
+    public void updateCarFool(Long id, CreateCarPoolRequest request) {
+        CarPool carFool = postRepository.findById(id);
+        PostRequestToCarFoolEntity(carFool, request);
+    }
+
+
+    /**
+     * 22. 검색 기능
+     * @param title
+     * @param username
+     * @param status
+     * @param offset
+     * @param size
+     * @return
+     */
+    public Page<PostDto> findSearchList(String title, String username, String status, int offset, int size) {
+        PageRequest page = PageRequest.of(offset, size);
+        PostSearchCondition condition = new PostSearchCondition(null, username, null, title, status);
+        Page<PostDto> searchList = postRepository.findSearchList(condition, page);
+        return searchList;
+    }
+
+
+    /**
+     * 23. 포스팅 마감하기
+     * @param id
+     */
+    @Transactional
+    public void operatingPost(Long id) {
+        PostSearchCondition condition = new PostSearchCondition(id, null, null);
+        Post findPost = postRepository.findPostById(condition);
+
+        findPost.setPostStatus(PostStatus.OPERATING);
+    }
+
+
+    /**
+     * 24. 포스트 운영 종료하기
+     * @param id
+     */
+    @Transactional
+    public void closedPost(Long id) {
+        PostSearchCondition condition = new PostSearchCondition(id, null, null);
+        Post findPost = postRepository.findPostById(condition);
+
+        findPost.setPostStatus(PostStatus.CLOSE);
     }
 
 
@@ -161,15 +322,9 @@ public class PostService {
     }
 
 
-    public Page<PostLinearDto> findParticipatingList(String username, int offset, int size) {
-        PageRequest page = PageRequest.of(offset, size);
-        PostSearchCondition condition = new PostSearchCondition(null, null, username);
 
-        Page<PostLinearDto> result = postRepository.findParticipatingPost(condition, page);
 
-        return result;
 
-    }
 
 
     public Post getPostEntity(PostSearchCondition condition) {
@@ -177,10 +332,6 @@ public class PostService {
         return findPost;
     }
 
-    public Contest getContestEntity(PostSearchCondition condition) {
-        Contest contest = postRepository.findContestById(condition);
-        return contest;
-    }
 
 
     private Set<ApplicationDto> getApplicationDtoList(Post findPost) {
@@ -190,25 +341,21 @@ public class PostService {
                 .collect(Collectors.toSet());
     }
 
-    private Set<ParticipantsDto> getParticipantsList(String participants) {
-//        return accountPosts
-//                .stream()
-//                .map(a -> new ParticipantsDto(a.getUsername(), a.getEmail(), a.getAge().intValue())
-//                .collect(Collectors.toSet());
-        return null;
+    private Set<ParticipantsDto> getParticipantsList(Post findPost) {
+        return findPost.getParticipants()
+                .stream()
+                .map(a -> new ParticipantsDto(a.getUsername()))
+                .collect(Collectors.toSet());
     }
 
-    public Page<PostLinearDto> findPostListByUsername(PostSearchCondition condition, int offset, int size) {
-        PageRequest page = PageRequest.of(offset, size);
-        Page<PostLinearDto> result = postRepository.findPostListByUsername(condition, page);
-        return result;
-    }
 
-    public Page<PostLinearDto> findPostListByApplicationUserName(PostSearchCondition condition, int offset, int size) {
-        PageRequest page = PageRequest.of(offset, size);
-        Page<PostLinearDto> result = postRepository.findPostListByApplicationUserName(condition, page);
+    public MiniProjectDtoPostingDetail findMiniProjectById(PostSearchCondition condition) {
+        MiniProject findPost = (MiniProject)postRepository.findPostById(condition);
+        Set<ApplicationDto> applications = getApplicationDtoList(findPost);
 
-        return result;
+        //Set<ParticipantsDto> participants = getParticipantsList(findPost.getParticipants());
+        MiniProjectDtoPostingDetail miniProjectDtoDetail = new MiniProjectDtoPostingDetail(findPost, applications);
+        return miniProjectDtoDetail;
     }
 
     public Page<PostLinearDto> findPostListByParticipants(PostSearchCondition condition, int offset, int size) {
@@ -218,19 +365,37 @@ public class PostService {
 
     }
 
-    @Transactional
-    public void deleteById(Long id) {
-        postRepository.deleteById(id);
+
+    private void PostRequestToStudyEntity(Study post, CreateStudyRequest request) {
+        PostRequestToPostEntity(post, request);
+
+        post.setCategory("Study");
+        post.setSubject(post.stringToSubject(request.getSubject()));
+        post.setRegion(request.getRegion());
+        post.setDuration(request.getDuration());
     }
 
-    @Transactional
-    public void updatePost(Long id, CreatePostRequest request) {
-        Post post = postRepository.findById(id);
-        updatePostEntity(request, post);
+    private void PostRequestToCarFoolEntity(CarPool post, CreateCarPoolRequest request) {
+        PostRequestToPostEntity(post, request);
+
+        post.setCategory("CarPool");
+        post.setFare(request.getFare());
+        post.setDeparture(request.getDeparture());
+        post.setDestination(request.getDestination());
     }
 
-    @Transactional
-    private void updatePostEntity(CreatePostRequest request, Post post) {
+    private void PostRequestToContestEntity(Contest contest,  CreateContestRequest request) {
+        PostRequestToPostEntity(contest, request);
+
+        contest.setCategory("Contest");
+        contest.setContestCategory(contest.stringToContestCategory(request.getContestCategory()));
+        contest.setHostOrganization(request.getHostOrgan());
+        contest.setQualification(contest.stringToQualification(request.getQualification()));
+        contest.setHomepage(request.getHomepage());
+    }
+
+    private Post PostRequestToPostEntity(Post post, CreatePostRequest request) {
+        System.out.println("request.getDeadLine() = " + request.getDeadLine());
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         LocalDateTime deadLine = LocalDateTime.parse(request.getDeadLine(), format);
 
@@ -240,52 +405,21 @@ public class PostService {
         post.setDueDate(deadLine);
         post.setMaxNumber(request.getMaxNum());
         post.setCurrentNumber(request.getCurNum());
-        post.setCategory(request.getCategory());
+        post.setPostStatus(PostStatus.POSTING);
+        post.setCategory("Post");
+
+        System.out.println("post = " + post);
+
+        return post;
     }
 
 
-    @Transactional
-    public void updateContest(Long id, CreatePostRequest request) {
-        Contest contest = postRepository.findById(id);
-
-        updatePostEntity(request, contest);
-    }
-    @Transactional
-    public void updateStudy(Long id, CreatePostRequest request) {
-        Study study = postRepository.findById(id);
-        updatePostEntity(request, study);
-    }
-
-    @Transactional
-    public void updatecarFool(Long id, CreatePostRequest request) {
-        CarPool carFool = postRepository.findById(id);
-        updatePostEntity(request, carFool);
-    }
 
 
-    public Page<PostDto> findSearchList(String title, String username, String status, int offset, int size) {
-        PageRequest page = PageRequest.of(offset, size);
-        PostSearchCondition condition = new PostSearchCondition(null, username, null, title, status);
-        Page<PostDto> searchList = postRepository.findSearchList(condition, page);
-        return searchList;
 
-    }
 
-    @Transactional
-    public void operatingPost(Long id) {
-        PostSearchCondition condition = new PostSearchCondition(id, null, null);
-        Post findPost = postRepository.findPostById(condition);
 
-        findPost.setPostStatus(PostStatus.OPERATING);
-    }
 
-    @Transactional
-    public void closedPost(Long id) {
-        PostSearchCondition condition = new PostSearchCondition(id, null, null);
-        Post findPost = postRepository.findPostById(condition);
-
-        findPost.setPostStatus(PostStatus.CLOSE);
-    }
 
 
 }

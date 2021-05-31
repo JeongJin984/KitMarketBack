@@ -1,4 +1,4 @@
-package com.siy.siyresource.domain.dto.detail;
+package com.siy.siyresource.domain.dto.PostingDetail;
 
 import com.querydsl.core.annotations.QueryProjection;
 import com.siy.siyresource.domain.dto.ApplicationDto;
@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Data
 @NoArgsConstructor
-public class StudyDtoDetail extends PostDtoDetail{
+public class StudyDtoPostingDetail extends PostDtoPostingDetail {
     private StudyCategory subject;
 
     private String region;
@@ -20,8 +20,8 @@ public class StudyDtoDetail extends PostDtoDetail{
     private String duration;
 
     @QueryProjection
-    public StudyDtoDetail(Study study, Set<ParticipantsDto> participants, Set<ApplicationDto> applications){
-        super(study, participants, applications);
+    public StudyDtoPostingDetail(Study study, Set<ApplicationDto> applications){
+        super(study, applications);
         this.subject = study.getSubject();
         this.region = study.getRegion();
         this.duration = study.getDuration();

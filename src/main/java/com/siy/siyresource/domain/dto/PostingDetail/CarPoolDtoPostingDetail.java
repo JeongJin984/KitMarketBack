@@ -1,4 +1,4 @@
-package com.siy.siyresource.domain.dto.detail;
+package com.siy.siyresource.domain.dto.PostingDetail;
 
 import com.querydsl.core.annotations.QueryProjection;
 import com.siy.siyresource.domain.dto.ApplicationDto;
@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Data
 @NoArgsConstructor
-public class CarPoolDtoDetail extends PostDtoDetail{
+public class CarPoolDtoPostingDetail extends PostDtoPostingDetail {
     private String fare;
     private String departure;
     private String destination;
@@ -20,8 +20,8 @@ public class CarPoolDtoDetail extends PostDtoDetail{
     private DepartTime departTime;
 
     @QueryProjection
-    public CarPoolDtoDetail(CarPool carPool, Set<ParticipantsDto> participants, Set<ApplicationDto> applications){
-        super(carPool, participants, applications);
+    public CarPoolDtoPostingDetail(CarPool carPool, Set<ApplicationDto> applications){
+        super(carPool, applications);
         this.fare = carPool.getFare().toString();
         this.departure = carPool.getDeparture();
         this.destination = carPool.getDestination();

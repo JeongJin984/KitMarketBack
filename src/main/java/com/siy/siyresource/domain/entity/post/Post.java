@@ -1,6 +1,7 @@
 package com.siy.siyresource.domain.entity.post;
 
 import com.siy.siyresource.domain.entity.Application;
+import com.siy.siyresource.domain.entity.Participants;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 import org.springframework.data.annotation.CreatedDate;
@@ -66,7 +67,10 @@ public class Post {
     /**
      * 참가중인 사람들
      */
-    private String participants;
+    @BatchSize(size = 100)
+    @OneToMany(mappedBy = "post", fetch = LAZY, cascade = ALL)
+    private Set<Participants> participants = new HashSet<>();
+
 
     /**
      * Application 연결
@@ -78,11 +82,6 @@ public class Post {
     public void plusCurrentNumber(){
         this.currentNumber++;
     }
-    public void plusParticipants(String add){
-        this.participants += add;
-        this.participants += ' ';
-    }
-
 
     public Post(@NotNull String writer, @NotNull String title, String content,
                 @NotNull Integer maxNumber, Integer currentNumber,
@@ -97,6 +96,5 @@ public class Post {
         this.category = category;
         this.postStatus = postStatus;
         this.qualifyGender = qualifyGender;
-        this.participants = "";
     }
 }

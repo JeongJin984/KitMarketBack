@@ -29,7 +29,8 @@ public class CarPool extends Post {
     //요금
     private Long fare;
 
-    public CarPool(@NotNull String writer, @NotNull String title, String content, @NotNull Integer maxNumber, Integer currentNumber, @NotNull LocalDateTime dueDate, String category, PostStatus postStatus, Gender qualifyGender, String departure, String destination, LocalDateTime departureTime, Long fare) {
+    public CarPool(@NotNull String writer, @NotNull String title, String content, @NotNull Integer maxNumber, Integer currentNumber, @NotNull LocalDateTime dueDate, String category,
+                   PostStatus postStatus, Gender qualifyGender, String departure, String destination, LocalDateTime departureTime, Long fare) {
         super(writer, title, content, maxNumber, currentNumber, dueDate, category, postStatus, qualifyGender);
         this.departure = departure;
         this.destination = destination;

@@ -1,8 +1,10 @@
 package com.siy.siyresource.service;
 import com.siy.siyresource.domain.condition.PostSearchCondition;
 import com.siy.siyresource.domain.entity.Application;
+import com.siy.siyresource.domain.entity.Participants;
 import com.siy.siyresource.domain.entity.post.Post;
 import com.siy.siyresource.repository.ApplicationRepositoy.ApplicationRepository;
+import com.siy.siyresource.repository.ParticipantRepository.ParticipantRepository;
 import com.siy.siyresource.repository.PostRepository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ApplicationService {
 
     private final ApplicationRepository applicationRepository;
+    private final ParticipantRepository participantRepository;
     private final PostRepository postRepository;
 
     public Application findByUsernameAndPostId(String username, Long postId){
@@ -35,11 +38,6 @@ public class ApplicationService {
 
 
     @Transactional
-    public void delete(Application application){
-        applicationRepository.delete(application);
-    }
-
-    @Transactional
     public void deleteById(Long id){
         applicationRepository.deleteById(id);
     }
@@ -57,13 +55,17 @@ public class ApplicationService {
         applicationRepository.delete(findApp);
     }
 
-    public String permitApp(Long appId, String hostName) {
-        Application findApp = findById(appId);
-        Post findPost = findApp.getPost();
+    @Transactional
+    public String permitApp(Long[] appId, String hostName) {
+        for (Long app: appId) {
+            Application findApp = findById(app);
+            Post findPost = findApp.getPost();
 
-        findPost.plusParticipants(findApp.getUsername());
-        findPost.plusCurrentNumber();
-        deleteById(appId);
+            Participants newParticipant = new Participants(findApp.getUsername(), findPost);
+            participantRepository.save(newParticipant);
+
+            deleteById(app);
+        }
 
         return "redirect/";
     }

@@ -2,6 +2,7 @@ package com.siy.siyresource.common.api;
 
 import com.siy.siyresource.common.api.request.*;
 import com.siy.siyresource.domain.condition.PostSearchCondition;
+import com.siy.siyresource.domain.dto.ClosedDetail.*;
 import com.siy.siyresource.domain.dto.PostingDetail.*;
 import com.siy.siyresource.domain.dto.post.*;
 import com.siy.siyresource.domain.dto.Linear.PostLinearDto;
@@ -72,7 +73,20 @@ public class PostApiController {
     }
 
     /**
-     * 5. post 한개 조회 o
+     * 5. MiniProject 전체 조회 0
+     */
+    @GetMapping(value = "/api/miniProjectList")
+    public Result MiniProjectList(
+            @RequestParam(value = "status", defaultValue = "POSTING", required = false)String status,
+            @RequestParam(value = "offset", defaultValue = "0", required = false) int offset,
+            @RequestParam(value = "size", defaultValue = "8", required = false) int size) {
+        Page<PostDto> result = postService.findMiniProjectList(status, offset, size);
+
+        return new Result(result.getContent().size(), result.getNumber(), result.getTotalPages(), result.get());
+    }
+
+    /**
+     * 6. post 한개 조회 o
      */
     @GetMapping(value = "/api/post")
     public PostDtoPostingDetail PostOne(@RequestParam(value = "id") Long id) {
@@ -85,7 +99,7 @@ public class PostApiController {
     }
 
     /**
-     * 6. study 한개 조회 o
+     * 7. study 한개 조회 o
      */
     @GetMapping(value = "/api/study")
     public StudyDtoPostingDetail StudyOne(@RequestParam(value = "id") Long id) {
@@ -97,10 +111,10 @@ public class PostApiController {
     }
 
     /**
-     * 7.carFool 한개 조회 o
+     *  8.carFool 한개 조회 o
      */
     @GetMapping(value = "/api/carPool")
-    public PostDtoPostingDetail carFoolOne(@RequestParam(value = "id") Long id) {
+    public CarPoolDtoPostingDetail carFoolOne(@RequestParam(value = "id") Long id) {
 
         PostSearchCondition condition = new PostSearchCondition(id, null, null);
 
@@ -110,10 +124,10 @@ public class PostApiController {
     }
 
     /**
-     * 8. contest 한개 조회 o
+     * 9. contest 한개 조회 o
      */
     @GetMapping(value = "/api/contest")
-    public PostDtoPostingDetail contestOne(@RequestParam(value = "id") Long id) {
+    public ContestDtoPostingDetail contestOne(@RequestParam(value = "id") Long id) {
 
         PostSearchCondition condition = new PostSearchCondition(id, null, null);
 
@@ -123,10 +137,10 @@ public class PostApiController {
     }
 
     /**
-     * 9. miniProject 한개 조회
+     * 10. miniProject 한개 조회
      */
     @GetMapping(value = "/api/miniProject")
-    public PostDtoPostingDetail miniProjectOne(@RequestParam(value = "id") Long id) {
+    public MiniProjectDtoPostingDetail miniProjectOne(@RequestParam(value = "id") Long id) {
 
         PostSearchCondition condition = new PostSearchCondition(id, null, null);
 
@@ -136,7 +150,7 @@ public class PostApiController {
     }
 
     /**
-     * 10. Post 저장 o
+     * 11. Post 저장 o
      */
     @PostMapping(value = "/api/post")
     public String savePost(@RequestBody @Valid CreatePostRequest request) {
@@ -158,7 +172,7 @@ public class PostApiController {
 
 
     /**
-     * 12. CarPool 저장 0
+     * 13. CarPool 저장 0
      */
     @PostMapping(value = "/api/carPool")
     public String saveCarFool(@RequestBody @Valid CreateCarPoolRequest request) {
@@ -168,7 +182,7 @@ public class PostApiController {
     }
 
     /**
-     * 13. Study 저장 0
+     * 14. Study 저장 0
      */
     @PostMapping(value = "/api/study")
     public String saveStudy(@RequestBody @Valid CreateStudyRequest request) {
@@ -178,7 +192,7 @@ public class PostApiController {
     }
 
     /**
-     * 14. MiniProject 저장
+     * 15. MiniProject 저장
      */
     @PostMapping(value = "/api/miniProject")
     public String saveStudy(@RequestBody @Valid CreateMiniProjectRequest request) {
@@ -189,7 +203,7 @@ public class PostApiController {
 
 
     /**
-     * 13. 내가 만든 모임 리스트 0
+     * 16. 내가 만든 모임 리스트 0
      * */
     @GetMapping("/api/post/my")
     public Result findPostMyMakeByUsername(@RequestParam(value = "username") @Valid String request,
@@ -203,7 +217,7 @@ public class PostApiController {
     }
 
     /**
-     * 15. 내가 참여중인 post 보기 0
+     * 17. 내가 참여중인 post 보기 0
      */
     @GetMapping(value = "/api/post/participant")
     public Result findParticipating(@RequestParam String username,
@@ -217,7 +231,7 @@ public class PostApiController {
 
 
     /**
-     * 16 . 내가 신청한 모임 리스트 0
+     * 18 . 내가 신청한 모임 리스트 0
      * */
     @GetMapping("/api/post/application")
     public Result findPostApplicatingByUsername(@RequestParam(value = "username") @Valid String request,
@@ -232,7 +246,7 @@ public class PostApiController {
     }
 
     /**
-     * 17. 포스트 삭제 0
+     * 19. 포스트 삭제 0
      */
     @DeleteMapping(value = "/api/post")
     public String delete(@RequestParam("id") Long id){
@@ -243,7 +257,7 @@ public class PostApiController {
 
 
     /**
-     * 18. Post 수정 0
+     * 20. Post 수정 0
      */
     @PutMapping(value = "/api/post")
     public String updatePost(@RequestBody @Valid CreatePostRequest request, @PathVariable("id")Long id){
@@ -253,7 +267,7 @@ public class PostApiController {
     }
 
     /**
-     *  19. Contest 수정 0
+     *  21. Contest 수정 0
      * */
     @PutMapping(value = "/api/contest")
     public String updateContest(@RequestBody @Valid CreateContestRequest request, @RequestParam("id")Long id){
@@ -263,7 +277,7 @@ public class PostApiController {
     }
 
     /**
-     *  20. Study 수정 0
+     *  22. Study 수정 0
      * */
     @PutMapping(value = "/api/study")
     public String updateStudy(@RequestBody @Valid CreateStudyRequest request, @RequestParam("id")Long id){
@@ -272,7 +286,7 @@ public class PostApiController {
         return "redirect:/";
     }
     /**
-     *  21. carPool 수정 0
+     *  23. carPool 수정 0
      * */
     @PutMapping(value = "/api/carPool")
     public String updateCarFool(@RequestBody @Valid CreateCarPoolRequest request, @RequestParam("id")Long id){
@@ -281,7 +295,7 @@ public class PostApiController {
         return "redirect:/";
     }
     /**
-     * MiniProject 수정
+     * 24. MiniProject 수정
      */
     @PutMapping(value = "/api/miniProject")
     public String updateCarFool(@RequestBody @Valid CreateMiniProjectRequest request, @RequestParam("id")Long id){
@@ -292,7 +306,7 @@ public class PostApiController {
 
 
     /**
-     *  22. 검색기능 0
+     *  25. 검색기능 0
      * @param title
      * @param username
      */
@@ -310,7 +324,7 @@ public class PostApiController {
 
 
     /**
-     *  23. 포스트 운영 마감하기 0
+     *  26. 포스트 운영 마감하기 0
      * */
     @GetMapping(value = "/api/post/closed")
     public String closedPost(@RequestParam(required = true) @Valid Long id){
@@ -318,9 +332,56 @@ public class PostApiController {
 
         return "redirect:/";
     }
+
     /**
-     * 참석자 보기
+     * 31. 참석자 보기
      */
+    @GetMapping(value = "/api/post/participanting")
+    public PostDtoClosedDetail postWithParticipants(@RequestParam @Valid Long id){
+        PostDtoClosedDetail postDtoClosedDetail = postService.findPostWithParticipants(id);
+
+        return postDtoClosedDetail;
+    }
+
+    /**
+     * 32. 스터디 참석자 보기
+     */
+    @GetMapping(value = "/api/study/participanting")
+    public StudyDtoClosedDetail studyWithParticipants(@RequestParam @Valid Long id){
+        StudyDtoClosedDetail postDtoClosedDetail = postService.findStudyWithParticipants(id);
+
+        return postDtoClosedDetail;
+    }
+
+    /**
+     * 33. 카풀 참석자 보기
+     */
+    @GetMapping(value = "/api/carPool/participanting")
+    public CarPoolDtoClosedDetail carPoolWithParticipants(@RequestParam @Valid Long id){
+        CarPoolDtoClosedDetail postDtoClosedDetail = postService.findcarPoolWithParticipants(id);
+
+        return postDtoClosedDetail;
+    }
+
+    /**
+     * 34. 콘테스트 참석자 보기
+     */
+    @GetMapping(value = "/api/carPool/participanting")
+    public ContestDtoClosedDetail contestWithParticipants(@RequestParam @Valid Long id){
+        ContestDtoClosedDetail postDtoClosedDetail = postService.findContestWithParticipants(id);
+
+        return postDtoClosedDetail;
+    }
+
+    /**
+     * 35. 미니프로젝트 참석자 보기
+     */
+    @GetMapping(value = "/api/carPool/participanting")
+    public MiniProjectDtoClosedDetail miniWithParticipants(@RequestParam @Valid Long id){
+        MiniProjectDtoClosedDetail postDtoClosedDetail = postService.findMiniProjectWithParticipants(id);
+
+        return postDtoClosedDetail;
+    }
 
 
 

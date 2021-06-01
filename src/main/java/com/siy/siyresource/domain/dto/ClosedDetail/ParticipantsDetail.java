@@ -1,5 +1,6 @@
 package com.siy.siyresource.domain.dto.ClosedDetail;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ParticipantsDetail {
     private String username;
     private String email;

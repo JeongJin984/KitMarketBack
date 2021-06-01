@@ -14,13 +14,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor
 public class MiniProject extends Post{
-    private String duration;
-    private String subject;
+    private String  projectDuration;
+    private String topic;
 
     public MiniProject(@NotNull String writer, @NotNull String title, String content, @NotNull Integer maxNumber, Integer currentNumber, @NotNull LocalDateTime dueDate, String category, PostStatus postStatus, Gender qualifyGender, String duration, String subject) {
         super(writer, title, content, maxNumber, currentNumber, dueDate, category, postStatus);
-        this.duration = duration;
-        this.subject = subject;
+        this.projectDuration = duration;
+        this.topic = subject;
         this.setCategory("MiniProject");
     }
 }

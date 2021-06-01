@@ -11,13 +11,13 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 public class MiniProjectDtoClosedDetail extends PostDtoClosedDetail{
-    private String duration;
-    private String subject;
+    private String projectDuration;
+    private String topic;
 
     public MiniProjectDtoClosedDetail(MiniProject mini, Set<ParticipantsDetail> participants) {
         super(mini, participants);
-        this.duration = mini.getDuration();
-        this.subject =  mini.getSubject();
+        this.projectDuration = mini.getProjectDuration();
+        this.topic =  mini.getTopic();
     }
 
 }

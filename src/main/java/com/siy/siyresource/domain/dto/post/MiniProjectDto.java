@@ -10,15 +10,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class MiniProjectDto extends PostDto {
 
-    private String duration;
-    private String subject;
+    private String projectDuration;
+    private String topic;
 
     @QueryProjection
     public MiniProjectDto(Long id, String writer, String title, String content, LocalDateTime dueDate, LocalDateTime createdAt,
-                          Integer maxNum, Integer curNum, String category, String status, String duration, String subject) {
+                          Long maxNum, Long curNum, String category, String status, String duration, String subject) {
         super(id, writer, title, content, dueDate, createdAt, maxNum, curNum, category,status);
-        this.duration = duration;
-        this.subject = subject;
+        this.projectDuration = duration;
+        this.topic = subject;
     }
 
 

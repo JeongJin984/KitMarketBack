@@ -8,7 +8,6 @@ import com.siy.siyresource.domain.dto.post.*;
 import com.siy.siyresource.domain.dto.Linear.PostLinearDto;
 import com.siy.siyresource.domain.dto.Linear.QPostLinearDto;
 import com.siy.siyresource.domain.entity.QApplication;
-import com.siy.siyresource.domain.entity.QParticipants;
 import com.siy.siyresource.domain.entity.post.*;
 import com.siy.siyresource.domain.entity.post.CarPool.CarPool;
 import com.siy.siyresource.domain.entity.post.Contest.Contest;
@@ -26,6 +25,7 @@ import static com.siy.siyresource.domain.entity.QApplication.application;
 import static com.siy.siyresource.domain.entity.QParticipants.*;
 import static com.siy.siyresource.domain.entity.post.CarPool.QCarPool.carPool;
 import static com.siy.siyresource.domain.entity.post.Contest.QContest.contest;
+import static com.siy.siyresource.domain.entity.post.QMiniProject.miniProject;
 import static com.siy.siyresource.domain.entity.post.QPost.post;
 import static com.siy.siyresource.domain.entity.post.Study.QStudy.*;
 import static org.springframework.util.StringUtils.hasText;
@@ -247,6 +247,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
 
+
+
     private JPAQuery<Contest> countContestQuery(String status) {
         JPAQuery<Contest> countQuery = queryFactory
                 .selectFrom(contest)
@@ -254,7 +256,45 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         return countQuery;
     }
 
+    /**
+     * 5. 미니프로젝트 리스트
+     * @param status
+     * @param page
+     * @return
+     */
+    @Override
+    public Page<PostDto> findMiniProjectListWithPaging(String status, PageRequest pageable) {
+        List<PostDto> content = queryFactory
+                .select(new QPostDto(
+                        miniProject.id,
+                        miniProject.writer,
+                        miniProject.title,
+                        miniProject.content,
+                        miniProject.dueDate,
+                        miniProject.createdAt,
+                        miniProject.maxNumber,
+                        miniProject.currentNumber,
+                        miniProject.category,
+                        miniProject.postStatus.stringValue()
+                ))
+                .from(miniProject)
+                .where(selectedStatusByMiniProject(status))
+                .orderBy(miniProject.createdAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
 
+        JPAQuery<MiniProject> countQuery = countMiniProjectList(status);
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
+    }
+
+
+
+    private JPAQuery<MiniProject> countMiniProjectList(String status) {
+        return queryFactory
+                .selectFrom(miniProject)
+                .where(selectedStatusByPost(status));
+    }
 
 
     /**
@@ -485,6 +525,17 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
             return contest.postStatus.eq(PostStatus.CLOSE);
         else
             return null;
+    }
+
+    private BooleanExpression selectedStatusByMiniProject(String status) {
+        System.out.println("status = " + status);
+        if(status.equals("POSTING"))
+            return post.postStatus.eq(PostStatus.POSTING);
+        else if(status.equals("CLOSED"))
+            return post.postStatus.eq(PostStatus.CLOSE);
+        else
+            return null;
+
     }
 
 

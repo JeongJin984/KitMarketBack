@@ -12,6 +12,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 public class CarPoolDtoPostingDetail extends PostDtoPostingDetail {
+    private String Gender;
     private String fare;
     private String departure;
     private String destination;
@@ -25,6 +26,7 @@ public class CarPoolDtoPostingDetail extends PostDtoPostingDetail {
         super(carPool, applications);
         System.out.println("carPool.getDepartTime() = " + carPool.getDepartTime());
 
+        this.Gender = carPool.getQualifyGender().toString();
         this.fare = carPool.getFare().toString();
         this.departure = carPool.getDeparture();
         this.destination = carPool.getDestination();

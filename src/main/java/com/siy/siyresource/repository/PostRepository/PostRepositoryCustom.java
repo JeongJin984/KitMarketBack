@@ -40,11 +40,14 @@ public interface PostRepositoryCustom {
     Page<PostDto> findStudyListWithPaging(String status, Pageable pageable);
     Page<PostDto> findCarPoolListWithPaging(String status, Pageable pageable);
     Page<PostDto> findContestListWithPaging(String status, Pageable pageable);
+    Page<PostDto> findMiniProjectListWithPaging(String status, PageRequest page);
+
 
     Page<PostLinearDto> findPostLinearListWithPaging(Pageable pageable);
     Page<PostLinearDto> findPostListByUsername(PostSearchCondition condition, Pageable pageable);
     Page<PostLinearDto> findPostListByApplicationUserName(PostSearchCondition condition, PageRequest pageable);
 
     Page<PostDto> findSearchList(PostSearchCondition condition, PageRequest page);
+
 
 }

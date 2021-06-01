@@ -2,20 +2,26 @@ package com.siy.siyresource.service.post;
 
 import com.siy.siyresource.common.api.request.*;
 import com.siy.siyresource.domain.condition.PostSearchCondition;
-import com.siy.siyresource.domain.dto.ClosedDetail.ParticipantsDetail;
+import com.siy.siyresource.domain.dto.ClosedDetail.*;
 import com.siy.siyresource.domain.dto.PostingDetail.ApplicationDto;
 import com.siy.siyresource.domain.dto.ParticipantsDto;
 import com.siy.siyresource.domain.dto.PostingDetail.*;
+import com.siy.siyresource.domain.dto.account.UserDto;
 import com.siy.siyresource.domain.dto.post.*;
 import com.siy.siyresource.domain.dto.Linear.PostLinearDto;
+import com.siy.siyresource.domain.entity.Participants;
 import com.siy.siyresource.domain.entity.post.CarPool.CarPool;
 import com.siy.siyresource.domain.entity.post.Contest.Contest;
 import com.siy.siyresource.domain.entity.post.MiniProject;
 import com.siy.siyresource.domain.entity.post.Post;
 import com.siy.siyresource.domain.entity.post.PostStatus;
 import com.siy.siyresource.domain.entity.post.Study.Study;
+import com.siy.siyresource.feign.AccountServiceClient;
 import com.siy.siyresource.repository.PostRepository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -23,15 +29,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class PostService {
 
     private final PostRepository postRepository;
+    private final CircuitBreakerFactory circuitBreakerFactory;
+    private final AccountServiceClient accountServiceClient;
+
 
     /**
      * 1. post 전체 조회
@@ -73,6 +84,15 @@ public class PostService {
         Page<PostDto> results = postRepository.findContestListWithPaging(status, page);
 
         return results;
+    }
+
+    /**
+     * 5. MiniProjectList
+     */
+    public Page<PostDto> findMiniProjectList(String status, int offset, int size) {
+        PageRequest page =PageRequest.of(offset, size);
+
+        return postRepository.findMiniProjectListWithPaging(status, page);
     }
 
     /**
@@ -177,8 +197,7 @@ public class PostService {
     }
 
     /**
-     * 미니 프로젝트 저장
-     * @param request
+     * 13. 미니 프로젝트 저장
      */
     public void studyMiniProject(CreateMiniProjectRequest request) {
         MiniProject miniProject = new MiniProject();
@@ -187,11 +206,7 @@ public class PostService {
         postRepository.save(miniProject);
     }
 
-    private void PostRequestToMiniProject(MiniProject miniProject, CreateMiniProjectRequest request) {
-        PostRequestToPostEntity(miniProject, request);
-        miniProject.setDuration(request.getDuration());
-        miniProject.setSubject(request.getSubject());
-    }
+
 
 
     /**
@@ -330,6 +345,58 @@ public class PostService {
         findPost.setPostStatus(PostStatus.CLOSE);
     }
 
+    /**
+     *  참석자 포함 포스트 보기
+     */
+    public PostDtoClosedDetail findPostWithParticipants(Long id) {
+        PostSearchCondition condition = new PostSearchCondition(id, null, null);
+        Post findPost = postRepository.findPostById(condition);
+
+        Set<ParticipantsDetail> participants = getParticipants(findPost);
+
+        return new PostDtoClosedDetail(findPost, participants);
+    }
+
+    /**
+     *  참석자 포함 포스트 보기
+     */
+    public StudyDtoClosedDetail findStudyWithParticipants(Long id) {
+        PostSearchCondition condition = new PostSearchCondition(id, null, null);
+        Study findPost = (Study)postRepository.findPostById(condition);
+
+        Set<ParticipantsDetail> participants = getParticipants(findPost);
+
+        return new StudyDtoClosedDetail(findPost, participants);
+    }
+
+
+    public CarPoolDtoClosedDetail findcarPoolWithParticipants(Long id) {
+        PostSearchCondition condition = new PostSearchCondition(id, null, null);
+        CarPool findPost = (CarPool)postRepository.findPostById(condition);
+
+        Set<ParticipantsDetail> participants = getParticipants(findPost);
+
+        return new CarPoolDtoClosedDetail(findPost, participants);
+    }
+
+    public ContestDtoClosedDetail findContestWithParticipants(Long id) {
+        PostSearchCondition condition = new PostSearchCondition(id, null, null);
+        Contest findPost = (Contest)postRepository.findPostById(condition);
+
+        Set<ParticipantsDetail> participants = getParticipants(findPost);
+
+        return new ContestDtoClosedDetail(findPost, participants);
+    }
+
+    public MiniProjectDtoClosedDetail findMiniProjectWithParticipants(Long id) {
+        PostSearchCondition condition = new PostSearchCondition(id, null, null);
+        MiniProject findPost = (MiniProject)postRepository.findPostById(condition);
+
+        Set<ParticipantsDetail> participants = getParticipants(findPost);
+
+        return new MiniProjectDtoClosedDetail(findPost, participants);
+    }
+
 
 
 
@@ -361,6 +428,30 @@ public class PostService {
                 .collect(Collectors.toSet());
     }
 
+    private Set<ParticipantsDetail> getParticipants(Post findPost) {
+
+        CircuitBreaker circuitBreaker = circuitBreakerFactory.create("circuitBreaker");
+
+        Set<Participants> participants = findPost.getParticipants();
+
+        Set<ParticipantsDetail> participantsDetails = new HashSet<ParticipantsDetail>();
+
+        for (Participants username:  participants) {
+            log.info("Before call user-service for participants");
+            UserDto findUser = circuitBreaker.run(() -> accountServiceClient.getUser(username.getUsername())
+                    , throwable -> new UserDto());
+            log.info("After call post-service for createdPosts");
+
+            participantsDetails.add(
+                    new ParticipantsDetail(findUser.getUsername(), findUser.getEmail(),
+                    findPost.getWriter().equals(username.getUsername()) ? "Leader":"Member"
+                )
+            );
+        }
+        return participantsDetails;
+
+    }
+
     private Set<ParticipantsDetail> getParticipantsList(Post findPost) {
         return null;
     }
@@ -386,6 +477,7 @@ public class PostService {
         PostRequestToPostEntity(post, request);
 
         post.setCategory("Study");
+
         post.setSubject(post.stringToSubject(request.getSubject()));
         post.setRegion(request.getRegion());
         post.setDuration(request.getDuration());
@@ -393,28 +485,29 @@ public class PostService {
 
     private void PostRequestToCarFoolEntity(CarPool post, CreateCarPoolRequest request) {
         PostRequestToPostEntity(post, request);
-
-        LocalDateTime departTime = getLocalDateTime(request.getDepartTime());
-
         post.setCategory("CarPool");
 
         post.setQualifyGender(post.stringToGender(request.getGender()));
-        post.setFare(request.getFare());
+        post.setFare(Long.valueOf(request.getFare()));
         post.setDeparture(request.getDeparture());
         post.setDestination(request.getDestination());
-        post.setDepartTime(departTime);
+        post.setDepartTime(post.getDepartTime());
     }
-
 
 
     private void PostRequestToContestEntity(Contest contest,  CreateContestRequest request) {
         PostRequestToPostEntity(contest, request);
-
         contest.setCategory("Contest");
+
         contest.setContestCategory(contest.stringToContestCategory(request.getContestCategory()));
         contest.setHostOrganization(request.getHostOrgan());
         contest.setQualification(contest.stringToQualification(request.getQualification()));
         contest.setHomepage(request.getHomepage());
+    }
+    private void PostRequestToMiniProject(MiniProject miniProject, CreateMiniProjectRequest request) {
+        PostRequestToPostEntity(miniProject, request);
+        miniProject.setProjectDuration(request.getProjectDuration());
+        miniProject.setTopic(request.getTopic());
     }
 
     private LocalDateTime getLocalDateTime(String departTime2) {
@@ -439,7 +532,6 @@ public class PostService {
 
         return post;
     }
-
 
 
 }

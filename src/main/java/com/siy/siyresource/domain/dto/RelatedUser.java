@@ -14,4 +14,5 @@ public class RelatedUser {
     private Integer age;
     private String major;
     private String gender;
-    private Integer grade;}
+    private Integer grade;
+}

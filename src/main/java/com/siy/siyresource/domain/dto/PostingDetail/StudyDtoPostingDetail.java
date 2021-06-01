@@ -11,7 +11,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 public class StudyDtoPostingDetail extends PostDtoPostingDetail {
-    private StudyCategory subject;
+    private String subject;
 
     private String region;
 
@@ -20,7 +20,7 @@ public class StudyDtoPostingDetail extends PostDtoPostingDetail {
     @QueryProjection
     public StudyDtoPostingDetail(Study study, Set<ApplicationDto> applications){
         super(study, applications);
-        this.subject = study.getSubject();
+        this.subject = study.getSubject().toString();
         this.region = study.getRegion();
         this.duration = study.getDuration();
     }

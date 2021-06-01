@@ -9,12 +9,12 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 public class MiniProjectDtoPostingDetail extends PostDtoPostingDetail {
-    private String duration;
-    private String subject;
+    private String projectDuration;
+    private String topic;
 
     public MiniProjectDtoPostingDetail(MiniProject mini, Set<ApplicationDto> applications) {
         super(mini, applications);
-        this.duration = mini.getDuration();
-        this.subject =  mini.getSubject();
+        this.projectDuration = mini.getProjectDuration();
+        this.topic =  mini.getTopic();
     }
 }

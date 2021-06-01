@@ -23,8 +23,8 @@ public class PostDto {
     private String deadLine;
     private String dueDate;
     private String createdAt;
-    private Integer maxNum;
-    private Integer curNum;
+    private Long maxNum;
+    private Long curNum;
     private String category;
     private String status;
 
@@ -41,8 +41,9 @@ public class PostDto {
 
 
     @QueryProjection
-    public PostDto(Long id, String writer, String title, String content, LocalDateTime dueDate, LocalDateTime createdAt, Integer maxNum,
-                   Integer curNum, String category, String status) {
+    public PostDto(Long id, String writer, String title, String content, LocalDateTime dueDate,
+                   LocalDateTime createdAt, Long maxNum,
+                   Long curNum, String category, String status) {
         this.id = id;
         this.writer = writer;
         this.title = title;

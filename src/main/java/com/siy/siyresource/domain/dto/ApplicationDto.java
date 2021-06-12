@@ -1,4 +1,4 @@
-package com.siy.siyresource.domain.dto.PostingDetail;
+package com.siy.siyresource.domain.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.AllArgsConstructor;
@@ -21,6 +21,7 @@ public class ApplicationDto {
     @QueryProjection
     public ApplicationDto(Long id, String content, LocalDateTime chatDate, String username) {
         this.id = id;
+        this.content = content;
         this.chatDate = chatDate.toString();
         this.username = username;
     }

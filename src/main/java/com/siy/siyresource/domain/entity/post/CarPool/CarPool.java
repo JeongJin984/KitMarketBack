@@ -27,10 +27,14 @@ public class CarPool extends Post {
     private String destination;
 
     //출발 시간
-    private LocalDateTime departTime;
+    private Long departHours;
+    private Long departMinutes;
 
     //요금
     private Long fare;
+
+    private Double Long_;
+    private Double lat;
 
     public Gender stringToGender(String gender){
         if(gender.equals("MALE"))
@@ -44,13 +48,17 @@ public class CarPool extends Post {
     }
 
     public CarPool(@NotNull String writer, @NotNull String title, String content, @NotNull Integer maxNumber, Integer currentNumber, @NotNull LocalDateTime dueDate, String category,
-                   PostStatus postStatus, Gender qualifyGender, String departure, String destination, LocalDateTime departTime, Long fare) {
+                   PostStatus postStatus, Gender qualifyGender, String departure, String destination, Long departHours,
+                   Long departMinutes, Long fare, Double Long_, Double lat) {
         super(writer, title, content, maxNumber, currentNumber, dueDate, category, postStatus);
         this.qualifyGender = qualifyGender;
         this.departure = departure;
         this.destination = destination;
-        this.departTime = departTime;
+        this.departHours = departHours;
+        this.departMinutes = departMinutes;
         this.fare = fare;
-        this.setCategory("CarPool");
+        this.Long_ = Long_;
+        this.lat = lat;
+        this.setCategory(category);
     }
 }

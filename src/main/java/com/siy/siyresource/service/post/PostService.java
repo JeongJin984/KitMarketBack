@@ -2,11 +2,12 @@ package com.siy.siyresource.service.post;
 
 import com.siy.siyresource.common.api.request.*;
 import com.siy.siyresource.domain.condition.PostSearchCondition;
+import com.siy.siyresource.domain.dto.AllDetail.*;
 import com.siy.siyresource.domain.dto.ClosedDetail.*;
-import com.siy.siyresource.domain.dto.PostingDetail.ApplicationDto;
-import com.siy.siyresource.domain.dto.ParticipantsDto;
+import com.siy.siyresource.domain.dto.ApplicationDto;
+import com.siy.siyresource.domain.dto.ParticipantsDetail;
 import com.siy.siyresource.domain.dto.PostingDetail.*;
-import com.siy.siyresource.domain.dto.account.UserDto;
+import com.siy.siyresource.domain.dto.RelatedUser;
 import com.siy.siyresource.domain.dto.post.*;
 import com.siy.siyresource.domain.dto.Linear.PostLinearDto;
 import com.siy.siyresource.domain.entity.Participants;
@@ -16,7 +17,7 @@ import com.siy.siyresource.domain.entity.post.MiniProject;
 import com.siy.siyresource.domain.entity.post.Post;
 import com.siy.siyresource.domain.entity.post.PostStatus;
 import com.siy.siyresource.domain.entity.post.Study.Study;
-import com.siy.siyresource.feign.AccountServiceClient;
+import com.siy.siyresource.feign.UserServiceClient;
 import com.siy.siyresource.repository.PostRepository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +42,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CircuitBreakerFactory circuitBreakerFactory;
-    private final AccountServiceClient accountServiceClient;
+    private final UserServiceClient userServiceClient;
 
 
     /**
@@ -397,6 +398,64 @@ public class PostService {
         return new MiniProjectDtoClosedDetail(findPost, participants);
     }
 
+    public PostDtoAllDetail findPostWithAppAndPart(Long id) {
+        PostSearchCondition condition = new PostSearchCondition(id, null, null);
+        Post post = postRepository.findPostById(condition);
+
+        Set<ApplicationDto> applications = getApplicationDtoList(post);
+        Set<ParticipantsDetail> participants = getParticipants(post);
+
+        PostDtoAllDetail postDtoAllDetail = new PostDtoAllDetail(post, applications, participants);
+        return postDtoAllDetail;
+    }
+    public PostDtoAllDetail findCarPoolWithAppAndPart(Long id) {
+        PostSearchCondition condition = new PostSearchCondition(id, null, null);
+        CarPool post = (CarPool)postRepository.findPostById(condition);
+
+        Set<ApplicationDto> applications = getApplicationDtoList(post);
+        Set<ParticipantsDetail> participants = getParticipants(post);
+
+        CarPoolDtoAllDetail postDtoAllDetail = new CarPoolDtoAllDetail(post, applications, participants);
+        return postDtoAllDetail;
+    }
+
+    public PostDtoAllDetail findStudyWithAppAndPart(Long id) {
+        PostSearchCondition condition = new PostSearchCondition(id, null, null);
+        Study post = (Study)postRepository.findPostById(condition);
+
+        Set<ApplicationDto> applications = getApplicationDtoList(post);
+        Set<ParticipantsDetail> participants = getParticipants(post);
+
+        StudyDtoAllDetail postDtoAllDetail = new StudyDtoAllDetail(post, applications, participants);
+        return postDtoAllDetail;
+    }
+    public PostDtoAllDetail findContestWithAppAndPart(Long id) {
+        PostSearchCondition condition = new PostSearchCondition(id, null, null);
+        Contest post = (Contest)postRepository.findPostById(condition);
+
+        Set<ApplicationDto> applications = getApplicationDtoList(post);
+        Set<ParticipantsDetail> participants = getParticipants(post);
+
+        ContestDtoAllDetail postDtoAllDetail = new ContestDtoAllDetail(post, applications, participants);
+        return postDtoAllDetail;
+    }
+    public PostDtoAllDetail findMiniProjectWithAppAndPart(Long id) {
+        PostSearchCondition condition = new PostSearchCondition(id, null, null);
+        MiniProject post = (MiniProject)postRepository.findPostById(condition);
+
+        Set<ApplicationDto> applications = getApplicationDtoList(post);
+        Set<ParticipantsDetail> participants = getParticipants(post);
+
+        MiniProjectDtoAllDetail postDtoAllDetail = new MiniProjectDtoAllDetail(post, applications, participants);
+        return postDtoAllDetail;
+    }
+
+
+
+
+
+
+
 
 
 
@@ -438,8 +497,8 @@ public class PostService {
 
         for (Participants username:  participants) {
             log.info("Before call user-service for participants");
-            UserDto findUser = circuitBreaker.run(() -> accountServiceClient.getUser(username.getUsername())
-                    , throwable -> new UserDto());
+            RelatedUser findUser = circuitBreaker.run(() -> userServiceClient.getUserData(username.getUsername())
+                    , throwable -> new RelatedUser());
             log.info("After call post-service for createdPosts");
 
             participantsDetails.add(
@@ -448,6 +507,7 @@ public class PostService {
                 )
             );
         }
+
         return participantsDetails;
 
     }
@@ -473,41 +533,53 @@ public class PostService {
     }
 
 
-    private void PostRequestToStudyEntity(Study post, CreateStudyRequest request) {
-        PostRequestToPostEntity(post, request);
+    private void PostRequestToStudyEntity(Study study, CreateStudyRequest request) {
+        PostRequestToPostEntity(study, request);
 
-        post.setCategory("Study");
+        study.setCategory("study");
 
-        post.setSubject(post.stringToSubject(request.getSubject()));
-        post.setRegion(request.getRegion());
-        post.setDuration(request.getDuration());
+        study.setSubject(study.stringToSubject(request.getSubject()));
+        study.setRegion(request.getRegion());
+        study.setDuration(request.getDuration());
+
+        System.out.println("study = " + study);
     }
 
-    private void PostRequestToCarFoolEntity(CarPool post, CreateCarPoolRequest request) {
-        PostRequestToPostEntity(post, request);
-        post.setCategory("CarPool");
+    private void PostRequestToCarFoolEntity(CarPool carPool, CreateCarPoolRequest request) {
+        PostRequestToPostEntity(carPool, request);
+        carPool.setCategory("carPool");
 
-        post.setQualifyGender(post.stringToGender(request.getGender()));
-        post.setFare(Long.valueOf(request.getFare()));
-        post.setDeparture(request.getDeparture());
-        post.setDestination(request.getDestination());
-        post.setDepartTime(post.getDepartTime());
+        carPool.setQualifyGender(carPool.stringToGender(request.getGender()));
+        carPool.setFare(Long.valueOf(request.getFare()));
+        carPool.setDepartHours(request.getDepartTime().getHours());
+        carPool.setDepartMinutes(request.getDepartTime().getMinutes());
+        carPool.setDestination(request.getDestination());
+        carPool.setLong_(request.getLong());
+        carPool.setLat(request.getLat());
+
+        System.out.println("carPool = " + carPool);
     }
 
 
     private void PostRequestToContestEntity(Contest contest,  CreateContestRequest request) {
         PostRequestToPostEntity(contest, request);
-        contest.setCategory("Contest");
+        contest.setCategory("contest");
 
         contest.setContestCategory(contest.stringToContestCategory(request.getContestCategory()));
-        contest.setHostOrganization(request.getHostOrgan());
+        contest.setHostOrganization(request.getHostOrganization());
         contest.setQualification(contest.stringToQualification(request.getQualification()));
         contest.setHomepage(request.getHomepage());
+
+        System.out.println("contest = " + contest);
     }
     private void PostRequestToMiniProject(MiniProject miniProject, CreateMiniProjectRequest request) {
         PostRequestToPostEntity(miniProject, request);
+
+        miniProject.setCategory("miniProject");
         miniProject.setProjectDuration(request.getProjectDuration());
         miniProject.setTopic(request.getTopic());
+
+        System.out.println("miniProject = " + miniProject);
     }
 
     private LocalDateTime getLocalDateTime(String departTime2) {
@@ -526,12 +598,12 @@ public class PostService {
         post.setMaxNumber(request.getMaxNum());
         post.setCurrentNumber(request.getCurNum());
         post.setPostStatus(PostStatus.POSTING);
-        post.setCategory("Post");
+        post.setCategory("post");
 
-        System.out.println("post = " + post);
 
         return post;
     }
+
 
 
 }

@@ -63,8 +63,7 @@ public class Contest extends Post {
         this.contestCategory = contestCategory;
         this.hostOrganization = hostOrganization;
         this.qualification = qualification;
-        this.homepage = homepage;
-        this.setCategory("Contest");
+        setCategory(category);
     }
 
 

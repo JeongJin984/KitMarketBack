@@ -1,6 +1,8 @@
-package com.siy.siyresource.domain.dto.ClosedDetail;
+package com.siy.siyresource.domain.dto.AllDetail;
 
+import com.siy.siyresource.domain.dto.ApplicationDto;
 import com.siy.siyresource.domain.dto.ParticipantsDetail;
+import com.siy.siyresource.domain.dto.ClosedDetail.PostDtoClosedDetail;
 import com.siy.siyresource.domain.entity.post.MiniProject;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,12 +13,12 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-public class MiniProjectDtoClosedDetail extends PostDtoClosedDetail{
+public class MiniProjectDtoAllDetail extends PostDtoAllDetail {
     private String projectDuration;
     private String topic;
 
-    public MiniProjectDtoClosedDetail(MiniProject mini, Set<ParticipantsDetail> participants) {
-        super(mini, participants);
+    public MiniProjectDtoAllDetail(MiniProject mini, Set<ApplicationDto> applications , Set<ParticipantsDetail> participants) {
+        super(mini, applications, participants);
         this.projectDuration = mini.getProjectDuration();
         this.topic =  mini.getTopic();
     }

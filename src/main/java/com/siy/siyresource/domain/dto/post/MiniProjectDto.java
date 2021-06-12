@@ -15,7 +15,7 @@ public class MiniProjectDto extends PostDto {
 
     @QueryProjection
     public MiniProjectDto(Long id, String writer, String title, String content, LocalDateTime dueDate, LocalDateTime createdAt,
-                          Long maxNum, Long curNum, String category, String status, String duration, String subject) {
+                          Integer maxNum, Integer curNum, String category, String status, String duration, String subject) {
         super(id, writer, title, content, dueDate, createdAt, maxNum, curNum, category,status);
         this.projectDuration = duration;
         this.topic = subject;

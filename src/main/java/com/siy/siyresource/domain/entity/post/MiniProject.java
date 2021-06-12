@@ -21,6 +21,6 @@ public class MiniProject extends Post{
         super(writer, title, content, maxNumber, currentNumber, dueDate, category, postStatus);
         this.projectDuration = duration;
         this.topic = subject;
-        this.setCategory("MiniProject");
+        setCategory(category);
     }
 }

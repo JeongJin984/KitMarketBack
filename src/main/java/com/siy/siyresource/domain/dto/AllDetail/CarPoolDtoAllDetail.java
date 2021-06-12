@@ -1,37 +1,36 @@
-package com.siy.siyresource.domain.dto.PostingDetail;
+package com.siy.siyresource.domain.dto.AllDetail;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.querydsl.core.annotations.QueryProjection;
 import com.siy.siyresource.domain.dto.ApplicationDto;
+import com.siy.siyresource.domain.dto.ParticipantsDetail;
 import com.siy.siyresource.domain.dto.DepartTime;
 import com.siy.siyresource.domain.entity.post.CarPool.CarPool;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Embedded;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-public class CarPoolDtoPostingDetail extends PostDtoPostingDetail {
-    private String Gender;
+public class CarPoolDtoAllDetail extends PostDtoAllDetail {
     private String fare;
     private String departure;
     private String destination;
 
     @Embedded
     private DepartTime departTime;
-
     @JsonProperty("long")
     private Double Long;
-
     private Double lat;
 
     @QueryProjection
-    public CarPoolDtoPostingDetail(CarPool carPool, Set<ApplicationDto> applications){
-        super(carPool, applications);
+    public CarPoolDtoAllDetail(CarPool carPool, Set<ApplicationDto> application, Set<ParticipantsDetail> participants){
+        super(carPool, application, participants);
 
-        this.Gender = carPool.getQualifyGender().toString();
         this.fare = carPool.getFare().toString();
         this.departure = carPool.getDeparture();
         this.destination = carPool.getDestination();
@@ -39,5 +38,5 @@ public class CarPoolDtoPostingDetail extends PostDtoPostingDetail {
         this.Long = carPool.getLong_();
         this.lat = carPool.getLat();
     }
-
 }
+

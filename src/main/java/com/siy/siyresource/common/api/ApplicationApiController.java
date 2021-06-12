@@ -29,7 +29,7 @@ public class ApplicationApiController {
         PostSearchCondition condition = new PostSearchCondition(id, null, null);
         Post findPost = postService.getPostEntity(condition);
 
-        Application application = new Application(request.getContent(), request.getUsername(), findPost);
+        Application application = new Application(request.getUsername(), request.getContent(), findPost);
         Long save = applicationService.save(application);
     }
 
@@ -43,7 +43,7 @@ public class ApplicationApiController {
     }
 
     /**
-     * 29. 수락하기 0
+     * 29. 수정하기 0
      */
     @PutMapping("/api/app/update")
     public String UpdateApp(@RequestBody @Valid ApplicationRequest request, @PathVariable Long postId){
@@ -58,7 +58,8 @@ public class ApplicationApiController {
      */
     @PostMapping("/api/app/permit")
     public String PermitApp(@RequestBody @Valid PermitRequest req){
-        applicationService.permitApp(req.getAppId(), req.getHostName());
+        System.out.println("/api/app/permit?req = " + req);
+        applicationService.permitApp(req.getAppIds(), req.getHostName());
         return "redirect:/";
     }
 
@@ -72,7 +73,7 @@ class ApplicationRequest{
 
 @Data
 class PermitRequest{
-    private Long[] appId;
+    private Long[] appIds;
     private String hostName;
 }
 

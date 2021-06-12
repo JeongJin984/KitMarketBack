@@ -21,7 +21,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
-@Component
+//@Component
 public class SimpleListener implements ApplicationListener<ApplicationStartedEvent> {
 
     private EntityManagerFactory entityManagerFactory;
@@ -48,7 +48,7 @@ public class SimpleListener implements ApplicationListener<ApplicationStartedEve
 
         for (int i = 0; i < 10; i++) {
             Study study = new Study("user", "Study_Title" + i, "본문 입니다.", 5, 3, LocalDateTime.of(2022, 3, 25, 18, 19, 03),
-                    "Study", PostStatus.POSTING, StudyCategory.NCS, "daegu", "3");
+                    "study", PostStatus.POSTING, StudyCategory.NCS, "daegu", "3");
 
 
             Application application1 = new Application("user", study.getTitle()+" 참여하고싶어요", study);
@@ -68,7 +68,7 @@ public class SimpleListener implements ApplicationListener<ApplicationStartedEve
 
         for (int i = 0; i < 10; i++) {
             Contest contest = new Contest("user", "Contest_title" + i, "본문 입니다.", 5, 3, LocalDateTime.of(2022, 3, 25, 18, 19, 03),
-                    "Study", PostStatus.POSTING, ContestCategory.DESIGN, "대구시 주최", Qualification.HIGHSCHOOL, "www.Daegu.co.kr" );
+                    "contest", PostStatus.POSTING, ContestCategory.DESIGN, "대구시 주최", Qualification.HIGHSCHOOL, "www.Daegu.co.kr" );
 
 
             Application application1 = new Application("user", contest.getTitle()+" 참여하고싶어요", contest);
@@ -87,27 +87,6 @@ public class SimpleListener implements ApplicationListener<ApplicationStartedEve
 
         }
 
-        for (int i = 0; i < 10; i++) {
-            CarPool carPool = new CarPool("user", "CarPool_Title" + i, "본문 입니다.", 5, 3, LocalDateTime.of(2020, 3, 25, 18, 19, 03),
-                    "Study", PostStatus.CLOSE, Gender.NONE, "금오공대", "구미역",
-                    LocalDateTime.of(2021, 5, 25, 18, 19, 03), 0L);
-
-
-            Application application1 = new Application("user", carPool.getTitle()+" 참여하고싶어요", carPool);
-            Application application2 = new Application("admin", carPool.getTitle()+" 참여하고싶어요", carPool);
-
-            Participants newParticipant1 = new Participants("user", carPool);
-            Participants newParticipant2 = new Participants("admin", carPool);
-
-
-            em.persist(carPool);
-            em.persist(application1);
-            em.persist(application2);
-
-            em.persist(newParticipant1);
-            em.persist(newParticipant2);
-
-        }
         em.getTransaction().commit();
     }
 }

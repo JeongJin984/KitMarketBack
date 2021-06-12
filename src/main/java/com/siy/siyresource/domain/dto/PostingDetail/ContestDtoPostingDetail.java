@@ -1,9 +1,8 @@
 package com.siy.siyresource.domain.dto.PostingDetail;
 
 import com.querydsl.core.annotations.QueryProjection;
+import com.siy.siyresource.domain.dto.ApplicationDto;
 import com.siy.siyresource.domain.entity.post.Contest.Contest;
-import com.siy.siyresource.domain.entity.post.Contest.ContestCategory;
-import com.siy.siyresource.domain.entity.post.Contest.Qualification;
 import lombok.Data;
 
 import javax.persistence.EnumType;

@@ -42,7 +42,7 @@ public class Study extends Post{
         this.subject = subject;
         this.region = region;
         this.duration = time;
-        this.setCategory("Study");
+        setCategory(category);
     }
 
 }

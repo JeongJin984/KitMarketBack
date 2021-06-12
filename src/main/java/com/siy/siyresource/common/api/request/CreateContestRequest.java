@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class CreateContestRequest extends CreatePostRequest{
     private String contestCategory;
-    private String hostOrgan;
+    private String hostOrganization;
     private String qualification;
     private String homepage;
 

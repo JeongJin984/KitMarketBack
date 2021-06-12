@@ -259,7 +259,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     /**
      * 5. 미니프로젝트 리스트
      * @param status
-     * @param page
+     * @param
      * @return
      */
     @Override
@@ -544,8 +544,6 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         BooleanExpression title = hasText(condition.getTitle()) ? post.title.contains(condition.getTitle()) : null;
         BooleanExpression username = hasText(condition.getUsername()) ? post.writer.contains(condition.getUsername()) : null;
 
-        System.out.println("title = " + title);
-        System.out.println("username = " + username);
 
         if(title != null){
             return title;

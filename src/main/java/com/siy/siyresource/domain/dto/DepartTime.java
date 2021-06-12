@@ -18,13 +18,14 @@ public class DepartTime {
     private Long minutes;
 
 
-     public static DepartTime LocalDateTimeToDepartTime(LocalDateTime time){
-        DepartTime departTime = new DepartTime();
-        System.out.println("time.getHour() = " + time.getHour());
-        System.out.println("time.getMinute() = " + time.getMinute());
 
-        departTime.setHours(Long.valueOf(time.getHour()));
-        departTime.setMinutes(Long.valueOf(time.getMinute()));
+    public static DepartTime LocalDateTimeToDepartTime(Long departHours, Long departMinutes) {
+        DepartTime departTime = new DepartTime();
+        System.out.println("time.getHour() = " + departHours);
+        System.out.println("time.getMinute() = " +  departMinutes);
+
+        departTime.setHours(departHours);
+        departTime.setMinutes(departMinutes);
 
         return departTime;
     }

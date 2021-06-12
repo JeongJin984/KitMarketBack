@@ -1,5 +1,6 @@
 package com.siy.siyresource.domain.dto.PostingDetail;
 
+import com.siy.siyresource.domain.dto.ApplicationDto;
 import com.siy.siyresource.domain.entity.post.Post;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
